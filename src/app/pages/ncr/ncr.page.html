@@ -1,0 +1,202 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>NON-CONFORMANCE FORM</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label position="floating">ORIGIN OF NCR:</ion-label>
+                  <ion-select interface="popover"[(ngModel)]="ncr.origin">
+                    <ion-select-option>INTERNAL</ion-select-option>
+                    <ion-select-option>EXTERNAL CUSTOMER</ion-select-option>
+                    <ion-select-option>SUPPLIER</ion-select-option>
+                    <ion-select-option>OTHER</ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item *ngIf="ncr.origin === 'OTHER'">
+                  <ion-label position="floating">PLEASE SPECIFY</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.other">
+                  </ion-input>
+                </ion-item>
+
+                <h4 class="ion-text-center">PART 1: IDENTIFIED NON-CONFORMANCE REPORT</h4>
+
+                <ion-item>
+                  <ion-label position="floating">Date of NCR</ion-label>
+                  <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ncr.ncrDate">
+                  </ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">NCR Number:</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.ncrNum">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Details of Non-conformance (Problem):</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.details">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Identified by: </ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.identifiedBy">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Date Identified</ion-label>
+                  <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ncr.identifiedDate">
+                  </ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Department</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.department">
+                  </ion-input>
+                </ion-item>
+
+                <h4 class="ion-text-center">PART 2: RESOLUTION AND ACTION TAKEN</h4>
+
+                <ion-item>
+                  <ion-label position="floating">Corrective Action taken: </ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.action">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Corrective Action implemented by:</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.actionBy">
+                  </ion-input>
+                </ion-item>
+
+                <img [src]="ncr.actionSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("actionSig")'>Add Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label class="ion-text-center">Sign</ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+            
+
+                <ion-item>
+                  <ion-label position="floating">Due Date</ion-label>
+                  <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ncr.dueDate">
+                  </ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Actual Date:</ion-label>
+                  <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ncr.actualDate">
+                  </ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Preventive action:</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.prevAction">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">The identified cause of the Non-Conformance: Ask Why? Why? Why? Why?
+                    Why? to identify root cause</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.cause">
+                  </ion-input>
+                </ion-item>
+
+                <h4 class="ion-text-center">PART 3: CLOSE OUT</h4>
+
+                <ion-item>
+                  <ion-label position="floating">Confirmation of Implementation</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.confirm">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Verified by:</ion-label>
+                  <ion-input type="text" [(ngModel)]="ncr.verifiedBy">
+                  </ion-input>
+                </ion-item>
+
+                <img [src]="ncr.verifiedSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("verifiedSig")'>Add Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label class="ion-text-center">Sign</ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+            
+                <ion-item>
+                  <ion-label position="floating">Date</ion-label>
+                  <ion-datetime displayFormat="YYYY-MM-DD HH:mm" [(ngModel)]="ncr.verifiedDate">
+                  </ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">The Corrective Action is inadequate:</ion-label>
+                  <ion-input [(ngModel)]="ncr.correct">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">The CAR can be closed out:</ion-label>
+                  <ion-input [(ngModel)]="ncr.car">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Details of further action required:</ion-label>
+                  <ion-input [(ngModel)]="ncr.furtherAction">
+                  </ion-input>
+                </ion-item>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check()">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

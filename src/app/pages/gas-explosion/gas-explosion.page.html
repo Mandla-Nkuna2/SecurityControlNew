@@ -1,0 +1,177 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="exit()">Exit <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>GAS EXPLOSION</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label position="floating">Date Today</ion-label>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.date" [readonly]="true"></ion-input>
+                </ion-item>
+
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='at'>Reported at</ion-label>
+                  <ion-label position="floating" *ngIf="!at" style="color:red !important">Reported at
+                  </ion-label>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.at"></ion-input>
+                </ion-item>
+
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="report2">Reported on (date):</ion-label>
+                  <ion-label position="floating" *ngIf="!report2" style="color:red !important">Reported on (date):
+                  </ion-label>
+                  <ion-datetime placeholder="Date..." item-right [(ngModel)]="appeal.report2" displayFormat="YYYY MM DD">
+                  </ion-datetime>                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="by">Reported by:</ion-label>
+                  <ion-label position="floating" *ngIf="!by" style="color:red !important">Reported by:
+                  </ion-label>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.by"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="from">From (area/section)</ion-label>
+                  <ion-label position="floating" *ngIf="!from" style="color:red !important"> From (area/section)
+                  </ion-label>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.from"></ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="cause">Cause of explosion known:</ion-label>
+                  <ion-label position="floating" *ngIf="!cause" style="color:red !important">Cause of explosion known:
+                  </ion-label>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.cause"></ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="sap">SAP Notified </ion-label>
+                  <ion-label position="floating" *ngIf="!sap" style="color:red !important"> SAP Notified
+                    Service </ion-label>
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.saptime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.sap"></ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="brigade">Fire Brigade notified </ion-label>
+                  <ion-label position="floating" *ngIf="!brigade" style="color:red !important"> Fire Brigade notified
+                  </ion-label>
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.brigadetime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.brigade"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="tenant">Alerted Tenants in area </ion-label>
+                  <ion-label position="floating" *ngIf="!tenant" style="color:red !important"> Alerted Tenants in area
+                  </ion-label>
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.tenanttime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.tenant"></ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="area">Areas Evacuated </ion-label>
+                  <ion-label position="floating" *ngIf="!area" style="color:red !important">Areas Evacuated </ion-label>
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.areatime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.area"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="shutdown">Emergency shutdown instituted </ion-label>
+                  <ion-label position="floating" *ngIf="!shutdown" style="color:red !important"> Emergency shutdown instituted</ion-label>
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.shutdowntime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.shutdown"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="instituted">Emergency shutdown completed </ion-label>
+                  <ion-label position="floating" *ngIf="!instituted" style="color:red !important"> Emergency shutdown completed
+                  </ion-label>
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.institutedtime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.instituted"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" >Any other items (specify) </ion-label>
+                 
+                  <ion-datetime placeholder="time" item-right [(ngModel)]="appeal.othertime" displayFormat="HH:mm">
+                  </ion-datetime>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.other"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="compile">Complied by </ion-label>
+                  <ion-label position="floating" *ngIf="!compile" style="color:red !important"> Complied by </ion-label>
+                  <ion-input placeholder="details..." [(ngModel)]="appeal.compile"></ion-input>
+                </ion-item>
+<p>ANY CASUALTIES?.................................IF SO COMPLETE INJURY REPORT</p>
+                <ion-item>
+                  <ion-label position="floating" *ngIf="add">Additional Information </ion-label>
+                  <ion-label position="floating" *ngIf="!add" style="color:red !important"> Additional Information
+                  </ion-label>
+                  <ion-textarea [(ngModel)]="appeal.add"></ion-textarea>
+                </ion-item>
+
+                <img [src]="appeal.supsign" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("supsign")'>Add Manager Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label *ngIf='supsign' class="ion-text-center"> Signature</ion-label>
+                      <ion-label *ngIf='!supsign' class="ion-text-center" style="color:red !important">
+                        Signature
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check()">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

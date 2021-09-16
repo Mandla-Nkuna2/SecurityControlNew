@@ -1,0 +1,56 @@
+.grid-header {
+  background: #ed1c24;
+  text-align: center;
+  color: white;
+  border: solid #b6090e;
+  font-size: 0.9em;
+}
+.grid-header-item {
+  border-right: solid #b6090e;
+}
+
+.header-first {
+  border-left: solid #b6090e;
+}
+
+.grid-row {
+  border-bottom: solid #b6090e;
+  border-right: solid #b6090e;
+  border-left: solid #b6090e;
+  color: #000;
+  font-size: 0.9em;
+}
+.grid-row-item {
+  border-right: solid #b6090e;
+  line-height: 45px;
+  background-color: #fff;
+  font-size: 0.9em;
+}
+.last-col {
+  background-color: #fff;
+  font-size: 0.9em;
+}
+.icon-edit {
+  color: darkorange;
+}
+.icon-delete {
+  color: #ff0101;
+}
+.icon-more {
+  color: #00aeef;
+}
+.heading {
+  background-color: #ed1c24;
+  border-top: solid #b6090e;
+  border-left: solid #b6090e;
+  border-right: solid #b6090e;
+  color: #fff;
+  font-size: 1.5em;
+}
+.billing-details {
+  width: 50%;
+  float: left;
+}
+.card {
+  background-color: #000;
+}

@@ -1,0 +1,625 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Crime Incident Report</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+             
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Report Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="incident.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Report Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="incident.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager/ Supervisor</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="incident.manager"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color:red !important">Site Name *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (click)="searchSites(incident)" (ionChange)="getSiteDetails(incident)"
+                        [(ngModel)]="incident.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="incident.site"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" position="floating">OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" position="floating" style="color:red !important">OB Number *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.ob" type="text"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="dateValue" position="floating">Incident Date *</ion-label>
+                      <ion-label *ngIf="!dateValue" position="floating" style="color:red !important">Incident Date *
+                      </ion-label>
+                      <ion-datetime [readonly]="view" [(ngModel)]="incident.incDate" displayFormat="YYYY/MM/DD">
+                      </ion-datetime>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="timeValue" position="floating">Incident Time *</ion-label>
+                      <ion-label *ngIf="!timeValue" position="floating" style="color:red !important">Incident Time *
+                      </ion-label>
+                      <ion-datetime [readonly]="view" [(ngModel)]="incident.incTime" displayFormat="HH:mm">
+                      </ion-datetime>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="categoryValue" position="floating">Incident Category *</ion-label>
+                      <ion-label *ngIf="!categoryValue" position="floating" style="color:red !important">Incident
+                        Category *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" (click)="getCategories()" [(ngModel)]="incident.category"
+                        (ionChange)="getTypes(incident)">
+                        <ion-select-option *ngFor="let cat of categorys | async">{{cat.category}}</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.category"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="incident.category != '' && incident.category != 'OTHER'">
+                      <ion-label *ngIf="typeValue" position="floating">Incident Type *</ion-label>
+                      <ion-label *ngIf="!typeValue" position="floating" style="color:red !important">Incident Type *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.type">
+                        <ion-select-option *ngFor="let type of types | async">{{type.type}}</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.type"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="incident.category == 'OTHER'">
+                      <ion-label *ngIf="typeValue" position="floating">Incident Type *</ion-label>
+                      <ion-label *ngIf="!typeValue" position="floating" style="color:red !important">Incident Type *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.type" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="detailsValue" position="floating">Brief Details *</ion-label>
+                      <ion-label *ngIf="!detailsValue" position="floating" style="color:red !important">Brief Details *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.details" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">PERSONAL DETAILS/ VICTIM/ SECURITY OFFICER</ion-col>
+                    </ion-row>
+
+                    <ion-item>
+                      <ion-label *ngIf="personValue" position="floating">Was there a person/ victim / security officer
+                        involved?
+                      </ion-label>
+                      <ion-label *ngIf="!personValue" position="floating" style="color:red !important">Was there a
+                        person/ victim /
+                        security
+                        officer involved?</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.person">
+                        <ion-select-option>YES</ion-select-option>
+                        <ion-select-option>NO</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.person"></ion-input>
+                    </ion-item>
+
+                    <div *ngIf="incident.person == 'YES'">
+                      <ion-item>
+                        <ion-label position="floating">Title</ion-label>
+                        <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.title">
+                          <ion-select-option>MR</ion-select-option>
+                          <ion-select-option>MISS</ion-select-option>
+                          <ion-select-option>MRS</ion-select-option>
+                          <ion-select-option>MS</ion-select-option>
+                          <ion-select-option>DR</ion-select-option>
+                          <ion-select-option>PROFESSOR</ion-select-option>
+                        </ion-select>
+                        <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.title"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">First Name</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.name" type="text"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Surname Name</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.surname" type="text"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Address</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.address" type="text"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Contact Number</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.contact" type="tel"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Email Address</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.email" type="email"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Employer</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.employer" type="text"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Type of Injury Sustained</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.injury" type="text"></ion-input>
+                      </ion-item>
+                    </div>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">SAPS INFORMATION</ion-col>
+                    </ion-row>
+
+                    <ion-item>
+                      <ion-label *ngIf="reportedValue" position="floating">Was the incident reported to the SAPS? *
+                      </ion-label>
+                      <ion-label *ngIf="!reportedValue" position="floating" style="color:red !important">Was the
+                        incident reported
+                        to the
+                        SAPS? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.reported">
+                        <ion-select-option>YES</ion-select-option>
+                        <ion-select-option>NO</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.reported"></ion-input>
+                    </ion-item>
+
+                    <div *ngIf="incident.reported == 'YES'">
+                      <ion-item>
+                        <ion-label position="floating">Time Reported to SAPS</ion-label>
+                        <ion-datetime [readonly]="view" [(ngModel)]="incident.sapsRepTime" displayFormat="HH:mm">
+                        </ion-datetime>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">SAPS Arrival Time</ion-label>
+                        <ion-datetime [readonly]="view" [(ngModel)]="incident.sapsArrTime" displayFormat="HH:mm">
+                        </ion-datetime>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">SAPS Officer</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.officer" type="text"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Case Number</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.case" type="text"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">SAPS Station Details</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.saps" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Metro/ Traffic Police Details</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.metro" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Ambulance/ Emergency Service Details</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.ambulance" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Fire Brigade Details</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.fire" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+                    </div>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Estimated Value of Loss</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.value" type="text"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="arrestsValue" position="floating">Were any arrests made? *</ion-label>
+                      <ion-label *ngIf="!arrestsValue" position="floating" style="color:red !important">Were any arrests
+                        made? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.arrests">
+                        <ion-select-option>YES</ion-select-option>
+                        <ion-select-option>NO</ion-select-option>
+                        <ion-select-option>NOT APPLICABLE</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.arrests"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="incident.arrests == 'YES'">
+                      <ion-label position="floating">Arrest Details</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.arrestDetails" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="managementValue" position="floating">Has Management been informed? *</ion-label>
+                      <ion-label *ngIf="!managementValue" position="floating" style="color:red !important">Has
+                        Management been
+                        informed? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.management">
+                        <ion-select-option>YES</ion-select-option>
+                        <ion-select-option>NO</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.management"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="clientValue" position="floating">Has the client been informed? *</ion-label>
+                      <ion-label *ngIf="!clientValue" position="floating" style="color:red !important">Has the client
+                        been
+                        informed? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.client">
+                        <ion-select-option>YES</ion-select-option>
+                        <ion-select-option>NO</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.client"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obDoneValue" position="floating">Was an OB done? *</ion-label>
+                      <ion-label *ngIf="!obDoneValue" position="floating" style="color:red !important">Was an OB done? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.obDone">
+                        <ion-select-option>YES</ion-select-option>
+                        <ion-select-option>NO</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.obDone"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="incident.obDone == 'YES'">
+                      <ion-label position="floating">OB Number</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.incOb" type="text"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="incident.obDone == 'NO'">
+                      <ion-label position="floating">Reason no OB was done?</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.noOb" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p class="ion-text-center">INCIDENT PHOTOS</p>
+
+                    <ion-label class="ion-text-center">Take Photo 1: </ion-label>
+                    <div [hidden]="view">
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto1()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 1
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture1.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 1
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent1" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped1($event)">
+                        </image-cropper>
+                      </ion-row>
+                    </div>
+                    <input #picture1 (change)="fileChangeEvent1($event)" style="display:none;" type="file"
+                      accept="image/*" capture="camera">
+                    <div text-centre>
+                      <img *ngIf="incident.photo1" [src]=incident.photo1 class="thumb">
+                    </div>
+                    <ion-item *ngIf="incident.photo1">
+                      <ion-label position="floating">Notes on Photo 1</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="incident.notes1" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <div *ngIf="incident.photo1 !== ''">
+                      <ion-label class="ion-text-center">Take Photo 2: </ion-label>
+                      <div [hidden]="view">
+                        <ion-row [hidden]="!isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="takePhoto2()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 2
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row [hidden]="isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="picture2.click()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 2
+                            </ion-button>
+                          </ion-col>
+                          <image-cropper [imageChangedEvent]="imageChangedEvent2" [maintainAspectRatio]="true"
+                            [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                            (imageCropped)="imageCropped2($event)">
+                          </image-cropper>
+                        </ion-row>
+                      </div>
+                      <input #picture2 (change)="fileChangeEvent2($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="incident.photo2" [src]=incident.photo2 class="thumb">
+                      </div>
+                      <ion-item *ngIf="incident.photo2">
+                        <ion-label position="floating">Notes on Photo 2</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.notes2" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+                    </div>
+
+                    <div *ngIf="incident.photo2 !== ''">
+                      <ion-label class="ion-text-center">Take Photo 3: </ion-label>
+                      <div [hidden]="incident.photo3 !== ''">
+                        <div [hidden]="view">
+                          <ion-row [hidden]="!isApp">
+                            <ion-col class="ion-text-center">
+                              <ion-button (click)="takePhoto3()">
+                                <ion-icon name="camera" slot="start"></ion-icon>Photo
+                              </ion-button>
+                            </ion-col>
+                          </ion-row>
+                          <ion-row [hidden]="isApp">
+                            <ion-col class="ion-text-center">
+                              <ion-button (click)="picture3.click()">
+                                <ion-icon name="camera" slot="start"></ion-icon>Photo
+                              </ion-button>
+                            </ion-col>
+                            <image-cropper [imageChangedEvent]="imageChangedEvent3" [maintainAspectRatio]="true"
+                              [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                              (imageCropped)="imageCropped3($event)">
+                            </image-cropper>
+                          </ion-row>
+                        </div>
+                        <input #picture3 (change)="fileChangeEvent3($event)" style="display:none;" type="file"
+                          accept="image/*" capture="camera">
+                        <div text-centre>
+                          <img *ngIf="incident.photo3" [src]=incident.photo3 class="thumb">
+                        </div>
+                        <ion-item *ngIf="incident.photo3">
+                          <ion-label position="floating">Notes on Photo 3</ion-label>
+                          <ion-input [readonly]="view" [(ngModel)]="incident.notes3" type="text" autocomplete="true"
+                            spellcheck="true">
+                          </ion-input>
+                        </ion-item>
+                      </div>
+                    </div>
+
+                    <div *ngIf="incident.photo3 !== ''">
+                      <ion-label class="ion-text-center">Take Photo 4: </ion-label>
+                      <div [hidden]="view">
+                        <ion-row [hidden]="!isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="takePhoto4()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 4
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row [hidden]="isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="picture4.click()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 4
+                            </ion-button>
+                          </ion-col>
+                          <image-cropper [imageChangedEvent]="imageChangedEvent4" [maintainAspectRatio]="true"
+                            [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                            (imageCropped)="imageCropped4($event)">
+                          </image-cropper>
+                        </ion-row>
+                      </div>
+                      <input #picture4 (change)="fileChangeEvent4($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="incident.photo4" [src]=incident.photo4 class="thumb">
+                      </div>
+                      <ion-item *ngIf="incident.photo4">
+                        <ion-label position="floating">Notes on Photo 4</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.notes4" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+                    </div>
+
+                    <div *ngIf="incident.photo4 !== ''">
+                      <ion-label class="ion-text-center">Take Photo 5: </ion-label>
+                      <div [hidden]="view">
+                        <ion-row [hidden]="!isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="takePhoto5()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 5
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row [hidden]="isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="picture5.click()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 5
+                            </ion-button>
+                          </ion-col>
+                          <image-cropper [imageChangedEvent]="imageChangedEvent5" [maintainAspectRatio]="true"
+                            [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                            (imageCropped)="imageCropped5($event)">
+                          </image-cropper>
+                        </ion-row>
+                      </div>
+                      <input #picture5 (change)="fileChangeEvent5($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="incident.photo5" [src]=incident.photo5 class="thumb">
+                      </div>
+                      <ion-item *ngIf="incident.photo5">
+                        <ion-label position="floating">Notes on Photo 5</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.notes5" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+                    </div>
+
+                    <div *ngIf="incident.photo5 !== ''">
+                      <ion-label class="ion-text-center">Take Photo 6: </ion-label>
+                      <div [hidden]="view">
+                        <ion-row [hidden]="!isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="takePhoto6()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 6
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row [hidden]="isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="picture6.click()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo 6
+                            </ion-button>
+                          </ion-col>
+                          <image-cropper [imageChangedEvent]="imageChangedEvent6" [maintainAspectRatio]="true"
+                            [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                            (imageCropped)="imageCropped6($event)">
+                          </image-cropper>
+                        </ion-row>
+                      </div>
+                      <input #picture6 (change)="fileChangeEvent6($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="incident.photo6" [src]=incident.photo6 class="thumb">
+                      </div>
+                      <ion-item *ngIf="incident.photo6">
+                        <ion-label position="floating">Notes on Photo 6</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="incident.notes6" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+                    </div>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color:red !important">Email to Client?
+                        *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="incident.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="incident.emailToClient"></ion-input>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col>
+
+                        <img [src]="incident.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                        <ion-item lines="none">
+                          <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Manager Signature
+                          </ion-button>
+                        </ion-item>
+    
+                      </ion-col>
+                    </ion-row>
+
+                  
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" class="ion-text-center">Manager / Supervisor Signature *
+                          </ion-label>
+                          <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Manager /
+                            Supervisor
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+
+
+                  </ion-slide>
+
+                </ion-slides>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(incident)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

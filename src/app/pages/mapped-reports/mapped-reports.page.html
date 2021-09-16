@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-toolbar color="primary" mode="ios">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="title-font">MAPPED REPORTS</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content scrollbar-y-auto>
+    <div id="map" style="width:100%; height:100%;"></div>
+  </ion-content>
+  
+  <ion-footer id="map_page">
+    <ion-toolbar color="primary">
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <ion-item>
+            <ion-label *ngIf="reportValue">REPORT NAME</ion-label>
+            <ion-label *ngIf="!reportValue" style="color: blue">REPORT NAME</ion-label>
+            <ion-select interface="popover"[(ngModel)]="location.report">
+              <ion-select-option>SITES</ion-select-option>
+              <ion-select-option *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T'" value="SITE VISIT">SITE VISIT REPORTS
+              </ion-select-option>
+              <ion-select-option *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T'">TRANSPARENCY REPORTS</ion-select-option>
+              <ion-select-option *ngIf="user.companyId !== '0qbfVjnyuKE8EAdenn3T'" value="SITE VISIT GEN">SITE VISIT REPORTS</ion-select-option>
+              <ion-select-option *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T'" value="PNP">PNP SITE VISIT REPORTS</ion-select-option>
+              <ion-select-option>VEHICLE INSPECTIONS</ion-select-option>
+              <ion-select-option>CRIME INCIDENTS</ion-select-option>
+              <ion-select-option>GENERAL INCIDENTS</ion-select-option>
+              <ion-select-option>TRAINING FORMS</ion-select-option>
+              <ion-select-option>MEETINGS</ion-select-option>
+              <ion-select-option>DISCIPLINARYS</ion-select-option>
+              <ion-select-option>LEAVE APPS</ion-select-option>
+              <ion-select-option>UNIFORM ORDERS</ion-select-option>
+              <ion-select-option>AR SITE VISITS</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col class="ion-text-center">
+          <ion-item>
+            <ion-label *ngIf="siteValue">SITE</ion-label>
+            <ion-label *ngIf="!siteValue" style="color:blue">SITE</ion-label>
+            <ion-select interface="popover"[(ngModel)]="location.site">
+              <ion-select-option>ALL</ion-select-option>
+              <ion-select-option *ngFor="let site of sites | async">{{site.name}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col class="ion-text-center">
+          <ion-item>
+            <ion-label *ngIf="qtyValue">QTY</ion-label>
+            <ion-label *ngIf="!qtyValue" style="color:blue">QTY</ion-label>
+            <ion-select interface="popover"[(ngModel)]="location.qty">
+              <ion-select-option value=100>ALL</ion-select-option>
+              <ion-select-option value=5>LAST 5</ion-select-option>
+              <ion-select-option value=10>LAST 10</ion-select-option>
+              <ion-select-option value=20>LAST 20</ion-select-option>
+              <ion-select-option value=50>LAST 50</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col class="ion-text-center">
+          <ion-button icon-left (click)="filter(map, location)">
+            <ion-icon name="search"></ion-icon>Filter
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-footer>
+  
+  

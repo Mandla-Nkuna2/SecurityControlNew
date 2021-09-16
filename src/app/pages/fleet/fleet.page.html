@@ -1,0 +1,173 @@
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-buttons slot="start">
+      <ion-button class="support-btn">
+        Support
+      </ion-button>
+    </ion-buttons>
+    <ion-item lines="none" slot="end">
+      <ion-avatar slot="end">
+        <img src="assets/imgs/user.jpeg" alt="">
+      </ion-avatar>
+      <ion-label>
+        <select name="cars" id="cars">
+          <option value="volvo">Lamu Dlamini</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+        </select>
+        <p>Admin</p>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+  <div class="top-holder flex al-center jc-between">
+    <div class="left">
+      <h1>Fleet</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/Sites<span>&nbsp;My Sites</span> </h4>
+    </div>
+  </div>
+
+
+  <div class="btn-holder add-btn">
+    <ion-button (click)="add()">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Add New Vehicle
+    </ion-button>
+  </div>
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+        <div class="holder">
+          <div class="the-header flex al-center jc-between">
+            <h2>Fleet</h2>
+            <div class="search-holder">
+              <ion-searchbar placeholder="" inputmode="decimal" type="text" [(ngModel)]="searchterm"
+              (ngModelChange)="searchterm = $event.toLocaleUpperCase()" (ionInput)="search($event)"
+              (keydown)="search($event)" [debounce]="250"
+                showCancelButton="never"></ion-searchbar>
+            </div>
+          </div>
+
+          <ion-row class="headers">
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5">
+              <h4>Make </h4>
+            </ion-col>
+
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5">
+              <h4>Registration</h4>
+            </ion-col>
+
+            <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5">
+              <h4>Last Date Inspection</h4>
+            </ion-col>
+
+            <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5">
+              <h4>Inspection By</h4>
+            </ion-col>
+
+
+            <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5">
+              <h4>Action</h4>
+            </ion-col>
+          </ion-row>
+
+          <div *ngIf='!searching'>
+
+            <ion-row class="values" style="width: 100% !important;" *ngFor="let vehicle of fleets| async">
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" class="dates">
+                <h5>{{vehicle.make}}</h5>
+              </ion-col>
+
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" class="dates">
+                <h5>{{vehicle.registration}}</h5>
+              </ion-col>
+
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5" class="dates">
+                <h5>{{vehicle.inspection}}</h5>
+              </ion-col>
+
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5" class="dates">
+                <h5>{{vehicle.inspector}}</h5>
+              </ion-col>
+              <ion-col sizeXs="7" sizeSm="4" sizeMd="4" sizeLg="4" sizeXl="4" class="flex al-center jc-between">
+                <div (click)="view(vehicle)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon name="eye"></ion-icon>
+                  <h5>&nbsp;&nbsp;View</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+
+                <div (click)="edit(vehicle)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon src="assets/imgs/editsm.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Edit</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+
+                <div (click)="delete(vehicle)" class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                  <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Delete</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+
+
+          <div *ngIf='searching'>
+
+            <ion-row class="values" style="width: 100% !important;" *ngFor="let vehicle of vehicles">
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" class="dates">
+                <h5>{{vehicle.date}}</h5>
+              </ion-col>
+
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" class="dates">
+                <h5>{{vehicle.registration}}</h5>
+              </ion-col>
+
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5" class="dates">
+                <h5>{{vehicle.inspection}}</h5>
+              </ion-col>
+
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5" class="dates">
+                <h5>{{vehicle.inspector}}</h5>
+              </ion-col>
+              <ion-col sizeXs="7" sizeSm="4" sizeMd="4" sizeLg="4" sizeXl="4" class="flex al-center jc-between">
+                <div (click)="view(vehicle)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon name="eye"></ion-icon>
+                  <h5>&nbsp;&nbsp;View</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+
+                <div (click)="edit(vehicle)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon src="assets/imgs/editsm.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Edit</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+
+                <div (click)="delete(vehicle)" class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                  <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Delete</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+
+
+        </div>
+      </ion-col>
+    </ion-row>
+    <!-- </ion-row> -->
+  </ion-grid>
+
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
+</ion-content>

@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="menu"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">BILLING BREAKDOWN</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid padding id="print-table">
+                  <ion-row class="grid-header">
+                    <ion-col class="first-col" style="max-width: 50px;"></ion-col>
+                    <ion-col class="second-col">SITE NAME</ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row" *ngFor="let site of sites | async; let i = index">
+                    <ion-col class="first-col" style="max-width: 50px; background-color: white;">{{i+1}}</ion-col>
+                    <ion-col class="second-col ion-text-center" style="background-color: white;">{{site.name}}</ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

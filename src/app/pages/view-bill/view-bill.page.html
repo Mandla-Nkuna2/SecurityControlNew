@@ -1,0 +1,128 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">{{bill.month}} PROJECTED BILL</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item color="black">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col class="upper">{{user.company}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col class="upper">{{user.email}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col class="upper">{{company.address}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col class="upper">{{user.contact}}</ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+
+                <div>
+                  <ion-item color="black">
+                    <ion-grid>
+                      <ion-row class="ion-justify-content-end">
+                        <ion-col size="2.4" class="tbl1-label">Invoice #</ion-col>
+                        <ion-col size="2.4" class="tbl1-item">{{bill.invDate}}</ion-col>
+                        <!-- This should be invoice number? -->
+                      </ion-row>
+                      <ion-row class="ion-justify-content-end">
+                        <ion-col size="2.4" class="tbl1-label">VAT #</ion-col>
+                        <ion-col size="2.4" class="tbl1-item">{{company.vat}}</ion-col>
+                      </ion-row>
+                      <ion-row class="ion-justify-content-end">
+                        <ion-col size="2.4" class="tbl1-label">Invoice Date</ion-col>
+                        <ion-col size="2.4" class="tbl1-item">{{bill.invDate}}</ion-col>
+                      </ion-row>
+                      <ion-row class="ion-justify-content-end">
+                        <ion-col size="2.4" class="tbl1-label">Due By Date</ion-col>
+                        <ion-col size="2.4" class="tbl1-item">{{bill.due}}</ion-col>
+                      </ion-row>
+                      <ion-row class="ion-justify-content-end">
+                        <ion-col size="2.4" class="tbl1-label tbl1-last">Amount Due</ion-col>
+                        <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-item tbl1-last">
+                          {{(bill.exRate * company.sites * 1.15) | currency:'R':"symbol":'1.2-2'}}</ion-col>
+                        <ion-col size="2.4" *ngIf="company.country != 'South Africa'" class="tbl1-item tbl1-last">
+                          {{(bill.exRate * company.sites) | currency:'$':"symbol":'1.2-2'}}</ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-item>
+                </div>
+
+                <ion-item color="black">
+                  <ion-grid class="grid-sep">
+                    <ion-row>
+                      <ion-col col-2 class="tbl2-label">ITEM</ion-col>
+                      <ion-col col-4 class="tbl2-label">DESCRIPTION</ion-col>
+                      <ion-col col-2 class="tbl2-label">RATE</ion-col>
+                      <ion-col col-2 class="tbl2-label">QTY</ion-col>
+                      <ion-col col-2 class="tbl2-label tbl2-last">AMOUNT</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col col-2 class="tbl2-item">SITES</ion-col>
+                      <ion-col col-4 class="tbl2-item">{{company.sites}} ACTIVE SITE ACCOUNTS</ion-col>
+                      <ion-col *ngIf="company.country == 'South Africa'" col-2 class="tbl2-item">
+                        {{bill.exRate | currency:'R':"symbol":'1.2-2'}}</ion-col>
+                      <ion-col *ngIf="company.country != 'South Africa'" col-2 class="tbl2-item">
+                        {{bill.exRate | currency:'$':"symbol":'1.2-2'}}</ion-col>
+                      <ion-col col-2 class="tbl2-item">{{company.sites}}</ion-col>
+                      <ion-col *ngIf="company.country == 'South Africa'" col-2 class="tbl2-item tbl2-last">
+                        {{bill.exRate * company.sites | currency:'R':"symbol":'1.2-2'}}</ion-col>
+                      <ion-col *ngIf="company.country != 'South Africa'" col-2 class="tbl2-item tbl2-last">
+                        {{bill.exRate * company.sites | currency:'$':"symbol":'1.2-2'}}</ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+
+                <ion-item color="black">
+                  <ion-grid style="width: 5%; float: right;" class="grid-sep">
+                    <ion-row class="ion-justify-content-end">
+                      <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-label">Total (excl VAT)
+                      </ion-col>
+                      <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-item">
+                        {{(bill.exRate * company.sites) | currency:'R':"symbol":'1.2-2'}}</ion-col>
+                    </ion-row>
+                    <ion-row class="ion-justify-content-end">
+                      <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-label">VAT (15%)
+                      </ion-col>
+                      <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-item">
+                        {{(bill.exRate * company.sites * 1.15) - (bill.exRate * company.sites) | currency:'R':"symbol":'1.2-2'}}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="ion-justify-content-end">
+                      <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-label tbl1-last">Total
+                        (incl VAT)
+                      </ion-col>
+                      <ion-col size="2.4" *ngIf="company.country == 'South Africa'" class="tbl1-item tbl1-last">
+                        {{(bill.exRate * company.sites * 1.15) | currency:'R':"symbol":'1.2-2'}}</ion-col>
+                      <ion-col size="2.4" *ngIf="company.country != 'South Africa'" class="tbl1-label tbl1-last">Total
+                      </ion-col>
+                      <ion-col size="2.4" *ngIf="company.country != 'South Africa'" class="tbl1-item tbl1-last">
+                        {{(bill.exRate * company.sites) | currency:'$':"symbol":'1.2-2'}}</ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

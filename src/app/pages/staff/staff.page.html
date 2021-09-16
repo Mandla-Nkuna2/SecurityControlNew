@@ -1,0 +1,185 @@
+<!-- <ion-header class="ion-no-border desktop">
+  <ion-toolbar class="ion-padding-horizontal dbar">
+    <ion-buttons slot="start">
+      <ion-button class="support-btn">
+        Support
+      </ion-button>
+    </ion-buttons>
+    <ion-item lines="none" slot="end">
+      <ion-avatar slot="end">
+        <img src="assets/imgs/user.jpeg" alt="">
+      </ion-avatar>
+      <ion-label>
+        <select name="cars" id="cars">
+          <option value="volvo">Lamu Dlamini</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+        </select>
+        <p>Admin</p>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-header class="ion-no-border mobile">
+  <ion-toolbar class="mbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Staff</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="staff">
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1>Staff</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/Sites<span>&nbsp;My Sites</span> </h4>
+    </div>
+  </div>
+
+
+  <div class="btn-holder desktop add-btn">
+
+    <ion-button  (click)="add()">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Add New Staff
+    </ion-button>
+
+    <ion-button (click)="staffReport()">
+      Download Report
+    </ion-button>
+  </div>
+
+  <div class="mobile flex al-center jc-beytween add-btn-mobile">
+    <ion-row>
+      <ion-col size="6">
+        <ion-button (click)="staffReport()" fill="outline" id="download">
+          Download Report
+        </ion-button>
+
+
+      </ion-col>
+      <ion-col>
+        <ion-button  (click)="add()">
+          Add Staff
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+        <div class="holder">
+          <div class="the-header flex al-center jc-between">
+            <h2>Staff</h2>
+            <div class="mobile search-btn">
+              <ion-button>
+                <ion-icon slot="icon-only" name="search"></ion-icon>
+              </ion-button>
+            </div>
+            <div class="search-holder desktop">
+              <ion-searchbar placeholder="" inputmode="decimal" type="text" [(ngModel)]="searchterm" [debounce]="250"
+                showCancelButton="never"  (ngModelChange)="searchterm = $event.toLocaleUpperCase()" (ionInput)="search($event)"
+                (keydown)="search($event)"></ion-searchbar>
+            </div>
+          </div>
+
+          <ion-row class="headers">
+            <ion-col sizeXs="5" sizeSm="7" sizeMd="7" sizeLg="8" sizeXl="8" class="dates">
+              <h4>Staff Name</h4>
+            </ion-col>
+            <ion-col sizeXs="7" sizeSm="5" sizeMd="5" sizeLg="4" sizeXl="4">
+              <h4>Action</h4>
+            </ion-col>
+          </ion-row>
+
+          <!-- <ion-list style="max-width: 800px; margin: 0 auto;" *ngIf="searching"> -->
+            <div *ngIf="searching">
+            <ion-row  class="values" style="width: 100% !important;"    *ngFor="let employee of employeeValues">
+              <ion-col sizeXs="5" sizeSm="7" sizeMd="7" sizeLg="8" sizeXl="8" class="dates">
+                <h5>{{employee.name}}</h5>
+              </ion-col>
+              <ion-col sizeXs="7" sizeSm="5" sizeMd="5" sizeLg="4" sizeXl="4" class="flex al-center jc-between">
+                <div  (click)="view(employee)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon name="eye"></ion-icon>
+                  <h5>&nbsp;&nbsp;View</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+  
+                <div (click)="edit(employee)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon src="assets/imgs/editsm.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Edit</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+  
+                <div (click)="delete(employee)" class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                  <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Delete</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+
+<!-- 
+            <ion-chip fill="clear" class="staff-chip" [routerLink]="['/view-guard', employee.Key]"
+              *ngFor="let employee of employeeValues">
+              <ion-avatar>
+                <img [src]=employee.photo>
+              </ion-avatar>
+              <ion-row style="width: 100%;">
+                <ion-col class="ion-text-left" style="min-width: 80%; max-height: 80px;">
+                  <ion-label style="color: #fff">{{employee.name}}</ion-label>
+                </ion-col>
+                <ion-col class="ion-text-right" style="max-width: 35px;">
+                  <ion-icon name="arrow-forward"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-chip>
+          </ion-list> -->
+
+          <div *ngIf="!searching">
+
+                   <ion-row class="values" style="width: 100% !important;" *ngFor="let guard of guards | async">
+            <ion-col sizeXs="5" sizeSm="7" sizeMd="7" sizeLg="8" sizeXl="8" class="dates">
+              <h5>{{guard.name}}</h5>
+            </ion-col>
+            <ion-col sizeXs="7" sizeSm="5" sizeMd="5" sizeLg="4" sizeXl="4" class="flex al-center jc-between">
+              <div  (click)="view(guard)" class="btn ion-activatable ripple-parent flex al-center">
+                <ion-icon name="eye"></ion-icon>
+                <h5>&nbsp;&nbsp;View</h5>
+                <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              </div>
+
+              <div (click)="edit(guard)" class="btn ion-activatable ripple-parent flex al-center">
+                <ion-icon src="assets/imgs/editsm.svg"></ion-icon>
+                <h5>&nbsp;&nbsp;Edit</h5>
+                <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              </div>
+
+              <div (click)="delete(guard)" class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                <h5>&nbsp;&nbsp;Delete</h5>
+                <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              </div>
+            </ion-col>
+          </ion-row>
+          </div>
+
+         
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
+</ion-content>

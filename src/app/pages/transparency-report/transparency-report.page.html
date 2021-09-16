@@ -1,0 +1,338 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Transparency Report</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="trans.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="trans.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="trans.manager"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color:red !important">Site Name *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (click)="searchSites(trans)" (ionChange)="getSiteDetails(trans)"
+                        [(ngModel)]="trans.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="trans.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="trans.site"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" position="floating">OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" position="floating" style="color:red !important">OB Number *</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="trans.ob" type="text"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-row>
+                      <ion-col>SNAG REPORT & FINDINGS</ion-col>
+                    </ion-row>
+
+                    <div>
+
+                      <p style="color:red !important;" text-center *ngIf="!photoValue">Please Take a Photo!</p>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto1()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 1
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture1.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 1
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent1" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped1($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture1 (change)="fileChangeEvent1($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="trans.photo1 !== '' && trans.photo1 !== undefined"
+                          [src]="trans.photo1" class="thumb">
+                      </div>
+
+                      <ion-item>
+                        <ion-label *ngIf="detailsValue" position="floating">Details of Findings *</ion-label>
+                        <ion-label *ngIf="!detailsValue" position="floating" style="color:red !important;">Details of Findings *
+                        </ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.details1" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="actionsValue" position="floating">Actions Taken *</ion-label>
+                        <ion-label *ngIf="!actionsValue" position="floating" style="color:red !important">Actions Taken *
+                        </ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.actions1" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="recommendValue" position="floating">Recommendations *</ion-label>
+                        <ion-label *ngIf="!recommendValue" position="floating" style="color:red !important">Recommendations *
+                        </ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.recommendations1" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+
+                    </div>
+
+                    <ion-button (click)="addSnag2()" full>Add Snag</ion-button>
+
+                    <div *ngIf="snag2">
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto2()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 2
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture2.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 2
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent2" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped2($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture2 (change)="fileChangeEvent2($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="trans.photo2 !== '' && trans.photo2 !== undefined"
+                          [src]="trans.photo2" class="thumb">
+                      </div>
+
+                      <ion-item>
+                        <ion-label position="floating">Details of Findings</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.details2" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Actions Taken</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.actions2" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Recommendations</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.recommendations2" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+
+                      <ion-button (click)="addSnag3()" full>Add Snag</ion-button>
+                    </div>
+                    <input #picture2 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                    <div *ngIf="snag3">
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto3()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 3
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture3.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 3
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent3" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped3($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture3 (change)="fileChangeEvent3($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="trans.photo3 !== '' && trans.photo3 !== undefined"
+                          [src]="trans.photo3" class="thumb">
+                      </div>
+
+                      <ion-item>
+                        <ion-label position="floating">Details of Findings</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.details3" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Actions Taken</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.actions3" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Recommendations</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.recommendations3" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+
+                      <ion-button (click)="addSnag4()" full>Add Snag</ion-button>
+                    </div>
+                    <input #picture3 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                    <div *ngIf="snag4">
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto4()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 4
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture4.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo 4
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent4" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped4($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture4 (change)="fileChangeEvent4($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="trans.photo4 !== '' && trans.photo4 !== undefined"
+                          [src]="trans.photo4" class="thumb">
+                      </div>
+
+                      <ion-item>
+                        <ion-label position="floating">Details of Findings</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.details4" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Actions Taken</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.actions4" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Recommendations</ion-label>
+                        <ion-input [readonly]="view" type="text" [(ngModel)]="trans.recommendations4" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+                    </div>
+                    <input #picture4 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email Minutes to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color:red !important">Email Minutes to Client? *
+                      </ion-label>
+                      <ion-select interface="popover"[(ngModel)]="trans.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <img [src]="trans.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Manager Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" class="ion-text-center">Manager Signature *</ion-label>
+                          <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Manager
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                   <img [src]="trans.guardSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("guardSig")'>Add Guard Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label class="ion-text-center">Guard Signature *</ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+            
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check()">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

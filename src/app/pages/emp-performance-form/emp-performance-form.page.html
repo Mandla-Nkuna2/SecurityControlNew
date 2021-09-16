@@ -1,0 +1,278 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>EMPLOYEE PERFORMANCE EVALUATION FORM </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <h4>Performance Rating Definitions</h4>
+                <ion-text>The following ratings are used: <br><br>
+                  Outstanding: Performance is consistently superior
+                  <br>
+                  Exceeds Expectations: Performance is routinely above job requirements
+                  <br>
+                  Meets Expectations: Performance is regularly competent and dependable
+                  <br>
+                  Below Expectations: Performance fails to meet job requirements on a frequent basis
+                  <br>
+                  Unsatisfactory: Performance is consistently unacceptable
+                  <br><br>
+                  Note: Please add comments for: “Outstanding” OR “Below Expectations, and “Unsatisfactory” Performance
+                </ion-text>
+
+                <ion-item>
+                  <ion-label position="floating">Date</ion-label>
+                  <ion-input type="text" [(ngModel)]="form.date" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Employee</ion-label>
+                  <ionic-selectable *ngIf="!view" style="text-align: left;" [(ngModel)]="form.employee" [items]="staff"
+                    (onChange)="getEmp(form.employee)" itemValueField="name" itemTextField="name" [canSearch]="true">
+                  </ionic-selectable>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.employee" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Evaluation Period</ion-label>
+                  <ion-input type="text" [(ngModel)]="form.period">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Employee Title: </ion-label>
+                  <ion-input type="text" [(ngModel)]="form.title">
+                  </ion-input>
+                </ion-item>
+
+                <h4>A. PERFORMANCE FACTORS </h4>
+
+                <ion-item>
+                  <ion-label position="floating">OB Reports:</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.ob">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.ob" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Following Procedure</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.procedure">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.procedure" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Punctuality</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.punctuality">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.punctuality"
+                    [readonly]="true"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Appearance</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.appearance">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.appearance" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Cleanliness</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.cleanliness">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.cleanliness"
+                    [readonly]="true"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Attitude</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.attitude">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.attitude" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Public Relations:</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.relations">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.relations" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Dedication</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="form.dedication">
+                    <ion-select-option>Outstanding</ion-select-option>
+                    <ion-select-option>Exceeds Expectations</ion-select-option>
+                    <ion-select-option>Meets Expectations</ion-select-option>
+                    <ion-select-option>Below Expectations</ion-select-option>
+                    <ion-select-option>Unsatisfactory</ion-select-option>
+                    <ion-select-option>Other</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" type="text" [(ngModel)]="form.dedication" [readonly]="true">
+                  </ion-input>
+                </ion-item>
+
+                <h4 position="floating">B. COMMENTS: </h4>
+                <ion-item>
+                  <ion-textarea type="text" [(ngModel)]="form.comments">
+                  </ion-textarea>
+                </ion-item>
+
+                <h4>C. SIGNATURES:</h4>
+
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>Employee</ion-col>
+                    <ion-col><u>{{form.employee}}</u></ion-col>
+                    <ion-col>Date</ion-col>
+                    <ion-col><u>{{form.date}}</u></ion-col>
+                  </ion-row>
+                </ion-grid>
+                <ion-text>
+                  (Signature does not necessarily denote agreement with official review and means only that the employee
+                  was given the opportunity to discuss the official review with the supervisor.)
+                </ion-text>
+
+                <img [src]="form.empSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("empSig")'>Add Employee Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label class="ion-text-center">Employee Signature</ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              <ion-grid>
+                  <ion-row>
+                    <ion-col>Evaluated By:</ion-col>
+                    <ion-col><u><ion-input [(ngModel)]="form.supervisor"></ion-input></u></ion-col>
+                    <ion-col>Date</ion-col>
+                    <ion-col><u>{{form.date}}</u></ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <img [src]="form.supSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("supSig")'>Add Supervisor Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label class="ion-text-center">Supervisor Signature</ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+             <ion-grid>
+                  <ion-row>
+                    <ion-col>Reviewed By</ion-col>
+                    <ion-col><u><ion-input [(ngModel)]="form.manager"></ion-input></u></ion-col>
+                    <ion-col>Date</ion-col>
+                    <ion-col><u>{{form.date}}</u></ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <img [src]="form.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Manager Signature
+                  </ion-button>
+                </ion-item>
+
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label class="ion-text-center">Manager Signature</ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+           </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check()">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

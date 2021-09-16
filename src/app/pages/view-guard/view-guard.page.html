@@ -1,0 +1,139 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">{{ guard.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <img *ngIf="guard.photo" [src]=guard.photo class="thumb">
+                <img *ngIf="!guard.photo"
+                  src="https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/guard.png?alt=media&token=c28ae50f-be3c-4abc-a984-013e5aae3eb5"
+                  class="thumb">
+
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>NAME:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{guard.name}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>SITE:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{guard.site}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>COMPANY NUMBER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{guard.CoNo}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>ID NUMBER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{guard.id}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>PSIRA NUMBER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{guard.AssNo}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label tbl-last">
+                      <p>CELL NUMBER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item tbl-last">{{guard.cell}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label tbl-last">
+                      <p>LEARNERSHIP NUMBER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item tbl-last">{{guard.learnershipNo}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label tbl-last">
+                      <p>LEARNERSHIP START DATE:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item tbl-last">{{guard.learnershipDate}}</ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <h3 class="ion-text-center" style="color:#fff">DISCIPLINARY WARNINGS</h3>
+                <ion-grid>
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">DATE</ion-col>
+                    <ion-col>WARNING TYPE</ion-col>
+                  </ion-row>
+                  <ion-row *ngFor="let warning of warnings | async">
+                    <ion-col class="grid-row-item ion-text-center">{{warning.date}}</ion-col>
+                    <ion-col class="last-col ion-text-center">{{warning.type}}</ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <h3 class="ion-text-center" style="color:#fff">UNIFORM ORDERS</h3>
+                <ion-grid>
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">DATE</ion-col>
+                    <ion-col>VIEW ORDER</ion-col>
+                  </ion-row>
+                  <ion-row *ngFor="let uniform of uniforms | async">
+                    <ion-col class="grid-row-item ion-text-center">{{uniform.date}}</ion-col>
+                    <ion-col class="last-col ion-text-center"><ion-button fill="clear"
+                        (click)="viewUniform(uniform)" style="margin: 0">
+                        <ion-icon name="arrow-round-forward"></ion-icon>
+                    </ion-button></ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <h3 class="ion-text-center" style="color:#fff">LEAVE APPLICATIONS</h3>
+                <ion-grid>
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">DATE</ion-col>
+                    <ion-col>VIEW LEAVE APP</ion-col>
+                  </ion-row>
+                  <ion-row *ngFor="let leave of leaveApps | async">
+                    <ion-col class="grid-row-item ion-text-center">{{leave.date}}</ion-col>
+                    <ion-col class="last-col ion-text-center"><ion-button fill="clear" (click)="viewLeave(leave)">
+                        <ion-icon name="arrow-round-forward"></ion-icon>
+                    </ion-button></ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <h3 class="ion-text-center" style="color:#fff">TRAINING FORMS</h3>
+                <ion-grid>
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">DATE</ion-col>
+                    <ion-col>VIEW TRAINING</ion-col>
+                  </ion-row>
+                  <ion-row *ngFor="let training of trainings | async">
+                    <ion-col class="grid-row-item ion-text-center">{{training.date}}</ion-col>
+                    <ion-col class="last-col ion-text-center"><ion-button fill="clear"
+                        (click)="viewTraining(training)">
+                        <ion-icon name="arrow-round-forward"></ion-icon>
+                    </ion-button></ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

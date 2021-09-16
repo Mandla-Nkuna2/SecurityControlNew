@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-title class="title-font">UPDATE BILLING</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <div>
+                  <ion-label *ngIf="addressValid" text-center>Search Updated Address *</ion-label>
+                  <ion-label *ngIf="!addressValid" text-center style="color:red">Search Updated Address *</ion-label>
+                  <input ngx-google-places-autocomplete #placesRef="ngx-places"
+                    (onAddressChange)="handleAddressChange($event)" style="width: 100%; border: none;">
+                </div>
+
+                <ion-item>
+                  <ion-label *ngIf="addressValid" position="floating">Company Address *</ion-label>
+                  <ion-label *ngIf="!addressValid" position="floating" style="color:red">Company Address *</ion-label>
+                  <ion-input [(ngModel)]="company.address" [readonly]="true"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="companyValid" position="floating">Company Name *</ion-label>
+                  <ion-label *ngIf="!companyValid" position="floating" style="color:red">Company Name *</ion-label>
+                  <ion-input type="text" [(ngModel)]="company.name"
+                    (ngModelChange)="company.name = $event.toLocaleUpperCase()"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="nameValid" position="floating">Contact Person *</ion-label>
+                  <ion-label *ngIf="!nameValid" position="floating" style="color:red">Contact Person *</ion-label>
+                  <ion-input type="text" [(ngModel)]="company.rep"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="telValid" position="floating">Contact Number *</ion-label>
+                  <ion-label *ngIf="!telValid" position="floating" style="color:red">Contact Number *</ion-label>
+                  <ion-input type="tel" [(ngModel)]="company.contact"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="emailValid" position="floating">Email Invoices To *</ion-label>
+                  <ion-label *ngIf="!emailValid" position="floating" style="color:red">Email Invoices To *</ion-label>
+                  <ion-input type="email" [(ngModel)]="company.email"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="company.country === 'South Africa'">
+                  <ion-label position="floating">VAT Number</ion-label>
+                  <ion-input type="text" [(ngModel)]="company.vat"></ion-input>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-button expand="full" (click)="save(company)" color="danger">
+                      <ion-icon name="checkmark"></ion-icon>Update
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

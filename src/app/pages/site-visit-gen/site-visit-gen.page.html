@@ -1,0 +1,543 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>SITE VISIT REPORT</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="visit.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="visit.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="visit.manager"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color:red">Site Name *</ion-label>
+                      <ion-select interface="popover" *ngIf="!view" (ionChange)="getSiteDetails($event)">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.site"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" position="floating">OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" position="floating" style="color:red">OB Number *</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.ob" type="text"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="shiftValue" position="floating">Shift *</ion-label>
+                      <ion-label *ngIf="!shiftValue" position="floating" style="color:red">Shift *</ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.shift">
+                        <ion-select-option>Day</ion-select-option>
+                        <ion-select-option>Night</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.shift"></ion-input>
+                    </ion-item>
+
+                    <p *ngIf="!photoValue" style="color:red" class="ion-text-center">Please take a Photo of the Site</p>
+                    <div [hidden]="view">
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto1()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Site Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture1.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Site Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent1" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped1($event)">
+                        </image-cropper>
+                      </ion-row>
+                    </div>
+                    <input #picture1 (change)="fileChangeEvent1($event)" style="display:none;" type="file"
+                      accept="image/*" capture="camera">
+                    <div text-centre>
+                      <img *ngIf="visit.photo1" [src]=visit.photo1 class="thumb">
+                    </div>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p class="ion-text-center">STAFF MEMBER INSPECTION</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="numValue" position="floating">Number of Staff on Duty *</ion-label>
+                      <ion-label *ngIf="!numValue" position="floating" style="color:red">Number of Staff on Duty *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.numSo" type="number"></ion-input>
+                    </ion-item>
+
+                    <div *ngIf="visit.numSo > 0">
+                      <ion-item>
+                        <ion-label *ngIf="soValue" position="floating">Staff Member on Duty *</ion-label>
+                        <ion-label *ngIf="!soValue" position="floating" style="color:red">Staff Member on Duty *
+                        </ion-label>
+                        <div *ngIf="visit.site !== ''">
+                          <ion-select interface="popover" *ngIf="!view" (ionChange)="guardDetails(visit)"
+                            [(ngModel)]="visit.soKey">
+                            <ion-select-option *ngFor="let guard of guards" [value]=guard.Key>{{guard.name}}
+                            </ion-select-option>
+                          </ion-select>
+                        </div>
+                        <div *ngIf="visit.site == ''">
+                          <ion-label>Please select a site before assigning staff</ion-label>
+                        </div>
+                        <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.so"></ion-input>
+                      </ion-item>
+
+                      <p style="color:red" class="ion-text-center">Please take a Photo of the Staff Member</p>
+                      <div [hidden]="view">
+                        <ion-row [hidden]="!isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="takePhoto2()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row [hidden]="isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="picture2.click()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo
+                            </ion-button>
+                          </ion-col>
+                          <image-cropper [imageChangedEvent]="imageChangedEvent2" [maintainAspectRatio]="true"
+                            [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                            (imageCropped)="imageCropped2($event)">
+                          </image-cropper>
+                        </ion-row>
+                      </div>
+                      <input #picture2 (change)="fileChangeEvent2($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="visit.photo2" [src]=visit.photo2 class="thumb">
+                      </div>
+
+                      <ion-item>
+                        <ion-label *ngIf="postValue" position="floating">Staff Member Post *</ion-label>
+                        <ion-label *ngIf="!postValue" position="floating" style="color:red">Staff Member Post *
+                        </ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="visit.soPost" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="uniformValue" position="floating">Is the Staff Member's uniform neat and
+                          serviceable? *
+                        </ion-label>
+                        <ion-label *ngIf="!uniformValue" position="floating" style="color:red">Is the Staff Member's
+                          uniform neat
+                          and
+                          serviceable? *</ion-label>
+                        <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.uniforms">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                        <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.uniforms"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Comments</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="visit.com1" autocomplete="true" type="text"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="roomValue" position="floating">Is the guardroom neat and tidy? *</ion-label>
+                        <ion-label *ngIf="!roomValue" position="floating" style="color:red">Is the guardroom neat and
+                          tidy? *
+                        </ion-label>
+                        <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.guardroom">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                        <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.guardroom"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Comments</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="visit.com2" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="obBookValue" position="floating">Is the O.B book completed? *</ion-label>
+                        <ion-label *ngIf="!obBookValue" position="floating" style="color:red">Is the O.B book completed?
+                          *
+                        </ion-label>
+                        <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.obComplete">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                        <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.obComplete"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Comments</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="visit.com3" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="regValue" position="floating">Are all registers in use and up to date? *
+                        </ion-label>
+                        <ion-label *ngIf="!regValue" position="floating" style="color:red">Is all registers in use and
+                          up to date?
+                          *</ion-label>
+                        <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.registers">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                        <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.registers"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label position="floating">Comments</ion-label>
+                        <ion-input [readonly]="view" [(ngModel)]="visit.com4" type="text" autocomplete="true"
+                          spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+
+
+                      <ion-item>
+                        <ion-label>Staff Member Signature *</ion-label>
+                      </ion-item>
+
+
+                      <img style="margin-top: 10%;" [src]='visit.guardSig'>
+
+
+                      <ion-item>
+                        <ion-button (click)='openPOP("guardSig")'> Staff Member Signature
+                        </ion-button>
+                      </ion-item>
+
+
+
+
+                    </div>
+
+                    <input #picture2 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                  </ion-slide>
+
+                  <ion-slide>
+                    <p class="ion-text-center">SITE CHECKLIST INSPECTION</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="alarmsValue" position="floating">Are alarms functional? *</ion-label>
+                      <ion-label *ngIf="!alarmsValue" position="floating" style="color:red">Are alarms functional? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.alarms">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.alarms"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com5" type="text" autocomplete="true"
+                        spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="radiosValue" position="floating">Are all radios in working order? *</ion-label>
+                      <ion-label *ngIf="!radiosValue" position="floating" style="color:red">Are all radios in working
+                        order? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.radios">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.radios"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com6" type="text" autocomplete="true"
+                        spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="panicValue" position="floating">Is the panic buttons available and in working
+                        order during
+                        the visit? *
+                      </ion-label>
+                      <ion-label *ngIf="!panicValue" position="floating" style="color:red">Is the panic buttons
+                        available and in
+                        working order
+                        during the visit? *</ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.panic">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.panic"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com7" type="text" autocomplete="true"
+                        spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="phoneValue" position="floating">Is the site phone available and operational? *
+                      </ion-label>
+                      <ion-label *ngIf="!phoneValue" position="floating" style="color:red">Is the site phone available
+                        and
+                        operational? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.phone">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.phone"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com8" type="text" autocomplete="true"
+                        spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="patrolValue" position="floating">Is the guard patrol system operational and in
+                        use? *
+                      </ion-label>
+                      <ion-label *ngIf="!patrolValue" position="floating" style="color:red">Is the guard patrol system
+                        operational
+                        and in use? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.patrol">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.patrol"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com9" type="text" autocomplete="true"
+                        spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="torchValue" position="floating">Is the torch available and working? *
+                      </ion-label>
+                      <ion-label *ngIf="!torchValue" position="floating" style="color:red">Is the torch available and
+                        working? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.torch">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.torch"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com10" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="elecValue" position="floating">Are the Electric Fence & Energizer in working
+                        order? *
+                      </ion-label>
+                      <ion-label *ngIf="!elecValue" position="floating" style="color:red">Are the Electric Fence &
+                        Energizer in
+                        working order? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.elec">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.elec"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com11" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="camValue" position="floating">Are all cameras in working order? *</ion-label>
+                      <ion-label *ngIf="!camValue" position="floating" style="color:red">Are all cameras in working
+                        order? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" [(ngModel)]="visit.cameras">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.cameras"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Comments</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.com12" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+                  </ion-slide>
+
+                  <ion-slide>
+                    <p class="ion-text-center">CLIENT MEETING</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="clientValue" position="floating">Client Name *</ion-label>
+                      <ion-label *ngIf="!clientValue" position="floating" style="color:red">Client Name *</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.client" type="text"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Client Discussion</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="visit.discussion" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="issuesValue" position="floating">Does the client have any issues with the
+                        service? *
+                      </ion-label>
+                      <ion-label *ngIf="!issuesValue" position="floating" style="color:red">Does the client have any
+                        issues with
+                        the service? *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" (click)="status(visit)" (ionChange)="status(visit)"
+                        [(ngModel)]="visit.issues">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Available</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="visit.issues"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color:red">Email to Client? *
+                      </ion-label>
+                      <ion-select interface="popover" (click)="status(visit)" [(ngModel)]="visit.email">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <img [src]="visit.manSig" style="display: block; margin-left: auto; margin-right: auto;" alt="">
+
+                    <ion-item lines="none">
+                      <ion-button style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add
+                        Supervisor Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" class="ion-text-center">Manager Signature *</ion-label>
+                          <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Manager
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                    <img [src]="visit.clientSig" style="display: block; margin-left: auto; margin-right: auto;" alt="">
+
+                    <ion-item lines="none">
+                      <ion-button style="margin-left: auto; margin-right: auto;" (click)='openPOP("clientSig")'>Add
+                        Client Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label class="ion-text-center">Client Signature *</ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(visit)">
+        Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-title class="title-font">Add Site to User: {{user.name}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollbar-y-auto padding>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label position="floating">Site Name</ion-label>
+                  <ion-select interface="popover"(ionChange)="check(site)" [(ngModel)]="site.key">
+                    <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-button (click)="add(site)">Add Site</ion-button>
+                  </ion-col>
+                </ion-row>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

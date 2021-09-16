@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="new" class="title-font">ADD USER</ion-title>
+    <ion-title *ngIf="edit" class="title-font">EDIT: {{ user.name }}</ion-title>
+    <ion-title *ngIf="view" class="title-font">VIEW: {{ user.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label *ngIf="nameValue" position="floating">User Name *</ion-label>
+                  <ion-label *ngIf="!nameValue" position="floating" style="color: red !important">User Name *
+                  </ion-label>
+                  <ion-input [readonly]="view" [(ngModel)]="user.name"
+                    (ngModelChange)="user.name = $event.toLocaleUpperCase()">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="typeValue" position="floating">User Type *</ion-label>
+                  <ion-label *ngIf="!typeValue" position="floating" style="color: red !important">User Type *
+                  </ion-label>
+                  <ion-input *ngIf="edit || view" [readonly]="view" [(ngModel)]="user.type"></ion-input>
+                  <ion-select interface="popover"*ngIf="new" [(ngModel)]="user.type">
+                    <ion-select-option>Account Admin</ion-select-option>
+                    <ion-select-option>Manager</ion-select-option>
+                    <ion-select-option>Fleet Manager</ion-select-option>
+                    <ion-select-option>Supervisor</ion-select-option>
+                    <ion-select-option>Response Officer</ion-select-option>
+                    <ion-select-option *ngIf="thompsons">Technician</ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">User Contact</ion-label>
+                  <ion-input [readonly]="view" [(ngModel)]="user.contact">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="emailValue" position="floating">User Email *</ion-label>
+                  <ion-label *ngIf="!emailValue" position="floating" style="color: red !important">User Email *
+                  </ion-label>
+                  <ion-input [readonly]="view || edit" [(ngModel)]="user.email">
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="passwordValue" position="floating">User Password *</ion-label>
+                  <ion-label *ngIf="!passwordValue" position="floating" style="color: red !important">User Password *
+                  </ion-label>
+                  <ion-input [readonly]="view || edit" [(ngModel)]="user.password">
+                  </ion-input>
+                </ion-item>
+
+                <div *ngIf="!view">
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-row">Site Name</ion-col>
+                    <ion-col>Select</ion-col>
+                  </ion-row>
+
+                    <ion-row class="grid-row" *ngFor="let site of siteList | orderBy: order">
+                      <ion-col class="grid-row-item" size="8">
+                        {{site.name}}
+                      </ion-col>
+                      <ion-col class="last-col ion-text-center" size="4">
+                        <ion-checkbox [(ngModel)]="site.selected" (click)="addToList(site)">
+                        </ion-checkbox>
+                      </ion-col>
+                    
+                    </ion-row>
+
+                </div>
+
+                <div *ngIf="view">
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-row">Site Name</ion-col>
+                    <ion-col>Select</ion-col>
+                  </ion-row>
+                  <ion-row *ngFor="let site of userSite | async">
+                    <ion-col class="grid-row-item" size="8">
+                      {{site.name}}
+                    </ion-col>
+                  </ion-row>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-button expand="full" (click)="check()">
+      <ion-icon name="checkmark"></ion-icon>Save User
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

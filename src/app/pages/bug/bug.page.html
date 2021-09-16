@@ -1,0 +1,50 @@
+<ion-header *ngIf="user.permission">
+  <ion-toolbar color="primary" mode="ios">
+    <ion-title class="title-font">Report a Bug</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollbar-y-auto padding>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <p>Hi {{bug.user}},</p>
+                <p>Thank you for assisting us in reporting a bug! Please describe the problem in is much detail as
+                  possible. Include details on what you did before the problem occurred! The more detail you can provide
+                  us the quicker we can solve the issue!</p>
+
+                <p style="font-weight:bold">DESCRIPTION *</p>
+                <textarea #bugInput id="bugInput" rows="5" maxLength="500" (keyup)="resize()"
+                  [(ngModel)]="bug.details"></textarea>
+
+                <ion-button (click)="profile.click()" slot="start">
+                  <ion-icon name="cloud-upload"></ion-icon>Upload Screenshot
+                </ion-button>
+                <input #profile style="display:none;" type="file" (change)="fileSelected($event)" />
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar transparent>
+    <ion-button expand="full" (click)="submit(bug)">
+      <ion-icon name="checkmark"></ion-icon>Submit
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,135 @@
+<ion-header id="eagle">
+  <ion-toolbar color="primary">
+    <ion-buttons left>
+      <ion-button icon-left (click)="prev()">
+        <ion-icon name="arrow-back"></ion-icon> Exit
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="upper">Incident Report</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label floating>Date</ion-label>
+                  <ion-input [(ngModel)]="eagle.date" [readonly]="true">{{eagle.date}}</ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating>Time</ion-label>
+                  <ion-input [(ngModel)]="eagle.time" [readonly]="true">{{eagle.time}}</ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating>Supervisor</ion-label>
+                  <ion-input [readonly]="true" [(ngModel)]="eagle.user">{{eagle.user}}</ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating *ngIf="dateValue">Incident Date *</ion-label>
+                  <ion-label floating *ngIf="!dateValue" style="color: red !important">Incident Date *</ion-label>
+                  <ion-datetime displayFormat="YYYY/MM/DD" [(ngModel)]="eagle.incDate"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating *ngIf="timeValue">Incident Time *</ion-label>
+                  <ion-label floating *ngIf="!timeValue" style="color: red !important">Incident Time *</ion-label>
+                  <ion-datetime displayFormat="HH:mm" [(ngModel)]="eagle.incTime"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating *ngIf="obValue">OB Number *</ion-label>
+                  <ion-label floating *ngIf="!obValue" style="color: red">OB Number *</ion-label>
+                  <ion-input [(ngModel)]="eagle.ob" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating>o.a. Extract Number *</ion-label>
+                  <ion-input [(ngModel)]="eagle.oa" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating *ngIf="byValue">By Whom Received *</ion-label>
+                  <ion-label floating *ngIf="!byValue" style="color: red">By Whom Received *</ion-label>
+                  <ion-input [(ngModel)]="eagle.by" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating>Phone Number *</ion-label>
+                  <ion-input [(ngModel)]="eagle.phone" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating *ngIf="toValue">From Whom Received *</ion-label>
+                  <ion-label floating *ngIf="!toValue" style="color: red">From Whom Received *</ion-label>
+                  <ion-input [(ngModel)]="eagle.to" type="text"></ion-input>
+                </ion-item>
+
+                <div id="text-area">
+                  <ion-item>
+                    <ion-label floating *ngIf="descriptionValue">Nature of Report *</ion-label>
+                    <ion-label floating *ngIf="!descriptionValue" style="color: red">Nature of Report *</ion-label>
+                    <ion-textarea id="text-area" type="text" autocomplete="true" spellcheck="true"
+                      [(ngModel)]="eagle.nature" autosize></ion-textarea>
+                  </ion-item>
+                </div>
+
+                <div id="text-area">
+                  <ion-item>
+                    <ion-label floating>Brief Details *</ion-label>
+                    <ion-textarea id="text-area" type="text" autocomplete="true" spellcheck="true"
+                      [(ngModel)]="eagle.details" autosize></ion-textarea>
+                  </ion-item>
+                </div>
+
+                <div id="text-area">
+                  <ion-item>
+                    <ion-label floating>Action Taken *</ion-label>
+                    <ion-textarea id="text-area" type="text" autocomplete="true" spellcheck="true"
+                      [(ngModel)]="eagle.action" autosize></ion-textarea>
+                  </ion-item>
+                </div>
+
+                <div id="text-area">
+                  <ion-item>
+                    <ion-label floating>Result *</ion-label>
+                    <ion-textarea id="text-area" type="text" autocomplete="true" spellcheck="true"
+                      [(ngModel)]="eagle.result" autosize></ion-textarea>
+                  </ion-item>
+                </div>
+
+                
+                <img [src]="eagle.sigUser" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigUser")'>Add Supervisor Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-item>
+                    <ion-label *ngIf="sigValue" text-center>Supervisor Signature *</ion-label>
+                    <ion-label *ngIf="!sigValue" text-center style="color: red !important">Manager/ Supervisor Signature *
+                    </ion-label>
+                  </ion-item>
+                </ion-row>
+           
+
+                <ion-button full (click)="save(eagle)">Save</ion-button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

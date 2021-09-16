@@ -1,0 +1,171 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="title-font">BILLING</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="user.type == 'Owner' || user.type == 'Admin'">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box" style="background: black !important">
+
+                <ion-item color="black">
+
+                  <ion-grid class="billing-details">
+
+                    <h5 class="ion-text-center" style="color: white;">BILLING DETAILS</h5>
+
+                    <ion-row>
+                      <ion-col size="4" class="tbl-label">COMPANY NAME:</ion-col>
+                      <ion-col size="8" class="tbl-item">{{company.name}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="4" class="tbl-label">CONTACT PERSON:</ion-col>
+                      <ion-col size="8" class="tbl-item">{{company.rep}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="4" class="tbl-label">CONTACT NUMBER:</ion-col>
+                      <ion-col size="8" class="tbl-item">{{company.contact}}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="4" class="tbl-label">EMAIL INVOICES TO:</ion-col>
+                      <ion-col size="8" class="tbl-item">{{company.email}}</ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="company.country != 'South Africa'">
+                      <ion-col size="4" class="tbl-label tbl-last">BILLING ADDRESS:</ion-col>
+                      <ion-col size="8" class="tbl-item tbl-last">{{company.address}}</ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="company.country == 'South Africa'">
+                      <ion-col size="4" class="tbl-label">BILLING ADDRESS:</ion-col>
+                      <ion-col size="8" class="tbl-item">{{company.address}}</ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="company.country == 'South Africa'">
+                      <ion-col size="4" class="tbl-label tbl-last">VAT NUMBER:</ion-col>
+                      <ion-col size="8" class="tbl-item tbl-last">{{company.vat}}</ion-col>
+                    </ion-row>
+                  </ion-grid>
+
+                  <ion-grid class="billing-details">
+
+                    <h5 class="ion-text-center" style="color: white;">ACTIONS</h5>
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-button class="button-menu" (click)="breakdown()">
+                          <ion-icon slot="start" name="arrow-forward"></ion-icon>VIEW BILLING BREAKDOWN
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-button class="button-menu" (click)="update()">
+                          <ion-icon slot="start" name="arrow-forward"></ion-icon>UPDATE BILLING DETAILS
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+            
+
+                  </ion-grid>
+                </ion-item>
+
+                <ion-grid>
+
+                  <h5 class="upper ion-text-center" style="color: white;">{{bill.month}}: PROJECTED BILL</h5>
+
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">BILL MONTH</ion-col>
+                    <ion-col class="grid-header-item">NUMBER SITES</ion-col>
+                    <ion-col class="grid-header-item">RATE</ion-col>
+                    <ion-col *ngIf="!user.trial" class="grid-header-item">PROJECTED BILL AMOUNT</ion-col>
+                    <ion-col *ngIf="user.trial" class="grid-header-item">PROJECTED PRO RATA BILL AMOUNT</ion-col>
+                    <ion-col class="grid-header-item">DUE BY DATE</ion-col>
+                    <ion-col size="3" class="grid-header-item">STATUS</ion-col>
+                    <ion-col size="1">
+                      <ion-icon name="cog"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col class="grid-row-item upper ion-text-center">{{bill.month}}</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">{{company.sites}}</ion-col>
+                    <ion-col *ngIf="company.country == 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate | currency:'R':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="company.country != 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate | currency:'$':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="!user.trial && company.country == 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate * company.sites | currency:'R':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="user.trial && company.country == 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate * company.sites * percent | currency:'R':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="!user.trial && company.country != 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate * company.sites | currency:'$':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="user.trial && company.country != 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate * company.sites * percent | currency:'$':false:'1.2-2'}}</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">{{bill.due}}</ion-col>
+                    <ion-col size="3" class="grid-row-item ion-text-center">{{bill.status}}</ion-col>
+                    <ion-col size="1" class="last-col ion-text-center">
+                      <ion-button fill="clear" (click)="view(bill)">
+                        <ion-icon name="arrow-forward-circle-outline" style="color:green"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <ion-grid *ngIf="user.trial">
+
+                  <h5 class="upper ion-text-center" style="color: white;">MONTHLY PROJECTED BILL</h5>
+
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">BILL MONTH</ion-col>
+                    <ion-col class="grid-header-item">NUMBER SITES</ion-col>
+                    <ion-col class="grid-header-item">RATE</ion-col>
+                    <ion-col class="grid-header-item">PROJECTED MONTHLY BILL AMOUNT</ion-col>
+                    <ion-col class="grid-header-item">DUE DATE</ion-col>
+                    <ion-col size="3" class="grid-header-item">STATUS</ion-col>
+                    <ion-col size="1">
+                      <ion-icon name="cog"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col class="grid-row-item upper ion-text-center">ANY</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">{{company.sites}}</ion-col>
+                    <ion-col *ngIf="company.country == 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate | currency:'R':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="company.country == 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate * company.sites | currency:'R':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="company.country != 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate | currency:'$':false:'1.2-2'}}</ion-col>
+                    <ion-col *ngIf="company.country != 'South Africa'" class="grid-row-item ion-text-center">
+                      {{bill.incRate * company.sites | currency:'$':false:'1.2-2'}}</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">NA</ion-col>
+                    <ion-col size="3" class="grid-row-item ion-text-center">MONTHLY PROJECTION</ion-col>
+                    <ion-col size="1" class="last-col ion-text-center">
+                      <ion-button clear icon-only (click)="view(bill)">
+                        <ion-icon name="arrow-forward-circle-outline" style="color:green"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer *ngIf='user.trial'>
+  <ion-toolbar transparent style="color:ghostwhite ion-text-center">
+    FREE TRIAL DAYS REMAINING: {{expDate}} DAYS
+  </ion-toolbar>
+</ion-footer>
+
+<ion-content scrollbar-y-auto class="background-color ion-padding" *ngIf="user.type != 'Owner' && user.type != 'Admin'">
+  <h3 style="color:red">YOU ARE NOT AUTHORIZED TO ACCESS THIS PAGE</h3>
+</ion-content>

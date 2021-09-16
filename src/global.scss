@@ -1,0 +1,191 @@
+
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+
+.footer
+    {
+      
+        margin:  0 auto;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        p
+        {
+            color: #b5b5b58a;
+            font-family: 'Regular';
+            font-size: 14px;
+
+            span
+            {
+                color: var(--ion-color-primary);
+            }
+        }
+    }
+
+.flex
+{
+    display: flex;
+}
+
+.flexd
+{
+    flex-direction: column;
+}
+
+
+.al-start
+{
+    align-items: flex-start;
+}
+
+.al-center
+{
+    align-items: center;
+}
+
+.al-end
+{
+    align-items: flex-end;
+}
+
+.jc-start
+{
+    justify-content: flex-start;
+}
+
+
+.jc-center
+{
+    justify-content: center;
+}
+
+.jc-end
+{
+    justify-content: flex-end;
+}
+
+.jc-between
+{
+    justify-content: space-between;
+}
+
+.jc-around
+{
+    justify-content: space-around;
+}
+
+
+ion-button
+{
+    text-transform: none;
+}
+
+
+.ripple-parent {
+    position: relative;
+    overflow: hidden;
+  }
+
+ion-content
+{
+    --background: radial-gradient(circle at center, #201f1f 0%, #171717 100%);
+}
+
+
+.the-form
+{
+    .input-item
+    {
+        margin: 10px 0;
+        ion-label
+        {
+            color: var(--ion-color-light);
+            font-size: 14px;
+            opacity: 0.29;
+            text-align: left;
+        }
+
+        ion-item
+        {
+            --background: #00000059;
+            --border-color: #ffffff26;
+            --border-radius: 5px;
+            --border-style: solid;
+            --border-width: 1px;
+            margin-top: 10px;
+
+
+            ion-input,ion-select,ion-datetime
+            {
+                color: var(--ion-color-light);
+                opacity: 0.45;
+                font-family: 'Regular';
+            }
+        }
+    }   
+}
+
+
+.btn-holder
+{
+    ion-button
+    {
+        --border-radius: 5px;
+        font-size: 14px;
+        height: 45px;
+    }
+}
+
+.support-btn
+{
+    --border-color: var(--ion-color-primary) !important;
+    --border-radius: 5px !important;
+    --border-style: solid !important;
+    --border-width: 1px !important;
+    --color: white !important;
+    font-size: 12px;
+    height: 43px !important;
+    width: 150px;
+}
+
+.search-holder
+{
+    ion-searchbar
+    {
+        .searchbar-input-container {
+            input {
+                background: transparent !important;
+                box-shadow: none !important;
+                border-radius: 1rem !important;
+                border: 1px solid #8e929e4f;
+                color: var(--ion-color-light);
+                font-family: 'Light';
+            }
+            }
+    }
+}
+
+
+.alert-wrapper.sc-ion-alert-md
+{
+    background: #000000;
+
+    .alert-radio-label.sc-ion-alert-md
+    {
+        color: #919191 !important;
+        font-size: 10px !important;
+    }
+}

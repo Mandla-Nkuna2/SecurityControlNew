@@ -1,0 +1,270 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="exit()">Exit <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>OB Entry</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label position="floating">Date</ion-label>
+                  <ion-input [(ngModel)]="ob.date" [readonly]="true"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Time</ion-label>
+                  <ion-input [(ngModel)]="ob.time" [readonly]="true"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Manager/ Supervisor</ion-label>
+                  <ion-input [readonly]="true" [(ngModel)]="ob.user"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                  <ion-label *ngIf="!siteValue" position="floating" style="color:red !important">Site Name *</ion-label>
+                  <ion-select interface="popover"*ngIf="!view && !saved" (ionChange)="getSiteDetails(ob)" [(ngModel)]="ob.siteKey">
+                    <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                    </ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="ob.site"></ion-input>
+                  <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="ob.site"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="dateValue">Occurence Date *</ion-label>
+                  <ion-label position="floating" *ngIf="!dateValue" style="color:red !important">Occurence Date *
+                  </ion-label>
+                  <ion-datetime [readonly]="view" displayFormat="YYYY/MM/DD" [(ngModel)]="ob.incDate"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="timeValue">Occurence Time *</ion-label>
+                  <ion-label position="floating" *ngIf="!timeValue" style="color:red !important">Occurence Time *
+                  </ion-label>
+                  <ion-datetime [readonly]="view" displayFormat="HH:mm" [(ngModel)]="ob.incTime"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="obValue">OB Number *</ion-label>
+                  <ion-label position="floating" *ngIf="!obValue" style="color: red !important">OB Number *</ion-label>
+                  <ion-input [readonly]="view" [(ngModel)]="ob.number" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="categoryValue">Category *</ion-label>
+                  <ion-label position="floating" *ngIf="!categoryValue" style="color: red !important">Category *
+                  </ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="ob.category" (ionChange)="obTypes(ob)">
+                    <ion-select-option *ngFor="let category of categories | async">{{category.name}}</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="ob.category"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="typeValue">Type *</ion-label>
+                  <ion-label position="floating" *ngIf="!typeValue" style="color: red !important">Type *</ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="ob.type">
+                    <ion-select-option *ngFor="let type of types | async">{{type.name}}</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="ob.type"></ion-input>
+                </ion-item>
+
+                <ion-item *ngIf="ob.type == 'OTHER'">
+                  <ion-label position="floating" *ngIf="otherValue">Other Type *</ion-label>
+                  <ion-label position="floating" *ngIf="!otherValue" style="color:red !important">Other Type *
+                  </ion-label>
+                  <ion-input [readonly]="view" [(ngModel)]="ob.other" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf="descriptionValue">Occurence Description *</ion-label>
+                  <ion-label position="floating" *ngIf="!descriptionValue" style="color: red !important">Occurence
+                    Description *</ion-label>
+                  <ion-textarea [readonly]="view" id="text-area" type="text" autocomplete="true" spellcheck="true"
+                    [(ngModel)]="ob.description" autosize></ion-textarea>
+                </ion-item>
+
+                <h4 class="ion-text-center">PHOTOS</h4>
+
+                <ion-item>
+                  <ion-label class="ion-text-center">Take Photo 1: </ion-label>
+                </ion-item>
+                <div [hidden]="view">
+                  <ion-row [hidden]="!isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="takePhoto1()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 1
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row [hidden]="isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="picture1.click()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 1
+                      </ion-button>
+                    </ion-col>
+                    <image-cropper [imageChangedEvent]="imageChangedEvent1" [maintainAspectRatio]="true"
+                      [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png" (imageCropped)="imageCropped1($event)">
+                    </image-cropper>
+                  </ion-row>
+                </div>
+                <input #picture1 (change)="fileChangeEvent1($event)" style="display:none;" type="file" accept="image/*"
+                  capture="camera">
+                <div text-centre>
+                  <img *ngIf="ob.photo1" [src]=ob.photo1 class="thumb">
+                </div>
+
+                <div [hidden]="ob.photo1 === ''">
+                <ion-item>
+                  <ion-label class="ion-text-center">Take Photo 2: </ion-label>
+                </ion-item>
+                <div [hidden]="view">
+                  <ion-row [hidden]="!isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="takePhoto2()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 2
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row [hidden]="isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="picture2.click()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 2
+                      </ion-button>
+                    </ion-col>
+                    <image-cropper [imageChangedEvent]="imageChangedEvent2" [maintainAspectRatio]="true"
+                      [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png" (imageCropped)="imageCropped2($event)">
+                    </image-cropper>
+                  </ion-row>
+                </div>
+                <input #picture2 (change)="fileChangeEvent2($event)" style="display:none;" type="file" accept="image/*"
+                  capture="camera">
+                <div text-centre>
+                  <img *ngIf="ob.photo2" [src]=ob.photo2 class="thumb">
+                </div>
+                </div>
+
+                <div [hidden]="ob.photo2 === ''">
+                <ion-item>
+                  <ion-label class="ion-text-center">Take Photo 3: </ion-label>
+                </ion-item>
+                <div [hidden]="view">
+                  <ion-row [hidden]="!isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="takePhoto3()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 3
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row [hidden]="isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="picture3.click()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 3
+                      </ion-button>
+                    </ion-col>
+                    <image-cropper [imageChangedEvent]="imageChangedEvent3" [maintainAspectRatio]="true"
+                      [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png" (imageCropped)="imageCropped3($event)">
+                    </image-cropper>
+                  </ion-row>
+                </div>
+                <input #picture3 (change)="fileChangeEvent3($event)" style="display:none;" type="file" accept="image/*"
+                  capture="camera">
+                <div text-centre>
+                  <img *ngIf="ob.photo3" [src]=ob.photo3 class="thumb">
+                </div>
+              </div>
+
+              <div [hidden]="ob.photo3 === ''">
+                <ion-item>
+                  <ion-label class="ion-text-center">Take Photo 4: </ion-label>
+                </ion-item>
+                <div [hidden]="view">
+                  <ion-row [hidden]="!isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="takePhoto4()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 4
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row [hidden]="isApp">
+                    <ion-col class="ion-text-center">
+                      <ion-button (click)="picture4.click()">
+                        <ion-icon name="camera" slot="start"></ion-icon>Photo 4
+                      </ion-button>
+                    </ion-col>
+                    <image-cropper [imageChangedEvent]="imageChangedEvent4" [maintainAspectRatio]="true"
+                      [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png" (imageCropped)="imageCropped4($event)">
+                    </image-cropper>
+                  </ion-row>
+                </div>
+                <input #picture4 (change)="fileChangeEvent4($event)" style="display:none;" type="file" accept="image/*"
+                  capture="camera">
+                <div text-centre>
+                  <img *ngIf="ob.photo4" [src]=ob.photo4 class="thumb">
+                </div>
+                </div>
+
+                <ion-item *ngIf="emailOption">
+                  <ion-label *ngIf="emailValue" position="floating">Email to Client? *</ion-label>
+                  <ion-label *ngIf="!emailValue" position="floating" style="color:red !important">Email to Client? *
+                  </ion-label>
+                  <ion-select interface="popover"*ngIf="!view" [(ngModel)]="ob.emailToClient">
+                    <ion-select-option>Yes</ion-select-option>
+                    <ion-select-option>No</ion-select-option>
+                  </ion-select>
+                  <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="ob.emailToClient"></ion-input>
+                </ion-item>
+
+                <img [src]="ob.sigUser" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                <ion-item lines="none">
+                  <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigUser")'>Add Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label *ngIf="sigValue" class="ion-text-center">Manager/ Supervisor Signature *</ion-label>
+                      <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Manager/
+                        Supervisor
+                        Signature *
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+             
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(ob)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

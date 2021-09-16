@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">CLIENTS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" id="clients">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-13">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid>
+                  <ion-row class="grid-header fonts">
+                    <ion-col class="grid-header-item" style="max-width: 35px;"></ion-col>
+                    <ion-col size="2" class="grid-header-item">COMPANY</ion-col>
+                    <ion-col size="2" class="grid-header-item">NAME</ion-col>
+                    <ion-col size="2" class="grid-header-item">EMAIL / CONTACT</ion-col>
+                    <ion-col size="2" class="grid-header-item">START DATE</ion-col>
+                    <ion-col size="2" class="grid-header-item">TRIAL</ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row" *ngFor="let client of clients | async; let i = index">
+                    <ion-col class="grid-row-item" style="max-width: 35px;">{{i+1}}</ion-col>
+                    <ion-col size="2" class="grid-row-item ion-text-center">{{client.name}}</ion-col>
+                    <ion-col size="2" class="grid-row-item ion-text-center">{{client.rep}}</ion-col>
+                    <ion-col size="2" class="grid-row-item ion-text-center">{{client.email}} + {{client.contact}}
+                    </ion-col>
+                    <ion-col size="2" class="grid-row-item ion-text-center">{{client.startDate}}</ion-col>
+                    <ion-col size="2" class="grid-row-item ion-text-center">{{client.trial}}</ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

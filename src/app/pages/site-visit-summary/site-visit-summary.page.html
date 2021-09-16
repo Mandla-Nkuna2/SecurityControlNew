@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="title-font">SITE VISIT SUMMARY</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="user.type == 'Owner' || user.type == 'Admin' || user.type == 'Account Admin'">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid>
+
+                  <ion-row>
+                    <ion-col class="ion-text-center">
+                      <ion-button color="success" (click)="download()">
+                        <ion-icon name="cloud-download" slot="start"></ion-icon>Download Summaries
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <div class="fonts">
+
+                    <ion-row class="grid-header">
+                      <ion-col size="1.5" class="grid-header-item">SELECTION</ion-col>
+                      <ion-col size="2.7" class="grid-header-item">SITE NAME</ion-col>
+                      <ion-col size="2" class="grid-header-item">LAST VISIT</ion-col>
+                      <ion-col size="2.5" class="grid-header-item">VISIT BY</ion-col>
+                      <ion-col size="2" class="grid-header-item">ISSUES</ion-col>
+                      <ion-col size="1.3" class="ion-text-center">
+                        <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+                      </ion-col>
+                    </ion-row>
+
+                    <ion-row class="grid-row" *ngFor="let site of sites | async">
+                      <ion-col size="1.5" class="grid-row-item">
+                        <ion-checkbox [(ngModel)]="site.selected" (ionChange)="addToList(site)"></ion-checkbox>
+                      </ion-col>
+                      <ion-col size="2.7" class="grid-row-item">{{site.name}}</ion-col>
+                      <ion-col size="2" class="grid-row-item">{{site.lastVisit | date:'fullDate'}}</ion-col>
+                      <ion-col size="2.5" class="grid-row-item">{{site.visitBy}}</ion-col>
+                      <ion-col size="2" *ngIf="site.status === undefined" class="grid-row-item">{{site.status}}
+                      </ion-col>
+                      <ion-col size="2" *ngIf="site.status === 'ALERT!!!'" class="grid-row-item"
+                        style="background:red !important">
+                        {{site.status}}
+                      </ion-col>
+                      <ion-col size="2" *ngIf="site.status === 'NA'" class="grid-row-item"
+                        style="background:yellow !important">
+                        {{site.status}}
+                      </ion-col>
+                      <ion-col size="2" *ngIf="site.status === 'NP'" class="grid-row-item"
+                        style="background:greenyellow !important">
+                        {{site.status}}</ion-col>
+                      <ion-col size="1.3" class="last-col ion-text-center">
+                        <ion-button *ngIf="site.visitKey !== null" fill="clear" (click)="view(site)">
+                          <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+
+                  </div>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

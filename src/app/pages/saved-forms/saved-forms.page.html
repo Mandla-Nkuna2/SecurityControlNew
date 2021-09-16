@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="title-font">SAVED FORMS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <div *ngIf="items.length == 0"
+                  style="color: #666666; text-align: center; margin-top: 15%; font-size: 2em;">No Saved Forms Available
+                </div>
+
+                <ion-row>
+                  <ion-col class="ion-text-center" style="padding-left: 40px; padding-right: 40px;">
+                    <div scrollY="true" id="myFixZone">
+                      <ion-button (click)="open(item)" color="warning" class="upper" routeDirection="forward"
+                        expand="block" *ngFor="let item of items" style="font-size: 0.6em;">
+                        <ion-icon name="build" slot="start"></ion-icon>
+                        {{item.report}}-{{item.date}}
+                      </ion-button>
+                    </div>
+                  </ion-col>
+                </ion-row>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ion-content>

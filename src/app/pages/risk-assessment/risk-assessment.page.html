@@ -1,0 +1,1564 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Risk Assessment</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="assessment.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="assessment.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="assessment.manager"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color:red !important">Site Name *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (ionChange)="getSiteDetails(assessment)"
+                        [(ngModel)]="assessment.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="assessment.site"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>PERIMETER</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="typeValue" position="floating">Perimeter Type *</ion-label>
+                      <ion-label *ngIf="!typeValue" position="floating" style="color:red !important">Perimeter Type *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="assessment.type" type="text" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="descValue" position="floating">Perimeter Description *</ion-label>
+                      <ion-label *ngIf="!descValue" position="floating" style="color:red !important">Perimeter
+                        Description *
+                      </ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.description" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="heightValue" position="floating">Perimeter Height *</ion-label>
+                      <ion-label *ngIf="!heightValue" position="floating" style="color:red !important">Perimeter Height
+                        *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="assessment.height" type="text" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="vulnerableValue" position="floating">Any Vulnerable or Damaged Area Risks? *
+                      </ion-label>
+                      <ion-label *ngIf="!vulnerableValue" position="floating" style="color:red !important">Any
+                        Vulnerable or
+                        Damaged Area Risks? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.vulnerable">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.vulnerable"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.vulnerable == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.vulnerableDesc" autosize></ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.vulnerable == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto1()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture1.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent1" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped1($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture1 (change)="fileChangeEvent1($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo1 !== '' && assessment.photo1 !== undefined"
+                          [src]="assessment.photo1" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.vulnerable == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.vulnerableLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.vulnerableLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.vulnerable == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.vulnerableRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="palarmsValue" position="floating">Any Perimeter Alarms Related Risks? *
+                      </ion-label>
+                      <ion-label *ngIf="!palarmsValue" position="floating" style="color:red !important">Any Perimeter
+                        Alarms
+                        Related Risks? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.palarms">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.palarms"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.palarms == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.palarmsDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.palarms == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto2()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture2.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent2" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped2($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture2 (change)="fileChangeEvent2($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo2 !== '' && assessment.photo2 !== undefined"
+                          [src]="assessment.photo2" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.palarms == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.palarmsLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.palarmsLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.palarms == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.palarmsRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="elecfenceValue" position="floating">Any Electric Fence Related Risks? *
+                      </ion-label>
+                      <ion-label *ngIf="!elecfenceValue" position="floating" style="color:red !important">Any Electric
+                        Fence
+                        Related Risks? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.elecfence">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.elecfence"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.elecfence == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.elecfenceDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.elecfence == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto3()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture3.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent3" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped3($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture3 (change)="fileChangeEvent3($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo3 !== '' && assessment.photo3 !== undefined"
+                          [src]="assessment.photo3" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.elecfence == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.elecfenceLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.elecfenceLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.elecfence == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.elecfenceRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="treesValue" position="floating">Any Risks Related to Trees & Vegetation? *
+                      </ion-label>
+                      <ion-label *ngIf="!treesValue" position="floating" style="color:red !important">Any Risks Related
+                        to Trees &
+                        Vegetation? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.trees">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.trees"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.trees == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.treesDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.trees == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto4()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture4.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent4" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped4($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture4 (change)="fileChangeEvent4($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo4 !== '' && assessment.photo4 !== undefined"
+                          [src]="assessment.photo4" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.trees == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.treesLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.treesLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.trees == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.treesRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="perimLightValue" position="floating">Any Risks Related to Perimeter Lighting? *
+                      </ion-label>
+                      <ion-label *ngIf="!perimLightValue" position="floating" style="color:red !important">Any Risks
+                        Related to
+                        Perimeter Lighting? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.perimLight">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.perimLight"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.perimLight == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.perimLightDesc" autosize></ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.perimLight == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto5()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture5.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent5" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped5($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture5 (change)="fileChangeEvent5($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo5 !== '' && assessment.photo5 !== undefined"
+                          [src]="assessment.photo5" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.perimLight == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.perimLightLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.perimLightLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.perimLight == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.perimLightRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>PREMISES AND HOUSEKEEPING</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="areasValue" position="floating">Any High Risk Area’s the Premises? *</ion-label>
+                      <ion-label *ngIf="!areasValue" position="floating" style="color:red !important">Any High Risk
+                        Area’s the
+                        Premises? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.areas">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.areas"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.areas == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.areasDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.areas == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto6()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture6.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent6" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped6($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture6 (change)="fileChangeEvent6($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo6 !== '' && assessment.photo6 !== undefined"
+                          [src]="assessment.photo6" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.areas == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.areasLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.areasLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.areas == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.areasRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="dangerValue" position="floating">Any Risks with Storage of Dangerous Items? *
+                      </ion-label>
+                      <ion-label *ngIf="!dangerValue" position="floating" style="color:red !important">Any Risks with
+                        Storage of
+                        Dangerous Items? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.danger">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.danger"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.danger == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.dangerDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.danger == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto7()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture7.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent7" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped7($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture7 (change)="fileChangeEvent7($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo7 !== '' && assessment.photo7 !== undefined"
+                          [src]="assessment.photo7" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.danger == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.dangerLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.dangerLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.danger == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.dangerRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="stackedValue" position="floating">Any Risks with stacked items against walls/
+                        fences or buildings? *
+                      </ion-label>
+                      <ion-label *ngIf="!stackedValue" position="floating" style="color:red !important">Any Risks with
+                        stacked
+                        items against walls/ fences
+                        or buildings? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.stacked">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.stacked"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.stacked == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.stackedDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.stacked == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto8()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture8.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent8" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped8($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture8 (change)="fileChangeEvent8($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo8 !== '' && assessment.photo8 !== undefined"
+                          [src]="assessment.photo8" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.stacked == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.stackedLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.stackedLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.stacked == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.stackedRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="surroundValue" position="floating">Any High Risk Area’s in the Surroundings? *
+                      </ion-label>
+                      <ion-label *ngIf="!surroundValue" position="floating" style="color:red !important">Any High Risk
+                        Area’s in
+                        the Surroundings? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.surround">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.surround"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.surround == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.surroundDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.surround == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto9()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture9.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent9" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped9($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture9 (change)="fileChangeEvent9($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo9 !== '' && assessment.photo9 !== undefined"
+                          [src]="assessment.photo9" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.surround == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.surroundLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.surroundLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.surround == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.surroundRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="premLightValue" position="floating">Any Premises Lighting Risks? *</ion-label>
+                      <ion-label *ngIf="!premLightValue" position="floating" style="color:red !important">Any Premises
+                        Lighting
+                        Risks? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.premLight">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.premLight"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.premLight == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.premLightDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.premLight == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto10()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture10.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent10" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped10($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture10 (change)="fileChangeEvent10($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo10 !== '' && assessment.photo10 !== undefined"
+                          [src]="assessment.photo10" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.premLight == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.premLightLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.premLightLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.premLight == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.premLightRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>ENTRANCES / EXITS</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="methodValue" position="floating">Entry / Exit Type *</ion-label>
+                      <ion-label *ngIf="!methodValue" position="floating" style="color:red !important">Entry / Exit Type
+                        *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.method">
+                        <ion-select-option>Manual Locked Gate/ s</ion-select-option>
+                        <ion-select-option>Remote Locked Gate/ s</ion-select-option>
+                        <ion-select-option>Biometrics</ion-select-option>
+                        <ion-select-option>Manned Gate/ s</ion-select-option>
+                        <ion-select-option>Manned Boom/ s</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.method"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="entranceValue" position="floating">Entrance/ Exit Description *</ion-label>
+                      <ion-label *ngIf="!entranceValue" position="floating" style="color:red !important">Entrance/ Exit
+                        Description
+                        *</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="assessment.entrance" type="text" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="monitoredValue" position="floating">Is Entry/ Exit Monitored & Documented? *
+                      </ion-label>
+                      <ion-label *ngIf="!monitoredValue" position="floating" style="color:red !important">Is Entry/ Exit
+                        Monitored
+                        & Documented? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.monitored">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.monitored"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="searchedValue" position="floating">Are Vehicles Searched on Entry/ Exit? *
+                      </ion-label>
+                      <ion-label *ngIf="!searchedValue" position="floating" style="color:red !important">Are Vehicles
+                        Searched on
+                        Entry/ Exit? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.searched">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.searched"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="staffValue" position="floating">Are Staff & Contractors Searched on Exit? *
+                      </ion-label>
+                      <ion-label *ngIf="!staffValue" position="floating" style="color:red !important">Are Staff &
+                        Contractors
+                        Searched on Exit? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.staff">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.staff"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="entryValue" position="floating">Any Risks with Entrances / Exits? *</ion-label>
+                      <ion-label *ngIf="!entryValue" position="floating" style="color:red !important">Any Risks with
+                        Entrances /
+                        Exits? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.entry">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.entry"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.entry == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.entryDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.entry == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto11()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture11.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent11" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped11($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture11 (change)="fileChangeEvent11($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo11 !== '' && assessment.photo11 !== undefined"
+                          [src]="assessment.photo11" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.entry == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.entryLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.entryLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.entry == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.entryRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="entryLightValue" position="floating">Any Risks Related to Entrance / Exit
+                        Lighting? *</ion-label>
+                      <ion-label *ngIf="!entryLightValue" position="floating" style="color:red !important">Any Risks
+                        Related to
+                        Entrance / Exit Lighting? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.entryLight">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.entryLight"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.entryLight == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.entryLightDesc" autosize></ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.entryLight == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto12()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture12.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent12" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped12($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture12 (change)="fileChangeEvent12($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo12 !== '' && assessment.photo12 !== undefined"
+                          [src]="assessment.photo12" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.entryLight == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.entryLightLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.entryLightLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.entryLight == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.entryLightRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>DOORS & WINDOWS</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="doorsValue" position="floating">Doors & Windows Burglar Proofed? *</ion-label>
+                      <ion-label *ngIf="!doorsValue" position="floating" style="color:red !important">Doors & Windows
+                        Burglar
+                        Proofed? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.doors">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.doors"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="lockValue" position="floating">Doors & Windows Lockable? *</ion-label>
+                      <ion-label *ngIf="!lockValue" position="floating" style="color:red !important">Doors & Windows
+                        Lockable? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.lock">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.lock"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="armedValue" position="floating">Doors & Windows Alarmed? *</ion-label>
+                      <ion-label *ngIf="!armedValue" position="floating" style="color:red !important">Doors & Windows
+                        Alarmed? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.armed">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.armed"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="doorsRiskValue" position="floating">Any Risks with Doors & Windows? *
+                      </ion-label>
+                      <ion-label *ngIf="!doorsRiskValue" position="floating" style="color:red !important">Any Risks with
+                        Doors &
+                        Windows? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.doorsRisk">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.doorsRisk"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.doorsRisk == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.doorsRiskDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.doorsRisk == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto13()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture13.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent13" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped13($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture13 (change)="fileChangeEvent13($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo13 !== '' && assessment.photo13 !== undefined"
+                          [src]="assessment.photo13" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.doorsRisk == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.doorsRiskLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.doorsRiskLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.doorsRisk == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.doorsRiskRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>ALARMS, CCTV & PANIC BUTTONS</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="alarmsValue" position="floating">Does the Premises have an alarm/s? *
+                      </ion-label>
+                      <ion-label *ngIf="!alarmsValue" position="floating" style="color:red !important">Does the Premises
+                        have an
+                        alarm/s? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.alarms">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.alarms"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="panicValue" position="floating">Does the Premises have Panic Button/s? *
+                      </ion-label>
+                      <ion-label *ngIf="!panicValue" position="floating" style="color:red !important">Does the Premises
+                        have Panic
+                        Button/s? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.panic">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.panic"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="responseValue" position="floating">Are the Alarms/ Panics Linked to Armed
+                        Response? *</ion-label>
+                      <ion-label *ngIf="!responseValue" position="floating" style="color:red !important">Are the Alarms/
+                        Panics Linked to Armed Response? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.response">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.response"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="testedValue" position="floating">Are the Alarms Regularly Tested? *</ion-label>
+                      <ion-label *ngIf="!testedValue" position="floating" style="color:red !important">Are the Alarms
+                        Regularly
+                        Tested? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.tested">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.tested"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="arcompanyValue" position="floating">Who is the Armed Response Company?
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="assessment.arcompany"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="camsValue" position="floating">Does the Premises have CCTV? *</ion-label>
+                      <ion-label *ngIf="!camsValue" position="floating" style="color:red !important">Does the Premises
+                        have CCTV? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.cams">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.cams"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">If Yes, Are the Cameras Monitored? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.monitoredcams">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.monitoredcams"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Is CCTV Coverage Sufficient? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.cctvsuf">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.cctvsuf"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="cctvValue" position="floating">Any Risks with Alarms & CCTV? *</ion-label>
+                      <ion-label *ngIf="!cctvValue" position="floating" style="color:red !important">Any Risks with
+                        Alarms & CCTV?
+                        *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.cctv">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.cctv"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.cctv == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.cctvDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.cctv == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto14()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture14.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent14" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped14($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture14 (change)="fileChangeEvent14($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo14 !== '' && assessment.photo14 !== undefined"
+                          [src]="assessment.photo14" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.cctv == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.cctvLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.cctvLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.cctv == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.cctvRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+                  <ion-slide>
+
+                    <p text-center>GUARDING & EQUIPMENT</p>
+
+                    <ion-item>
+                      <ion-label position="floating">How Many Guards are Currently Posted on Site?</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="assessment.guards"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="roomValue" position="floating">Is there a GuardRoom Available? *</ion-label>
+                      <ion-label *ngIf="!roomValue" position="floating" style="color:red !important">Is there a
+                        GuardRoom
+                        Available? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.room">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.room"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="patrolValue" position="floating">Is there a Patrolling System in use? *
+                      </ion-label>
+                      <ion-label *ngIf="!patrolValue" position="floating" style="color:red !important">Is there a
+                        Patrolling System
+                        in use? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.patrol">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.patrol"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">What kind of System is in Place?</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="assessment.system"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">List of Equipment in Place:</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.equipment" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="guardValue" position="floating">Any Risks with Guarding & Equipment? *
+                      </ion-label>
+                      <ion-label *ngIf="!guardValue" position="floating" style="color:red !important">Any Risks with
+                        Guarding &
+                        Equipment? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.guard">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.guard"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.guard == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.guardDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.guard == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto15()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture15.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent15" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped15($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture15 (change)="fileChangeEvent15($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo15 !== '' && assessment.photo15 !== undefined"
+                          [src]="assessment.photo15" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.guard == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.guardLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.guardLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.guard == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.guardRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>GENERAL HEALTH & SAFETY</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="fireValue" position="floating">Is there Fire Equipment Available? *</ion-label>
+                      <ion-label *ngIf="!fireValue" position="floating" style="color:red !important">Is there Fire
+                        Equipment
+                        Available? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.fire">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.fire"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="servicedValue" position="floating">Fire Equipment Regulary Inspected & Serviced?
+                        *</ion-label>
+                      <ion-label *ngIf="!servicedValue" position="floating" style="color:red !important">Fire Equipment
+                        Regulary
+                        Inspected & Serviced? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.serviced">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.serviced"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="aidValue" position="floating">Is there First Aid Equipment Available? *
+                      </ion-label>
+                      <ion-label *ngIf="!aidValue" position="floating" style="color:red !important">Is there First Aid
+                        Equipment
+                        Available? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.aid">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.aid"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="signsValue" position="floating">Is there Adequate H&S Signage displayed? *
+                      </ion-label>
+                      <ion-label *ngIf="!signsValue" position="floating" style="color:red !important">Is there Adequate
+                        H&S Signage
+                        displayed? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.signs">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.signs"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="evacValue" position="floating">Are there Emergency Evac Plans in place? *
+                      </ion-label>
+                      <ion-label *ngIf="!evacValue" position="floating" style="color:red !important">Are there Emergency
+                        Evac Plans
+                        in place? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.evac">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.evac"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="assemblyValue" position="floating">Is there an Emergency Assembly Point/s? *
+                      </ion-label>
+                      <ion-label *ngIf="!assemblyValue" position="floating" style="color:red !important">Is there an
+                        Emergency
+                        Assembly Point/s? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.assembly">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not isApplicable</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.assembly"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="healthValue" position="floating">Any Health & Safety Risks Identified? *
+                      </ion-label>
+                      <ion-label *ngIf="!healthValue" position="floating" style="color:red !important">Any Health &
+                        Safety Risks
+                        Identified? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.health">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.health"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.health == 'Yes'">
+                      <ion-label position="floating">Risk Description</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.healthDesc" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <div *ngIf="assessment.health == 'Yes'">
+                      <ion-label class="ion-text-center">Take a Photo: </ion-label>
+                      <ion-row [hidden]="!isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="takePhoto16()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row [hidden]="isApp">
+                        <ion-col class="ion-text-center">
+                          <ion-button (click)="picture16.click()">
+                            <ion-icon name="camera" slot="start"></ion-icon>Photo
+                          </ion-button>
+                        </ion-col>
+                        <image-cropper [imageChangedEvent]="imageChangedEvent16" [maintainAspectRatio]="true"
+                          [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                          (imageCropped)="imageCropped16($event)">
+                        </image-cropper>
+                      </ion-row>
+                      <input #picture16 (change)="fileChangeEvent16($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="assessment.photo16 !== '' && assessment.photo16 !== undefined"
+                          [src]="assessment.photo16" class="thumb">
+                      </div>
+                    </div>
+
+                    <ion-item *ngIf="assessment.health == 'Yes'">
+                      <ion-label position="floating">Risk Level? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.healthLevel">
+                        <ion-select-option>High</ion-select-option>
+                        <ion-select-option>Medium</ion-select-option>
+                        <ion-select-option>Low</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.healthLevel"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="assessment.health == 'Yes'">
+                      <ion-label position="floating">Recommendations</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.healthRec" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <input #picture6 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture7 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture8 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture9 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture10 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture11 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture12 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture13 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture14 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture15 style="display:none;" type="file" accept="image/*" capture="camera">
+                    <input #picture16 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                  </ion-slide>
+
+                  <ion-slide>
+                    <p text-center>FINAL NOTES</p>
+
+                    <ion-item>
+                      <ion-label position="floating">Final Assessment Summary</ion-label>
+                      <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="assessment.notes" autosize>
+                      </ion-textarea>
+                    </ion-item>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color:red !important">Email to Client? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="assessment.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="assessment.emailToClient"></ion-input>
+                    </ion-item>
+
+
+                    <img [src]="assessment.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Manager Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" text-center>Manager Signature *</ion-label>
+                          <ion-label *ngIf="!sigValue" text-center style="color:red !important">Manager Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                
+
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(assessment)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

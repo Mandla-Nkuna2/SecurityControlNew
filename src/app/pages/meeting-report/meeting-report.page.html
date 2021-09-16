@@ -1,0 +1,193 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Client Meeting Report</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="meeting.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="meeting.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager/ Supervisor</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="meeting.user"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color: red !important">Site Name *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (ionChange)="getSiteDetails(meeting)" [(ngModel)]="meeting.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="meeting.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="meeting.site"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="clientValue" position="floating">Client Name *</ion-label>
+                      <ion-label *ngIf="!clientValue" position="floating" style="color: red !important">Client Name *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="meeting.client"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" position="floating">OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" position="floating" style="color: red !important">OB Number *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="meeting.ob"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label *ngIf="reasonValue" position="floating">Meeting Agenda *</ion-label>
+                      <ion-label *ngIf="!reasonValue" position="floating" style="color: red !important">Meeting Agenda *
+                      </ion-label>
+                      <ion-input [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="meeting.reason">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Attendees</ion-label>
+                      <ion-textarea [readonly]="view" id="minutes" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="meeting.attendees" autosize></ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Apologies</ion-label>
+                      <ion-textarea [readonly]="view" id="minutes" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="meeting.apologies" autosize></ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label text-wrap position="floating">Notes Arising from Previous Meeting Minutes</ion-label>
+                      <ion-textarea [readonly]="view" id="minutes" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="meeting.prev" autosize></ion-textarea>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="minutesValue" position="floating">Meeting Minutes *</ion-label>
+                      <ion-label *ngIf="!minutesValue" style="color: red !important" position="floating">Meeting Minutes
+                        *
+                      </ion-label>
+                      <ion-textarea [readonly]="view" id="minutes" type="text" autocomplete="true" spellcheck="true"
+                        [(ngModel)]="meeting.minutes" autosize></ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email Minutes to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color: red !important">Email Minutes to
+                        Client? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="meeting.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="meeting.emailToClient"></ion-input>
+                    </ion-item>
+
+                    <img [src]="meeting.sigUser" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigUser")'>Add Supervisor Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <img [src]="meeting.sigUser" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigUser")'>Add Manager Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" class="ion-text-center">Manager Signature *</ion-label>
+                          <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Manager
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                
+
+                    <img [src]="meeting.sigClient" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigClient")'>Add Client Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label class="ion-text-center">Client Signature *</ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                 
+
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(meeting)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

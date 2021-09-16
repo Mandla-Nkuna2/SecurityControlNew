@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="title-font">TECHNICAL JOB CARDS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-title style="color: black; text-align: center;">TECHNICAL JOB CARDS</ion-title>
+
+                <ion-grid style="font-size: 0.7em">
+                  <ion-row>
+                    <ion-col size="6" class="ion-text-right">
+                      <input placeholder="Search Orders...." class="search" type="text" [(ngModel)]="term">
+                    </ion-col>
+                    <ion-col size="6" class="ion-text-right" *ngIf="tech">
+                      <ion-button (click)="create()">Create Job Card</ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">CARD DATE</ion-col>
+                    <ion-col class="grid-header-item">CARD TIME</ion-col>
+                    <ion-col *ngIf="!app" class="grid-header-item">MANAGER</ion-col>
+                    <ion-col *ngIf="!app" class="grid-header-item">CARD DESCRIPTION</ion-col>
+                    <ion-col class="grid-header-item">ASSIGNED USER</ion-col>
+                    <ion-col class="grid-header-item">CARD STATUS</ion-col>
+                    <ion-col>
+                      <ion-icon class="icon-cog" name="cog"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row" *ngFor="let order of orders | filter:term">
+                    <ion-col class="grid-row-item ion-text-center">{{order.date}}</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">{{order.time}}</ion-col>
+                    <ion-col *ngIf="!app" class="grid-row-item ion-text-center">{{order.manager}}</ion-col>
+                    <ion-col *ngIf="!app" class="grid-row-item ion-text-center">{{order.desc}}</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">{{order.assignedName}}</ion-col>
+                    <ion-col class="grid-row-item ion-text-center">{{order.status}}</ion-col>
+                    <ion-col class="last-col ion-text-center">
+                      <ion-button fill="clear" (click)="view(order)">
+                        <ion-icon name="eye"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

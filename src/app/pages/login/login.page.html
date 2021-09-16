@@ -1,0 +1,129 @@
+<!-- <ion-content class="fix-menu" style="background-color: #000000 !important;">
+
+    <section class="login p-fixed d-flex common-img-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-md-6" style="margin: 0 auto; padding-top: 30px">
+                        <img class="auth-form__image reset" src="assets/icon/icon.png" role="img" />
+                    </div>
+                    <div class="login-card card-block auth-body mr-auto ml-auto">
+                            <div class="auth-box">
+                                <ion-row>
+                                    <ion-col class="ion-text-center">
+                                        <h3 class="ion-text-center" style="color: red;">Log In</h3>
+                                    </ion-col>
+                                </ion-row>
+                                <hr />
+                                <div class="input-group">
+                                    <ion-input type="email"  placeholder="Your Email Address"
+                                        ></ion-input>
+                                    <span class="md-line"></span>
+                                </div>
+                                <div class="input-group">
+                                    <ion-input type="password"  placeholder="Password"
+                                       (keyup.enter)="login()"></ion-input>
+                                    <span class="md-line"></span>
+                                </div>
+                                <ion-row>
+                                    <ion-col>
+                                        <ion-button style="float:right;" fill="clear" color="danger"
+                                            routerLink="/forgot-password">Forgot Password</ion-button>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <ion-button expand="block" color="success" (click)="login()">Sign in
+                                        </ion-button>
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <ion-button expand="block" routerLink="/registration" routeDirection="root">Sign
+                                            Up</ion-button>
+                                    </ion-col>
+                                </ion-row>
+
+                                <hr />
+                                <ion-row>
+                                    <ion-col style="padding: 0; margin: 0;" class="ion-text-center">
+                                        <ion-button style="padding: 0; margin: 0;" fill="clear"
+                                            routerLink="/privacy" routeDirection="root">Privacy
+                                            Policy</ion-button>
+                                    </ion-col>
+                                </ion-row>
+                                <hr />
+                            </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</ion-content> -->
+
+<ion-content class="ion-padding-horizontal" >
+    <ion-grid style="height: 100%">
+      <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
+        <ion-col sizeXs="12" sizeSm="8" sizeMd="6" sizeLg="4" sizeXl="4" class="ion-no-padding">
+          <div class="holder">
+            <div class="logo-holder ion-text-center">
+              <img src="assets/imgs/logo.svg" alt="">
+            </div>
+  
+            <div class="the-form">
+              <div class="title">
+                <h3>Login</h3>
+                <p class="ion-text-wrap">Please login into your account to continue.</p>
+              </div>
+  
+  
+              <div class="input-item">
+                <ion-label>Email</ion-label>
+                <ion-item lines="none">
+                  <ion-input type="email" [(ngModel)]='email' placeholder="Johndoe@gmail.com"></ion-input>
+                </ion-item>
+              </div>
+  
+              <div class="input-item">
+                <ion-label>Password</ion-label>
+                <ion-item lines="none">
+                  <ion-input [(ngModel)]='password' type="password" placeholder="*********"></ion-input>
+                </ion-item>
+              </div>
+  
+  
+              <div class="btn-holder ion-padding-top">
+                <ion-button  (click)="login()" expand="block">
+                    Login
+                </ion-button>
+              </div>
+  
+  
+              <div class="forgot-holder ion-text-center">
+                <ion-button  expand="block" fill="clear"  routerLink="/forgot-password">
+                  Forgot Password?
+                </ion-button>
+              </div>
+  
+  
+              <div class="bottom-holder ion-text-center">
+                <p>Don't have an account?<span> &nbsp;Register Now</span></p>
+              </div>
+  
+            </div>
+          </div>
+  
+         
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
+    <div class="footer desktop">
+      <p  class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+    </div>
+  </ion-content>
+  
+  

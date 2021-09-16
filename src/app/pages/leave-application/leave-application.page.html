@@ -1,0 +1,239 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Leave Application</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager/ Supervisor</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.user"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color:red !important">Site Name *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (click)="searchSites(leave)" (ionChange)="getSiteDetails(leave)"
+                        [(ngModel)]="leave.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="leave.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="leave.site"></ion-input>
+
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="soValue" position="floating">Name of Employee *</ion-label>
+                      <ion-label *ngIf="!soValue" position="floating" style="color:red !important">Name of Employee *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" (click)="Guards(leave)" (ionChange)="guardDetails(leave)"
+                        [(ngModel)]="leave.soKey">
+                        <ion-select-option *ngFor="let guard of guards | async" [value]=guard.Key>{{guard.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="leave.so"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label *ngIf="typeValue" position="floating">Type of Leave *</ion-label>
+                      <ion-label *ngIf="!typeValue" position="floating" style="color:red !important">Type of Leave *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" (ionChange)="getAvailable(leave)" [(ngModel)]="leave.type">
+                        <ion-select-option>ANNUAL LEAVE</ion-select-option>
+                        <ion-select-option>SICK LEAVE</ion-select-option>
+                        <ion-select-option>FAMILY RESPONSIBILITY</ion-select-option>
+                        <ion-select-option>UNPAID LEAVE</ion-select-option>
+                        <ion-select-option>MATERNITY LEAVE</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="leave.type"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="leave.type == 'ANNUAL LEAVE' && leave.accruedLeave != null">
+                      <ion-label position="floating">Previously Accrued Leave</ion-label>
+                      <ion-input [readonly]="view" [readonly]="true" [(ngModel)]="leave.accruedLeave" type="number">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="leave.type == 'ANNUAL LEAVE' && leave.available != null">
+                      <ion-label position="floating">Current Accrued Leave</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.available" type="number"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="leave.type == 'ANNUAL LEAVE' && leave.usedLeave != null">
+                      <ion-label position="floating">Current Used Leave</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.usedLeave" type="number"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="leave.type == 'ANNUAL LEAVE' && leave.availableLeave != null">
+                      <ion-label position="floating">Available Leave</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.availableLeave" type="number"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="fromValue" position="floating">From Date *</ion-label>
+                      <ion-label *ngIf="!fromValue" position="floating" style="color:red !important">From Date *
+                      </ion-label>
+                      <ion-datetime [readonly]="view" displayFormat="YYYY/MM/DD" min="2017" max="2050"
+                        [(ngModel)]="leave.from">
+                      </ion-datetime>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="toValue" position="floating">To Date *</ion-label>
+                      <ion-label *ngIf="!toValue" position="floating" style="color:red !important">To Date *</ion-label>
+                      <ion-datetime [readonly]="view" displayFormat="YYYY/MM/DD" min="2017" max="2050"
+                        [(ngModel)]="leave.to" (ngModelChange)="daysCalc(leave)"></ion-datetime>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Days Requested /Taken</ion-label>
+                      <ion-input [readonly]="view" [readonly]="true" [(ngModel)]="leave.days" type="number"></ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="leave.type == 'ANNUAL LEAVE'">
+                      <ion-label position="floating">Remaining Leave (If Approved)</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="leave.remainingLeave" type="number"></ion-input>
+                    </ion-item>
+
+                    <div *ngIf="leave.type == 'FAMILY RESPONSIBILITY' || leave.type == 'SICK LEAVE'">
+                      <p text-center>PHOTO OF PROOF - DOCTORS NOTE/ CERTIFICATE</p>
+                      <div [hidden]="view">
+                        <ion-row [hidden]="!isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="takePhoto()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row [hidden]="isApp">
+                          <ion-col class="ion-text-center">
+                            <ion-button (click)="picture.click()">
+                              <ion-icon name="camera" slot="start"></ion-icon>Photo
+                            </ion-button>
+                          </ion-col>
+                          <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+                            [aspectRatio]="4 / 4" [resizeToWidth]="300" format="png"
+                            (imageCropped)="imageCropped($event)">
+                          </image-cropper>
+                        </ion-row>
+                      </div>
+                      <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file"
+                        accept="image/*" capture="camera">
+                      <div text-centre>
+                        <img *ngIf="leave.photo" [src]=leave.photo class="thumb">
+                      </div>
+                      <input #picture style="display:none;" type="file" accept="image/*" capture="camera">
+                    </div>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color:red !important">Email to Client? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="leave.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="leave.emailToClient"></ion-input>
+                    </ion-item>
+
+
+                    <img [src]="leave.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Supervisor Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sig1Value" class="ion-text-center">Manager/ Supervisor Signature *
+                          </ion-label>
+                          <ion-label *ngIf="!sig1Value" class="ion-text-center" style="color:red">Manager/ Supervisor
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                 
+                    <img [src]="leave.guardSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("guardSig")'>Add Officer Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sig2Value" class="ion-text-center">Security Officer Signature *</ion-label>
+                          <ion-label *ngIf="!sig2Value" text-center style="color:red !important">Security Officer
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                
+
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(leave)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

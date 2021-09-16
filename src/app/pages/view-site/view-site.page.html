@@ -1,0 +1,314 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">{{ site.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid class="account-grid">
+                  <ion-row>
+                    <ion-col class="upper">Site Name:</ion-col>
+                    <ion-col class="upper" style="color:#fff">{{ site.name }}</ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col class="upper">Site Address:</ion-col>
+                    <ion-col class="upper" style="color:#fff">{{site.address}}</ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col class="upper">Client Name:</ion-col>
+                    <ion-col class="upper" style="color:#fff">{{site.client}}</ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col class="upper">Client Email:</ion-col>
+                    <ion-col class="upper" style="color:#fff">{{site.email}}</ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col class="upper">Client Contact:</ion-col>
+                    <ion-col class="upper" style="color:#fff">{{site.contact}}</ion-col>
+                  </ion-row>
+
+                </ion-grid>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-button expand="block" (click)="edit(site)">
+                      <ion-icon name="create"></ion-icon>EDIT SITE INFORMATION
+                    </ion-button>
+                  </ion-col>
+                  <ion-col class="ion-text-center">
+                    <ion-button expand="block" (click)="deleteSite(site)">
+                      <ion-icon name="trash"></ion-icon>DELETE SITE
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row>
+                  <ion-col size="6.65" class="ion-text-right">
+                    <h3>STAFF</h3>
+                  </ion-col>
+                  <ion-col size="5.35" class="ion-text-right">
+                    <ion-button (click)="viewStaff()">
+                      <ion-icon name="eye"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+                <div *ngIf="viewstaff">
+                  <ion-row>
+                    <ion-col class="ion-text-center">
+                      <ion-button expand="block" (click)="add(site)">
+                        <ion-icon name="add"></ion-icon>ADD STAFF MEMBER TO SITE
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-grid>
+
+                    <ion-row class="grid-header">
+                      <ion-col class="grid-header-item">STAFF NAME</ion-col>
+                      <ion-col size="5">
+                        <ion-icon name="cog"></ion-icon>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="grid-row" *ngFor="let guard of guards | async">
+                      <ion-col class="grid-row-item ion-text-center">{{guard.name}}</ion-col>
+                      <ion-col size="5" class="last-col ion-text-center">
+                        <ion-button fill="clear" (click)="delete(guard)">
+                          <ion-icon name="trash"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" (click)="view(guard)">
+                          <ion-icon name="arrow-round-forward"></ion-icon>
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+
+                <ion-row>
+                  <ion-col size="7" class="ion-text-right">
+                    <h3>REPORTS</h3>
+                  </ion-col>
+                  <ion-col size="5" class="ion-text-right">
+                    <ion-button (click)="viewReport()">
+                      <ion-icon name="eye"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+                <div *ngIf="viewreport">
+
+                  <ion-row>
+                    <ion-col class="ion-text-center" size="6">
+                      <ion-item>
+                        <ion-select interface="popover"style="color: #ed1c24; min-width: 100%;" [(ngModel)]="report"
+                          (ionChange)="loadReports(report)">
+                          <ion-select-option>CLIENT INSTRUCTIONS</ion-select-option>
+                          <ion-select-option>CRIME INCIDENT REPORTS</ion-select-option>
+                          <ion-select-option>DISCIPLINARY REPORTS</ion-select-option>
+                          <ion-select-option>GENERAL INCIDENT REPORTS</ion-select-option>
+                          <ion-select-option *ngIf="user.companyId !== '0qbfVjnyuKE8EAdenn3T'">GENERAL SITE VISIT
+                            REPORTS</ion-select-option>
+                          <ion-select-option>INCIDENT NOTIFICATIONS</ion-select-option>
+                          <ion-select-option>LEAVE APPLICATIONS</ion-select-option>
+                          <ion-select-option>MEETING MINUTES</ion-select-option>
+                          <ion-select-option>RISK ASSESSMENTS</ion-select-option>
+                          <ion-select-option
+                            *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T' || user.companyId === '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">SITE VISIT REPORTS</ion-select-option>
+                          <ion-select-option
+                            *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T' || user.companyId === '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">TENANT VISITS</ion-select-option>
+                          <ion-select-option>TRAINING FORMS</ion-select-option>
+                          <ion-select-option
+                            *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T' || user.companyId === '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">TRANSPARENCY REPORTS</ion-select-option>
+                          <ion-select-option>UNIFORM ORDERS</ion-select-option>
+                          <ion-select-option>VEHICLE INSPECTIONS</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+
+                  <div *ngIf="formValue && normal">
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col>
+                          <h6 class="ion-text-center" style="color: white;">{{ report }}</h6>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="grid-header">
+                        <ion-col class="grid-header-item">DATE</ion-col>
+                        <ion-col class="grid-header-item">TIME</ion-col>
+                        <ion-col class="grid-header-item">MANAGER/ SUPERVISOR</ion-col>
+                        <ion-col class="grid-header-item">SITE</ion-col>
+                        <ion-col>
+                          <ion-icon class="icon-cog" name="cog"></ion-icon>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="grid-row" *ngFor="let report of reports | async">
+                        <ion-col class="grid-row-item ion-text-center">{{report.date}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.time}}</ion-col>
+                        <ion-col *ngIf="!userValue" class="grid-row-item ion-text-center">{{report.manager}}</ion-col>
+                        <ion-col *ngIf="userValue" class="grid-row-item ion-text-center">{{report.user}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.site}}</ion-col>
+                        <ion-col class="last-col ion-text-center">
+                          <ion-button fill="clear" (click)="download(report)">
+                            <ion-icon name="download" class="icon-more"></ion-icon>
+                          </ion-button>
+                          <ion-button
+                            *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'"
+                            fill="clear" (click)="deleteReport(report)">
+                            <ion-icon name="trash" class="icon-delete"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+
+                  <div
+                    *ngIf="report === 'DISCIPLINARY REPORTS' || report === 'TRAINING FORMS' || report === 'UNIFORM ORDERS'">
+                    <h6 class="ion-text-center" style="color: white;">DISCIPLINARY REPORTS</h6>
+                    <ion-grid>
+                      <ion-row class="grid-header">
+                        <ion-col class="grid-header-item">DATE</ion-col>
+                        <ion-col class="grid-header-item">TIME</ion-col>
+                        <ion-col class="grid-header-item">MANAGER/ SUPERVISOR</ion-col>
+                        <ion-col class="grid-header-item">STAFF MEMBER</ion-col>
+                        <ion-col>
+                          <ion-icon class="icon-cog" name="cog"></ion-icon>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="grid-row" *ngFor="let report of reports | async">
+                        <ion-col class="grid-row-item ion-text-center">{{report.date}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.time}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.user}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.so}}</ion-col>
+                        <ion-col class="last-col ion-text-center">
+                          <ion-button fill="clear" (click)="download(report)">
+                            <ion-icon name="download" class="icon-more"></ion-icon>
+                          </ion-button>
+                          <ion-button
+                            *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'"
+                            fill="clear" (click)="deleteReport(report)">
+                            <ion-icon name="trash" class="icon-delete"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+
+                  <div *ngIf="report === 'VEHICLE INSPECTIONS'">
+                    <h6 class="ion-text-center" style="color: white;">VEHICLE INSPECTIONS</h6>
+                    <ion-grid>
+                      <ion-row class="grid-header">
+                        <ion-col class="grid-header-item">DATE</ion-col>
+                        <ion-col class="grid-header-item">TIME</ion-col>
+                        <ion-col class="grid-header-item">INSPECTOR</ion-col>
+                        <ion-col class="grid-header-item">REGISTRATION</ion-col>
+                        <ion-col>
+                          <ion-icon class="icon-cog" name="cog"></ion-icon>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="grid-row" *ngFor="let report of reports | async">
+                        <ion-col class="grid-row-item ion-text-center">{{report.date}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.time}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.inspector}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.registration}}</ion-col>
+                        <ion-col class="last-col ion-text-center">
+                          <ion-button fill="clear" (click)="download(report)">
+                            <ion-icon name="download" class="icon-more"></ion-icon>
+                          </ion-button>
+                          <ion-button
+                            *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'"
+                            fill="clear" (click)="deleteReport(report)">
+                            <ion-icon name="trash" class="icon-delete"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+
+                  <div *ngIf="report === 'LEAVE APPLICATIONS'">
+                    <h6 class="ion-text-center" style="color: white;">LEAVE APPLICATIONS</h6>
+                    <ion-grid>
+                      <ion-row class="grid-header">
+                        <ion-col class="grid-header-item">DATE FROM</ion-col>
+                        <ion-col class="grid-header-item">DATE TO</ion-col>
+                        <ion-col class="grid-header-item">EMPLOYEE</ion-col>
+                        <ion-col class="grid-header-item">SITE</ion-col>
+                        <ion-col>
+                          <ion-icon class="icon-cog" name="cog"></ion-icon>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="grid-row" *ngFor="let report of reports | async">
+                        <ion-col class="grid-row-item ion-text-center">{{report.from}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.to}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.so}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.site}}</ion-col>
+                        <ion-col class="last-col ion-text-center">
+                          <ion-button fill="clear" (click)="download(report)">
+                            <ion-icon name="download" class="icon-more"></ion-icon>
+                          </ion-button>
+                          <ion-button
+                            *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'"
+                            fill="clear" (click)="deleteReport(report)">
+                            <ion-icon name="trash" class="icon-delete"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+
+                  <div *ngIf="report === 'AR SITE VISITS'">
+                    <h6 class="ion-text-center" style="color: white;">AR SITE VISITS</h6>
+                    <ion-grid>
+                      <ion-row class="grid-header">
+                        <ion-col class="grid-header-item">DATE</ion-col>
+                        <ion-col class="grid-header-item">TIME</ion-col>
+                        <ion-col class="grid-header-item">RESPONSE OFFICER</ion-col>
+                        <ion-col class="grid-header-item">SITE</ion-col>
+                        <ion-col>
+                          <ion-icon class="icon-cog" name="cog"></ion-icon>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="grid-row" *ngFor="let report of reports | async">
+                        <ion-col class="grid-row-item ion-text-center">{{report.date}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.time}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.user}}</ion-col>
+                        <ion-col class="grid-row-item ion-text-center">{{report.site}}</ion-col>
+                        <ion-col class="last-col ion-text-center">
+                          <ion-button fill="clear" (click)="download(report)">
+                            <ion-icon name="download" class="icon-more"></ion-icon>
+                          </ion-button>
+                          <ion-button
+                            *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'"
+                            fill="clear" (click)="deleteReport(report)">
+                            <ion-icon name="trash" class="icon-delete"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

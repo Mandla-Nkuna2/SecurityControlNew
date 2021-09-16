@@ -1,0 +1,175 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>CLIENT INSTRUCTION</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="instruction.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="instruction.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager/ Supervisor</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="instruction.user"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color: red !important">Site Name *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (ionChange)="getSiteDetails(instruction)"
+                        [(ngModel)]="instruction.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="instruction.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="instruction.site"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label *ngIf="clientValue" position="floating">Client Name *</ion-label>
+                      <ion-label *ngIf="!clientValue" position="floating" style="color: red !important">Client Name *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="instruction.client"></ion-input>
+                    </ion-item>
+
+                    <div>
+                      <ion-item>
+                        <ion-label *ngIf="detailsValue" position="floating">Details of Instruction *</ion-label>
+                        <ion-label *ngIf="!detailsValue" style="color: red !important" position="floating">Details of
+                          Instruction *
+                        </ion-label>
+                        <ion-textarea [readonly]="view" type="text" autocomplete="true" spellcheck="true"
+                          [(ngModel)]="instruction.details" autosize></ion-textarea>
+                      </ion-item>
+                    </div>
+
+                    <ion-item>
+                      <ion-label *ngIf="responsibleValue" position="floating">Person Responsible *</ion-label>
+                      <ion-label *ngIf="!responsibleValue" position="floating" style="color: red !important">Person
+                        Responsible *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="instruction.responsible"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="dateValue" position="floating">Action By Date *</ion-label>
+                      <ion-label *ngIf="!dateValue" position="floating" style="color: red !important">Action By Date *
+                      </ion-label>
+                      <ion-datetime [readonly]="view" [(ngModel)]="instruction.action" displayFormat="YYYY/MM/DD">
+                      </ion-datetime>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email Copy to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color: red !important">Email Copy to
+                        Client? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="instruction.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="instruction.emailToClient"></ion-input>
+                    </ion-item>
+
+                    <img style="display: block; margin-left: auto; margin-right: auto;" [src]="instruction.sigUser" alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigUser")'>Add Manager Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" class="ion-text-center">Manager Signature *</ion-label>
+                          <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Manager
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+
+
+                    <img style="display: block; margin-left: auto; margin-right: auto;" [src]="instruction.sigClient" alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigClient")'>Add Client Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sig2Value" class="ion-text-center">Client Signature *</ion-label>
+                          <ion-label *ngIf="!sig2Value" class="ion-text-center" style="color:red !important">Client
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+
+              </ion-slide>
+
+                </ion-slides>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(instruction)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

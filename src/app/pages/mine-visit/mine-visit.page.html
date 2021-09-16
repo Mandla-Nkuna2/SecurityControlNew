@@ -1,0 +1,900 @@
+<ion-header id="mine-visit">
+  <ion-toolbar color="primary">
+    <ion-buttons left>
+      <ion-button icon-left (click)="prev()">
+        <ion-icon name="arrow-back"></ion-icon> Prev
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="upper" id="titlesv">Mine Visit Report</ion-title>
+    <ion-buttons end>
+      <ion-button *ngIf="nxtButton" icon-right (click)="next()">Next
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding id="visit-bod">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #visitSlider>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label floating>Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="visit.date">{{visit.date}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="visit.time">{{visit.time}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Manager</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="visit.manager">{{visit.manager}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" floating>Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" floating style="color:red">Site Name *</ion-label>
+                      <ion-select interface="popover"(click)="searchSites(visit)" (ionChange)="getSiteDetails(visit)"
+                        [(ngModel)]="visit.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" floating>OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" floating style="color:red">OB Number *</ion-label>
+                      <ion-input [(ngModel)]="visit.ob" type="text"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="shiftValue" floating>Shift *</ion-label>
+                      <ion-label *ngIf="!shiftValue" floating style="color:red">shift *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.shift">
+                        <ion-select-option>Day</ion-select-option>
+                        <ion-select-option>Night</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <p *ngIf="!photoValue" style="color:red" text-center>Please take a Photo of the Site</p>
+                    <ion-row *ngIf="isApp">
+                      <ion-col text-center>
+                        <ion-button (click)="takePhoto1()" icon-left class="photo">
+                          <ion-icon name="camera"></ion-icon>Photo of Site *
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                    <div *ngIf="!isApp" text-center>
+                      <ion-button (click)="picture.click()" icon-left>
+                        <ion-icon name="camera"></ion-icon>Photo of Site *
+                      </ion-button>
+                    </div>
+                    <input #picture style="display:none;" type="file" accept="image/*" capture="camera">
+                    <img *ngIf="visit.photo1" [src]=visit.photo1 class="thumb">
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <p text-center>STAFF MEMBER INSPECTION</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="numValue" floating>Number of Staff on Duty *</ion-label>
+                      <ion-label *ngIf="!numValue" floating style="color:red">Number of Staff on Duty *</ion-label>
+                      <ion-input [(ngModel)]="visit.numSo" type="number"></ion-input>
+                    </ion-item>
+
+                    <div *ngIf="visit.numSo > 0">
+                      <ion-item>
+                        <ion-label *ngIf="soValue" floating>Staff Member on Duty *</ion-label>
+                        <ion-label *ngIf="!soValue" floating style="color:red">Staff Member on Duty *</ion-label>
+                        <ion-select interface="popover"(ionChange)="guardDetails(visit)" [(ngModel)]="visit.soKey">
+                          <ion-select-option *ngFor="let guard of guards | async" [value]=guard.Key>{{guard.name}}
+                          </ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <p *ngIf="!photo2Value" style="color:red" text-center>Please take a Photo of the Staff Member</p>
+                      <ion-row *ngIf="isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="takePhoto2()" icon-left class="photo">
+                            <ion-icon name="camera"></ion-icon>Staff Member Photo *
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngIf="!isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="picture2.click()" icon-left>
+                            <ion-icon name="camera"></ion-icon>Staff Member Photo *
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <img *ngIf="visit.photo2" [src]=visit.photo2 class="thumb">
+
+                      <ion-item>
+                        <ion-label *ngIf="uniformValue" floating>GUARD VISIBLE? *</ion-label>
+                        <ion-label *ngIf="!uniformValue" floating style="color:red">GUARD VISIBLE? *</ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.uniforms">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com1" autocomplete="true" type="text" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="roomValue" floating>GUARD ATTENTIVE TO CLIENTS AND CONTRACTORS? *</ion-label>
+                        <ion-label *ngIf="!roomValue" floating style="color:red">GUARD ATTENTIVE TO CLIENTS AND
+                          CONTRACTORS? *</ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.guardroom">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com2" type="text" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="obBookValue" floating>GUARD IN FULL UNIFORM? *</ion-label>
+                        <ion-label *ngIf="!obBookValue" floating style="color:red">GUARD IN FULL UNIFORM? *</ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.obComplete">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com3" type="text" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="regValue" floating>GUARD SHAVED AND NEATLY DRESSED? *</ion-label>
+                        <ion-label *ngIf="!regValue" floating style="color:red">GUARD SHAVED AND NEATLY DRESSED? *
+                        </ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.registers">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com4" type="text" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="alarmsValue" floating>GUARD WEARING BODY EQUIPMENT? *</ion-label>
+                        <ion-label *ngIf="!alarmsValue" floating style="color:red">GUARD WEARING BODY EQUIPMENT? *
+                        </ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.alarms">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com5" type="text" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="radiosValue" floating>GUARD SOBER, NOT SMELLING OF ALCOHOL? *</ion-label>
+                        <ion-label *ngIf="!radiosValue" floating style="color:red">GUARD SOBER, NOT SMELLING OF ALCOHOL?
+                          *</ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.radios">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com6" type="text" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="panicValue" floating>GUARD FAMILIAR WITH PROCESS WHEN PERSON REFUSES ALCOHOL
+                          TEST? *</ion-label>
+                        <ion-label *ngIf="!panicValue" floating style="color:red">GUARD FAMILIAR WITH PROCESS WHEN
+                          PERSON REFUSES ALCOHOL TEST? *</ion-label>
+                        <ion-select interface="popover"[(ngModel)]="visit.panic">
+                          <ion-select-option>Yes</ion-select-option>
+                          <ion-select-option>No</ion-select-option>
+                          <ion-select-option>Not Applicable</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Comments</ion-label>
+                        <ion-input [(ngModel)]="visit.com7" type="text" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <img [src]="visit.guardSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                      <ion-item lines="none">
+                        <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("guardSig")'>Add Staff Signature
+                        </ion-button>
+                      </ion-item>
+
+                      <ion-row>
+                        <ion-item>
+                          <ion-label *ngIf="guardSigValue" text-center>Staff Member Signature *</ion-label>
+                          <ion-label *ngIf="!guardSigValue" text-center style="color:red">Staff Member Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-row>
+               
+                    </div>
+
+                    <input #picture2 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                  </ion-slide>
+
+                  <ion-slide>
+                    <p text-center>SITE CHECKLIST INSPECTION</p>
+
+                    <ion-item>
+                      <ion-label *ngIf="phoneValue" floating>ALCOHOL BLOWER PRESENT AND IN GOOD WORKING CONDITION? *
+                      </ion-label>
+                      <ion-label *ngIf="!phoneValue" floating style="color:red">ALCOHOL BLOWER PRESENT AND IN GOOD
+                        WORKING CONDITION? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.phone">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com8" type="text" autocomplete="true" spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="patrolValue" floating>ALL STAFF AND VISITORS ENTERING MINING AREA SUBJECTED TO
+                        ALCOHOL TEST? *</ion-label>
+                      <ion-label *ngIf="!patrolValue" floating style="color:red">ALL STAFF AND VISITORS ENTERING MINING
+                        AREA SUBJECTED TO ALCOHOL TEST? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.patrol">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com9" type="text" autocomplete="true" spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="torchValue" floating>NO RISK/UNFAMILIAR VEHICLES / PERSONS OUTSIDE THE GATE? *
+                      </ion-label>
+                      <ion-label *ngIf="!torchValue" floating style="color:red">NO RISK/UNFAMILIAR VEHICLES / PERSONS
+                        OUTSIDE THE GATE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.torch">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com10" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="elecValue" floating>GATES LOCKED AFTER HOURS? *</ion-label>
+                      <ion-label *ngIf="!elecValue" floating style="color:red">GATES LOCKED AFTER HOURS? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.elec">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com11" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="camValue" floating>GATES LOCKED WHILE BLASTING IN PROCESS (DAYSHIFT ONLY)? *
+                      </ion-label>
+                      <ion-label *ngIf="!camValue" floating style="color:red">GATES LOCKED WHILE BLASTING IN PROCESS
+                        (DAYSHIFT ONLY)? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.cameras">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com12" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>PEDESTRIAN GATE LOCKED AFTER HOURS? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.pedestrian">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com13" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>GUARDHOUSE CLEAN AND PRESENTABLE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.presentable">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com14" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>NO UNIFORM LEFT ON SITE BY OFF DUTY GUARDS? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.left">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com15" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>NO UNSAFE HEATERS, OPEN WALL PLUGS IN GUARD HOUSE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.heaters">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com16" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>VISITORS ANNOUNCED? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.announced">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com17" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>VISITORS SIGNED IN? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.signedin">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com18" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>VISITORS SIGNED OUT? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.signedout">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com19" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>COLLECTION TRUCKS NOT ALLOWED THROUGH MAIN GATE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.collection">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com20" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>OB COMPLETED : HOURLY CONTROL NUMBERS RECORDED (NIGHTSHIFT ONLY)? *
+                      </ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.hourly">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com21" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL INCIDENTS REPORTED TO CONTROL ROOM? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.incidents">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com22" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>HANDOVER COMPLETED AND EQUIPMENT SIGNED FOR? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.handover">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com23" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL EQUIPMENT PRESENT AS PER HANDOVER? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.equipment">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com24" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL EQUIPMENT IN WORKING CONDITION? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.working">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com25" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>PANIC BUTTON WITH GUARD? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.panicGuard">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com26" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>TORCH, RADIO AND SEFEKO ON CHARGE (DAYSHIFT ONLY)? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.safeko">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com27" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL RADIO COMMUNICATION TESTED AND WORKING? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.tested">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com28" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>DUTY ROSTER PRESENT AND ON DISPLAY? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.present">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com29" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>GUARDS COMPLYING TO DUTY ROSTER? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.comply">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com30" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>SOP PRESENT? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.sop">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com31" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL GUARDS ON SITE SIGNED OFF SOP? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.signed">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com32" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL GUARDS ID COPIES PRESENT? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.ids">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com33" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide *ngIf="visit.shift == 'Night'">
+                    <p text-center>NIGHT SHIFT CHECKS</p>
+
+                    <ion-item>
+                      <ion-label floating>CLOCKING POINTS SECURE FOR GATE/PLANT AREA? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.points">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com34" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>QUANTITY OF POINTS FOUND?</ion-label>
+                      <ion-input [(ngModel)]="visit.qty" type="text" autocomplete="true" spellcheck="true"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL POINT SECURELY IN PLACE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.inplace">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com35" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>VALID COMPLAINTS REGARDING POINTS FROM GUARD? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.complaints">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com36" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>QUANTITY WORKSHOP AREA CLOCKING POINTS FOUND</ion-label>
+                      <ion-input [(ngModel)]="visit.workshop" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL POINTS SECURELY IN PLACE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.secure">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com37" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>VALID COMPLAINTS FROM GUARD? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.valid">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com38" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>WORKSHOP AND SURROUNDING BUILDING DOORS AND WINDOWS LOCKED? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.windows">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com39" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>QUANTITY SITE SUPERVISOR CLOCKING POINTS FOUND? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.supervisor">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com40" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL POINTS SECURELY IN PLACE? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.place">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com41" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>VALID COMPLAINTS FROM SUPERVISOR? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.supCom">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com42" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ROBOGUARDS TEST CONDUCTED? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.test">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com43" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL ROBOGUARDS ACTIVATED? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.activated">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com44" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>NUMBERS NOT ACTIVATING</ion-label>
+                      <ion-input [(ngModel)]="visit.notActive" type="number"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>ALL CONSTRUCTION VEHICLES CHECKED-LOCKED? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="visit.checked">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                        <ion-select-option>Not Applicable</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Comments</ion-label>
+                      <ion-input [(ngModel)]="visit.com45" type="text" autocomplete="true" spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <img [src]="visit.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Manager Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-item>
+                        <ion-label *ngIf="sigValue" text-center>Manager Signature *</ion-label>
+                        <ion-label *ngIf="!sigValue" text-center style="color:red">Manager Signature *</ion-label>
+                      </ion-item>
+                    </ion-row>
+                  
+
+                    <ion-button full (click)="save(visit)">Save</ion-button>
+                  </ion-slide>
+
+                </ion-slides>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

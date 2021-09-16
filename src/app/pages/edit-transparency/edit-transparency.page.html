@@ -1,0 +1,291 @@
+<ion-header>
+  <ion-toolbar color="primary" id="trans">
+    <ion-buttons left>
+      <ion-button icon-left (click)="prev()">
+        <ion-icon name="arrow-back"></ion-icon> Prev
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="upper">Transparency Report</ion-title>
+    <ion-buttons end>
+      <ion-button *ngIf="nxtButton" icon-right (click)="next()">Next
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+                <ion-slides #transSlider>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label floating>Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="trans.date">{{trans.date}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="trans.time">{{trans.time}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Manager</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="trans.manager">{{trans.manager}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" floating>Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" floating style="color:red">Site Name *</ion-label>
+                      <ion-select interface="popover"(click)="searchSites(trans)" (ionChange)="getSiteDetails(trans)"
+                        [(ngModel)]="trans.siteKey">
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site.key>{{site.name}}</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" floating>OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" floating style="color:red">OB Number *</ion-label>
+                      <ion-input [(ngModel)]="trans.ob" type="text"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-row>
+                      <ion-col>SNAG REPORT & FINDINGS</ion-col>
+                    </ion-row>
+
+                    <div>
+
+                      <p style="color:red;" text-center *ngIf="!photoValue">Please Take a Photo!</p>
+                      <ion-row *ngIf="isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="takePhoto1()" icon-left class="photo">
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem *
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngIf="!isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="picture1.click()" icon-left>
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem *
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <input #picture1 style="display:none;" type="file" accept="image/*" capture="camera">
+                      <img *ngIf="trans.photo1" [src]=trans.photo1>
+
+                      <ion-item>
+                        <ion-label *ngIf="detailsValue" floating>Details of Findings *</ion-label>
+                        <ion-label *ngIf="!detailsValue" floating style="color:red;">Details of Findings *</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.details1" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="actionsValue" floating>Actions Taken *</ion-label>
+                        <ion-label *ngIf="!actionsValue" floating style="color:red">Actions Taken *</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.actions1" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="recommendValue" floating>Recommendations *</ion-label>
+                        <ion-label *ngIf="!recommendValue" floating style="color:red">Recommendations *</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.recommendations1" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+
+                    </div>
+
+                    <ion-button (click)="addSnag2()" full>Add Snag</ion-button>
+
+                    <div *ngIf="snag2">
+                      <ion-row *ngIf="isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="takePhoto2()" icon-left class="photo">
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngIf="!isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="picture2.click()" icon-left>
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem *
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <img *ngIf="trans.photo2" [src]=trans.photo2 class="thumb">
+
+                      <ion-item>
+                        <ion-label floating>Details of Findings</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.details2" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Actions Taken</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.actions2" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Recommendations</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.recommendations2" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+
+                      <ion-button (click)="addSnag3()" full>Add Snag</ion-button>
+                    </div>
+                    <input #picture2 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                    <div *ngIf="snag3">
+                      <ion-row *ngIf="isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="takePhoto3()" icon-left class="photo">
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngIf="!isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="picture3.click()" icon-left>
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <img *ngIf="trans.photo3" [src]=trans.photo3 class="thumb">
+
+                      <ion-item>
+                        <ion-label floating>Details of Findings</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.details3" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Actions Taken</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.actions3" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Recommendations</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.recommendations3" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+
+                      <ion-button (click)="addSnag4()" full>Add Snag</ion-button>
+                    </div>
+                    <input #picture3 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                    <div *ngIf="snag4">
+                      <ion-row *ngIf="!isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="takePhoto4()" icon-left class="photo">
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngIf="!isApp">
+                        <ion-col text-center>
+                          <ion-button (click)="picture4.click()" icon-left>
+                            <ion-icon name="camera"></ion-icon>Photo of Detected Problem
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                      <img *ngIf="trans.photo4" [src]=trans.photo4 class="thumb">
+
+                      <ion-item>
+                        <ion-label floating>Details of Findings</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.details4" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Actions Taken</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.actions4" autocomplete="true" spellcheck="true">
+                        </ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label floating>Recommendations</ion-label>
+                        <ion-input type="text" [(ngModel)]="trans.recommendations4" autocomplete="true"
+                          spellcheck="true"></ion-input>
+                      </ion-item>
+                    </div>
+                    <input #picture4 style="display:none;" type="file" accept="image/*" capture="camera">
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" floating>Email Minutes to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" floating style="color:red">Email Minutes to Client? *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="trans.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                    <img [src]="trans.manSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("manSig")'>Add Manager Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-item>
+                        <ion-label *ngIf="sigValue" text-center>Manager Signature *</ion-label>
+                        <ion-label *ngIf="!sigValue" text-center style="color:red">Manager Signature *</ion-label>
+                      </ion-item>
+                    </ion-row>
+                  <img [src]="trans.guardSig" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("guardSig")'>Add Guard Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-item>
+                        <ion-label text-center>Guard Signature</ion-label>
+                      </ion-item>
+                    </ion-row>
+                  </ion-slide>
+
+                </ion-slides>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer class="footer">
+  <ion-row>
+    <ion-col text-center>
+      <i class="icofont-save save" (click)="save(trans)"></i><br>
+      Save
+    </ion-col>
+    <ion-col text-center>
+      <i class="icofont-paper send" (click)="send(trans)"></i><br>
+      Send
+    </ion-col>
+    <ion-col text-center>
+      <i class="icofont-ui-delete delete" (click)="delete()"></i><br>
+      Delete
+    </ion-col>
+  </ion-row>
+</ion-footer>

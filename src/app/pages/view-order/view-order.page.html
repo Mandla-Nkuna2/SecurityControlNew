@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-title class="title-font">View Work Order</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid>
+
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>DATE CREATED:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.date}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>TIME CREATED:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.time}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>MANAGER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.manager}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>ASSIGNED TECHNICIAN:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.assignedName}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>TYPE:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.type}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>CUSTOMER:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.customer}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>DESCRIPTION:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.desc}}</ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="order.status === 'In Progress' || order.status === 'Closed'">
+                    <ion-col class="tbl-label">
+                      <p>JOB DATE:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.date}}</ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="order.status === 'In Progress' || order.status === 'Closed'">
+                    <ion-col class="tbl-label">
+                      <p>JOB TIME:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.time}}</ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="order.status === 'In Progress' || order.status === 'Closed'">
+                    <ion-col class="tbl-label">
+                      <p>JOB CARD NO:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.cardNo}}</ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="order.status === 'In Progress' || order.status === 'Closed'">
+                    <ion-col class="tbl-label">
+                      <p>ACTIONS:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.actions}}</ion-col>
+                  </ion-row>
+                  <ion-row *ngIf="order.status === 'In Progress' || order.status === 'Closed'">
+                    <ion-col class="tbl-label">
+                      <p>MATERIALS:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">{{order.material}}</ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label">
+                      <p>STATUS:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item">
+                      {{order.status}}
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col class="tbl-label tbl-last">
+                      <p>FINAL STATUS:</p>
+                    </ion-col>
+                    <ion-col class="tbl-item tbl-last">
+                      <ion-input [(ngModel)]="order.finalStatus" (ionChange)="saveStatus(order)"></ion-input>
+                    </ion-col>
+                  </ion-row>
+
+                  <div *ngIf="technical">
+                    <ion-row *ngIf="order.status === 'Pending' || order.status === 'Received'">
+                      <ion-col class="ion-text-center">
+                        <ion-button (click)="action(order)">Complete Job Card
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

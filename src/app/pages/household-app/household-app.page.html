@@ -1,0 +1,365 @@
+<ion-header id="meeting">
+  <ion-toolbar color="primary">
+    <ion-buttons left>
+      <ion-button icon-left (click)="prev()">
+        <ion-icon name="arrow-back"></ion-icon> Prev
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="upper">Commercial Application</ion-title>
+    <ion-buttons end>
+      <ion-button *ngIf="nxtButton" icon-right (click)="next()">Next
+        <ion-icon name="arrow-forward"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding id="app-body">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #visitSlider>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label floating>Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="app.date">{{app.date}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="app.time">{{app.time}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Represenative</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="app.user">{{app.user}}</ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="fullNameValue" floating>Client's full names *</ion-label>
+                      <ion-label *ngIf="!fullNameValue" floating style="color:red">Client's full names *</ion-label>
+                      <ion-input [(ngModel)]="app.fullName"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="addressValue" floating>Client's address *</ion-label>
+                      <ion-label *ngIf="!addressValue" floating style="color:red">Client's address *</ion-label>
+                      <ion-input [(ngModel)]="app.address"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="idValue" floating>Client's ID Number *</ion-label>
+                      <ion-label *ngIf="!idValue" floating style="color:red">Client's ID Number *</ion-label>
+                      <ion-input [(ngModel)]="app.id"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="maritalValue" floating>Client's Marital Status *</ion-label>
+                      <ion-label *ngIf="!maritalValue" floating style="color:red">Client's Marital Status *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="app.marital">
+                        <ion-select-option>Single</ion-select-option>
+                        <ion-select-option>Married</ion-select-option>
+                        <ion-select-option>Divorced</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <div *ngIf="app.marital === 'Married'">
+                      <ion-item>
+                        <ion-label *ngIf="typeValue" floating>Marriage Type *</ion-label>
+                        <ion-label *ngIf="!typeValue" floating style="color:red">Marriage Type *</ion-label>
+                        <ion-select interface="popover"[(ngModel)]="app.type">
+                          <ion-select-option>In Community of Property</ion-select-option>
+                          <ion-select-option>Out of Community of Property</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="spouseValue" floating>Client's Spouse full names *</ion-label>
+                        <ion-label *ngIf="!spouseValue" floating style="color:red">Client's Spouse full names *
+                        </ion-label>
+                        <ion-input [(ngModel)]="app.spouse"></ion-input>
+                      </ion-item>
+
+                      <ion-item>
+                        <ion-label *ngIf="spouseIdValue" floating>Client's Spouse ID Number *</ion-label>
+                        <ion-label *ngIf="!spouseIdValue" floating style="color:red">Client's Spouse ID Number *
+                        </ion-label>
+                        <ion-input [(ngModel)]="app.spouseId"></ion-input>
+                      </ion-item>
+                    </div>
+
+                    <ion-item>
+                      <ion-label *ngIf="emailValue" floating>Client's Email Address for Notices *</ion-label>
+                      <ion-label *ngIf="!emailValue" floating style="color:red">Client's Email Address for Notices *
+                      </ion-label>
+                      <ion-input [(ngModel)]="app.email"></ion-input>
+                    </ion-item>
+
+
+                    <ion-button full round (click)="postal()">POSTAL ADDRESS SAME AS REGISTERED ADDRESS</ion-button>
+
+                    <ion-item>
+                      <ion-label *ngIf="postalValue" floating>Client's Registered Postal Address *</ion-label>
+                      <ion-label *ngIf="!postalValue" floating style="color:red">Client's Registered Postal Address *
+                      </ion-label>
+                      <ion-input [(ngModel)]="app.postal"></ion-input>
+                    </ion-item>
+
+                    <p style="color: red; text-align: center">Client's Identity Document Copy</p>
+                    <ion-button full round icon-left (click)="photo1()">
+                      <ion-icon name="camera"></ion-icon>ID Photo
+                    </ion-button>
+                    <img *ngIf="app.photo1" [src]=app.photo1>
+
+                    <p style="color: red; text-align: center">Water and lights account or signed rental contract (not
+                      older than 3
+                      months)</p>
+                    <ion-button full round icon-left (click)="photo2()">
+                      <ion-icon name="camera"></ion-icon>Proof of Address Photo
+                    </ion-button>
+                    <img *ngIf="app.photo2" [src]=app.photo2>
+
+                    <div *ngIf="app.marital === 'Married'">
+                      <p style="color: red; text-align: center">Client's Spouse Identity Document
+                        Copy</p>
+                      <ion-button full round icon-left (click)="photo3()">
+                        <ion-icon name="camera"></ion-icon>Spouse ID Photo
+                      </ion-button>
+                      <img *ngIf="app.photo3" [src]=app.photo3>
+                    </div>
+
+                  </ion-slide>
+
+                  <ion-slide>
+                    <h2 text-center>APPLICATION TERMS</h2>
+
+                    <ion-list>
+                      <ion-label text-wrap>Your application is subject to our credit assessment,
+                        approval criteria and conditions being satisfied. We have the discretion based on these criteria
+                        to decline or
+                        approve your application or we may offer you a different plan from the plan you selected on your
+                        application.
+                        We reserve the right to grant or refuse your application. You agree that the Credit Provider and
+                        its business
+                        associates may obtain personal information about you from all or any credit bureaus and/or
+                        registers which contain such information and may initially screen, verify and process the
+                        application and
+                        information you supply for credit and all relevant information</ion-label>
+                      <ion-label text-wrap>You agree to accept this application form as part of this agreement once your
+                        application
+                        is approved</ion-label>
+                      <ion-label text-wrap>We agree to render the services and subscription to you on the terms and
+                        conditions of the
+                        services and subscription agreement attached hereto for your perusal</ion-label>
+                      <ion-label text-wrap>You acknowledge, confirm and agree that neither we nor any other member of
+                        our group of
+                        companies (which, for the purposes hereof, means a holding contractor and all of its
+                        subsidiaries), our
+                        respective affiliates, employees, officers or directors, shall be liable for any loss, costs,
+                        expenses or
+                        damages of whatever nature (whether direct, indirect, consequential or other), which you may
+                        suffer or incur
+                        as a result of, arising from, or in connection with any steps we take or do not take to comply
+                        with our
+                        obligations under these laws</ion-label>
+                      <ion-label text-wrap>The parties agree that on acceptance of this application the attached
+                        household service
+                        and subscription agreement will be signed by both parties by the applicant and contractor hereto
+                      </ion-label>
+                      <ion-label text-wrap>You acknowledge that the Cntractor shall be entitled to share your personal
+                        information
+                        with its business associates for purposes (including, without limitation, the processing of
+                        transactions,
+                        acceptance of payments and/or administration of your elections on the application or in terms of
+                        any agreement
+                        that comes into place between yourself and the contractor.</ion-label>
+                    </ion-list>
+
+                    <ion-item>
+                      <ion-label *ngIf="applicantValue" floating>Applicant *</ion-label>
+                      <ion-label *ngIf="!applicantValue" floating style="color:red">Applicant *</ion-label>
+                      <ion-input [(ngModel)]="app.applicant">{{app.fullName}}</ion-input>
+                    </ion-item>
+
+                    <img [src]="app.signature" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("signature")'>Add Applicant Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-item>
+                        <ion-label *ngIf="sigValue" text-center>Applicant Signature *</ion-label>
+                        <ion-label *ngIf="!sigValue" text-center style="color: red">Applicant Signature *</ion-label>
+                      </ion-item>
+                    </ion-row>
+                 
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <h2 text-center>INSTALLATION AND OR ADDITION LAYOUT FOR TECHNICAL</h2>
+
+                    <ion-item>
+                      <ion-label floating>Contact Person *</ion-label>
+                      <ion-input [(ngModel)]="app.contact"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Premises Type *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="app.premises">
+                        <ion-select-option>Factory (Double)</ion-select-option>
+                        <ion-select-option>Factory (Single)</ion-select-option>
+                        <ion-select-option>Office (Double)</ion-select-option>
+                        <ion-select-option>Office (single)</ion-select-option>
+                        <ion-select-option>House (Double)</ion-select-option>
+                        <ion-select-option>House (single)</ion-select-option>
+                        <ion-select-option>Other</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item *ngIf="app.premises === 'Other'">
+                      <ion-label floating>Other Description *</ion-label>
+                      <ion-input [(ngModel)]="app.other"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label floating>Roof type *</ion-label>
+                      <ion-select interface="popover"[(ngModel)]="app.roof">
+                        <ion-select-option>Pitch</ion-select-option>
+                        <ion-select-option>Surface</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <h2 text-center>STOCK LIST</h2>
+                    <ion-item>
+                      <ion-label floating>Qty</ion-label>
+                      <ion-input [(ngModel)]="app.qty1" type="number"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label floating>Description</ion-label>
+                      <ion-input [(ngModel)]="app.desc1"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label floating>Instillation Area</ion-label>
+                      <ion-input [(ngModel)]="app.area1"></ion-input>
+                    </ion-item>
+
+                    <div *ngIf="app.area1">
+                      <ion-item>
+                        <ion-label floating>Qty</ion-label>
+                        <ion-input [(ngModel)]="app.qty2" type="number"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Description</ion-label>
+                        <ion-input [(ngModel)]="app.desc2"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Instillation Area</ion-label>
+                        <ion-input [(ngModel)]="app.area2"></ion-input>
+                      </ion-item>
+                    </div>
+
+                    <div *ngIf="app.area2">
+                      <ion-item>
+                        <ion-label floating>Qty</ion-label>
+                        <ion-input [(ngModel)]="app.qty3" type="number"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Description</ion-label>
+                        <ion-input [(ngModel)]="app.desc3"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Instillation Area</ion-label>
+                        <ion-input [(ngModel)]="app.area3"></ion-input>
+                      </ion-item>
+                    </div>
+
+                    <div *ngIf="app.area3">
+                      <ion-item>
+                        <ion-label floating>Qty</ion-label>
+                        <ion-input [(ngModel)]="app.qty4" type="number"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Description</ion-label>
+                        <ion-input [(ngModel)]="app.desc4"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Instillation Area</ion-label>
+                        <ion-input [(ngModel)]="app.area4"></ion-input>
+                      </ion-item>
+                    </div>
+
+                    <div *ngIf="app.area4">
+                      <ion-item>
+                        <ion-label floating>Qty</ion-label>
+                        <ion-input [(ngModel)]="app.qty5" type="number"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Description</ion-label>
+                        <ion-input [(ngModel)]="app.desc5"></ion-input>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label floating>Instillation Area</ion-label>
+                        <ion-input [(ngModel)]="app.area5"></ion-input>
+                      </ion-item>
+                    </div>
+
+                    <p text-center>The client has been requested to the positioning of equipment as per quotation and
+                      herewith the
+                      Installation and or equipment layout for technical installation team. Any additional work not
+                      recorded here will
+                      be billed at prevailing prices of company.</p>
+                    <p text-center>DIAGRAM</p>
+                    <p text-center style="color: red">(NB: All trenching and conduit will be done by client prior to
+                      commencement of
+                      installation)</p>
+                    <p>The following drawings codes must be used:</p>
+                    <img
+                      src="https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/keys.png?alt=media&token=7049f739-deab-4957-9180-fcd07ff2efbc">
+                    <ion-button full round icon-left (click)="photo5()">
+                      <ion-icon name="camera"></ion-icon>Diagram Photo
+                    </ion-button>
+
+                  </ion-slide>
+
+                  <ion-slide>
+                    <ion-item>
+                      <ion-label floating>Office Notes</ion-label>
+                      <ion-textarea style="min-height: 300px;" [(ngModel)]="app.notes"></ion-textarea>
+                    </ion-item>
+
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer class="footer">
+  <ion-row>
+    <ion-col text-center>
+      <i class="icofont-save save" (click)="save(app)"></i><br>
+      Save
+    </ion-col>
+    <ion-col text-center>
+      <i class="icofont-paper send" (click)="send(app)"></i><br>
+      Send
+    </ion-col>
+  </ion-row>
+</ion-footer>

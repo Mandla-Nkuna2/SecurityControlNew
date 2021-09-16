@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">Add Staff To {{ guard.site }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-button (click)="all()">
+                      <ion-icon name="clipboard"></ion-icon>ALL STAFF
+                    </ion-button>
+                  </ion-col>
+                  <ion-col class="ion-text-center">
+                    <ion-button (click)="name()">
+                      <ion-icon name="search"></ion-icon>SEARCH NAME
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+
+                <ion-searchbar *ngIf="guardName === true" class="background" style="border: solid 1px #488aff"
+                  type="text" [(ngModel)]="searchterm" (ngModelChange)="searchterm = $event.toLocaleUpperCase()"
+                  (ionInput)="search($event)" (keydown)="search($event)"></ion-searchbar>
+
+                <div *ngIf="searching === true">
+                  <ion-item>
+                    <ion-label position="floating">Staff:</ion-label>
+                    <ion-select interface="popover"(ionChange)="check()" [(ngModel)]="guard.name">
+                      <ion-select-option *ngFor="let staff of guards">{{ staff.name }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+
+                <div *ngIf="searching === false">
+                  <ion-item>
+                    <ion-label position="stacked">All Staff:</ion-label>
+                    <ion-select interface="popover"(ionChange)="check()" [(ngModel)]="guard.name">
+                      <ion-select-option *ngFor="let staff of allGuards | async">{{ staff.name }}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </div>
+
+                <ion-button expand="block" (click)="add(guard)">Add Staff Member</ion-button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</ion-content>
+

@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">BUG REPORTS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="background-color">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid>
+                  <ion-row class="grid-header">
+                    <ion-col class="grid-header-item">DATE STAMP</ion-col>
+                    <ion-col class="grid-header-item">USER</ion-col>
+                    <ion-col class="grid-header-item">EMAIL</ion-col>
+                    <ion-col class="grid-header-item">CONTACT</ion-col>
+                    <ion-col>
+                      <ion-icon name="cog" class="icon-settings"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row" *ngFor="let bug of bugs | async">
+                    <ion-col class="grid-row-item" text-center>{{bug.dateStamp | date:'short'}}</ion-col>
+                    <ion-col class="grid-row-item" text-center>{{bug.user}}</ion-col>
+                    <ion-col class="grid-row-item" text-center>{{bug.email}}</ion-col>
+                    <ion-col class="grid-row-item" text-center>{{bug.contact}}</ion-col>
+                    <ion-col class="last-col" text-center>
+                      <ion-button fill="clear" (click)="view(bug)">
+                        <ion-icon name="arrow-forward-circle-outline" class="icon-more"></ion-icon>
+                      </ion-button>
+                      <ion-button (click)="delete(bug)">
+                        <ion-icon name="trash" class="icon-delete"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

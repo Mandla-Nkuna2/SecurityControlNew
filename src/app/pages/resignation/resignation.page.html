@@ -1,0 +1,148 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="exit()">Exit <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Voluntary Resignation Letter</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label position="floating">Date</ion-label>
+                  <ion-input [(ngModel)]="appeal.date" [readonly]="true"></ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='employeeName'>Employee Full Name</ion-label>
+                  <ion-label position="floating" *ngIf="!employeeName" style="color:red !important">Employee Full Name
+                  </ion-label>
+                  <ion-input [(ngModel)]="appeal.employeeName"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='companyNumber'>Company Number </ion-label>
+                  <ion-label position="floating" *ngIf="!companyNumber" style="color:red !important">Company Number
+                  </ion-label>
+                  <ion-input [(ngModel)]="appeal.companyNumber"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='position'>Position held in company </ion-label>
+                  <ion-label position="floating" *ngIf="!position" style="color:red !important">Position held in company
+                  </ion-label>
+                  <ion-input [(ngModel)]="appeal.position"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Notice</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="appeal.notice" multiple="true">
+                    <ion-select-option>I will work my full notice period as prescribed by the company in terms of my
+                      length of employment</ion-select-option>
+                    <ion-select-option>I will not work my notice period and hereby authorize the company to deduct the
+                      necessary amount payable in lieu of notice.</ion-select-option>
+
+                  </ion-select>
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='site'>Worked at Site </ion-label>
+                  <ion-label position="floating" *ngIf="!site" style="color:red !important">Worked at Site
+                  </ion-label>
+                  <ion-input [(ngModel)]="appeal.site"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='last'>Last Day </ion-label>
+                  <ion-label position="floating" *ngIf="!last" style="color:red !important">Last Day
+                  </ion-label>
+                  <ion-datetime (ionChange)=dat() displayFormat="DD/MM/YYYY" [(ngModel)]="appeal.last"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating" *ngIf='place'>Signed at</ion-label>
+                  <ion-label position="floating" *ngIf="!place" style="color:red !important">Signed at
+                  </ion-label>
+                  <ion-input [(ngModel)]="appeal.place"></ion-input>
+                </ion-item>
+
+
+
+                <p>I, {{appeal.employeeName}} with company number: {{appeal.companyNumber}}, herewith notify you that I
+                  am resigning from my position as (Position held in company) {{appeal.position}} at (Site name)
+                  {{appeal.site}}.
+                  My last day of employment will be {{appeal.last}}.
+                </p>
+
+
+                <h3>Witness</h3>
+
+                <img [src]="appeal.employeeSign" style="display: block; margin-left: auto; margin-right: auto;" alt="">
+
+                <ion-item lines="none">
+                  <ion-button style="margin-left: auto; margin-right: auto;" (click)='openPOP("employeeSign")'>Add
+                    Witness Signature
+                  </ion-button>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label *ngIf='employeeSign' class="ion-text-center">Employee Signature</ion-label>
+                      <ion-label *ngIf='!employeeSign' class="ion-text-center" style="color:red !important">Employee
+                        Signature
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <img [src]="appeal.supervisorSign" style="display: block; margin-left: auto; margin-right: auto;"
+                  alt="">
+
+                <ion-item lines="none">
+                  <ion-button style="margin-left: auto; margin-right: auto;" (click)='openPOP("supervisorSign")'>Add
+                    Supervisor Signature
+                  </ion-button>
+                </ion-item>
+
+
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <ion-item>
+                      <ion-label *ngIf='supervisorSign' class="ion-text-center">Supervisor Signature</ion-label>
+                      <ion-label *ngIf='!supervisorSign' class="ion-text-center" style="color:red !important">Supervisor
+                        Signature
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check()">
+        Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

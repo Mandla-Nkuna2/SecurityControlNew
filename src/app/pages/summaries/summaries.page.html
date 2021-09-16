@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="menu"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-font">SUMMARIES</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-button class="big-button" (click)="all()">
+                        <ion-icon slot="start" name="pie"></ion-icon>
+                        OVERALL SUMMARY
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button class="big-button" (click)="visit()">
+                        <ion-icon slot="start" name="globe"></ion-icon>
+                        SITE VISIT SUMMARY
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col>
+                      <ion-button class="big-button" (click)="fleet()">
+                        <ion-icon slot="start" name="car"></ion-icon>
+                        VEHICLE SUMMARY
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button class="big-button" (click)="training()">
+                        <ion-icon slot="start" name="people"></ion-icon>
+                        TRAINING SUMMARY
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row>
+                    <ion-col>
+                      <ion-button class="big-button" (click)="ob()">
+                        <ion-icon slot="start" name="clipboard"></ion-icon>
+                        OB ENTRY SUMMARY
+                      </ion-button>
+                    </ion-col>
+                    <ion-col>
+                      <ion-button class="big-button" (click)="incident()">
+                        <ion-icon slot="start" name="alert"></ion-icon>
+                        INCIDENT SUMMARY
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

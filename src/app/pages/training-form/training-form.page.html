@@ -1,0 +1,259 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="prevButton" (click)="prev()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Training Form</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="nxtButton" (click)="next()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-slides #slides pager="false" [options]="{autoScaleSlider: true}">
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label position="floating">Date</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="training.date"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Time</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="training.time"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Manager/ Supervisor</ion-label>
+                      <ion-input [readonly]="true" [(ngModel)]="training.user"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="siteValue" position="floating">Site Name *</ion-label>
+                      <ion-label *ngIf="!siteValue" position="floating" style="color:red !important">Site Name *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view && !saved" (click)="searchSites(training)" (ionChange)="getSiteDetails($event)"
+                        >
+                        <ion-select-option *ngFor="let site of sites | async" [value]=site>{{site.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.site"></ion-input>
+                      <ion-input *ngIf="saved" [readonly]="true" [(ngModel)]="training.site"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="obValue" position="floating">OB Number *</ion-label>
+                      <ion-label *ngIf="!obValue" position="floating" style="color:red !important">OB Number *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="training.ob"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="shiftValue" position="floating">Shift *</ion-label>
+                      <ion-label *ngIf="!shiftValue" position="floating" style="color:red !important">Shift *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.shift">
+                        <ion-select-option>Day</ion-select-option>
+                        <ion-select-option>Night</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.shift"></ion-input>
+                    </ion-item>
+
+                  </ion-slide>
+
+                  <ion-slide>
+
+                    <ion-item>
+                      <ion-label *ngIf="soValue" position="floating">Name of Employee *</ion-label>
+                      <ion-label *ngIf="!soValue" position="floating" style="color:red !important">Name of Employee *
+                      </ion-label>
+                      <ion-select interface="popover" *ngIf="!view" (ionChange)="guardDetails($event)">
+                        <ion-select-option *ngFor="let guard of guards" [value]=guard>{{guard.name}}
+                        </ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.so"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="typeValue" position="floating">Type of Training *</ion-label>
+                      <ion-label *ngIf="!typeValue" position="floating" style="color:red !important">Type of Training *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.type">
+                        <ion-select-option *ngFor="let training of types | async">{{training.type}}</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.type"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="reasonValue" position="floating">Reason For Training *</ion-label>
+                      <ion-label *ngIf="!reasonValue" position="floating" style="color:red !important">Reason For
+                        Training *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="training.reason" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="lengthValue" position="floating">How long has the Employee been on Site? *
+                      </ion-label>
+                      <ion-label *ngIf="!lengthValue" position="floating" style="color:red !important">How long has the
+                        Employee
+                        been on Site?
+                        *</ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="training.length" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="fitValue" position="floating">Is the Employee fit for the Duties of this Site? *
+                      </ion-label>
+                      <ion-label *ngIf="!fitValue" position="floating" style="color:red !important">Is the Employee fit
+                        for the
+                        Duties of this
+                        Site? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.fit">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.fit"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="jdValue" position="floating">Is there a Job Description on Site? *</ion-label>
+                      <ion-label *ngIf="!jdValue" position="floating" style="color:red !important">Is there a Job
+                        Description on
+                        Site? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.jd">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.jd"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="signJDValue" position="floating">Did the Employee Sign the Job Description? *
+                      </ion-label>
+                      <ion-label *ngIf="!signJDValue" position="floating" style="color:red !important">Did the Employee
+                        the Job
+                        Description? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.signJD">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.signJD"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="proceduresValue" position="floating">Does he/ she understand the site
+                        Procedures? *
+                      </ion-label>
+                      <ion-label *ngIf="!proceduresValue" position="floating" style="color:red !important">Does he/ she
+                        understand
+                        the site
+                        Procedures? *</ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.procedures">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.procedures"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label *ngIf="summaryValue" position="floating">Summary of Training *</ion-label>
+                      <ion-label *ngIf="!summaryValue" position="floating" style="color:red !important">Summary of
+                        Training *
+                      </ion-label>
+                      <ion-input [readonly]="view" [(ngModel)]="training.summary" type="text" autocomplete="true"
+                        spellcheck="true">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item *ngIf="emailOption">
+                      <ion-label *ngIf="emailValue" position="floating">Email Training to Client? *</ion-label>
+                      <ion-label *ngIf="!emailValue" position="floating" style="color:red !important">Email Training to
+                        Client? *
+                      </ion-label>
+                      <ion-select interface="popover"*ngIf="!view" [(ngModel)]="training.emailToClient">
+                        <ion-select-option>Yes</ion-select-option>
+                        <ion-select-option>No</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="view" [readonly]="true" [(ngModel)]="training.emailToClient"></ion-input>
+                    </ion-item>
+
+                    <img [src]="training.sigUser" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigUser")'>Add Trainer Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sigValue" class="ion-text-center">Trainer Signature *</ion-label>
+                          <ion-label *ngIf="!sigValue" class="ion-text-center" style="color:red !important">Trainer
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                   <img [src]="training.sigOfficer" style="display: block; margin-left: auto; margin-right: auto;"  alt="">
+
+                    <ion-item lines="none">
+                      <ion-button  style="margin-left: auto; margin-right: auto;" (click)='openPOP("sigOfficer")'>Add Employee Signature
+                      </ion-button>
+                    </ion-item>
+
+                    <ion-row>
+                      <ion-col class="ion-text-center">
+                        <ion-item>
+                          <ion-label *ngIf="sig2Value" class="ion-text-center">Employee Signature *</ion-label>
+                          <ion-label *ngIf="!sig2Value" class="ion-text-center" style="color:red !important">Employee
+                            Signature *
+                          </ion-label>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                 
+                  </ion-slide>
+
+                </ion-slides>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(training)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

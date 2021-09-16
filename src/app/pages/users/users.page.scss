@@ -1,0 +1,156 @@
+ion-toolbar
+{
+    --background: #100F10;
+
+    ion-buttons
+    {
+        margin: 20px 0;
+    }
+
+
+    ion-item
+    {
+        --background: transparent;
+        width: 100% !important;
+
+        select
+        {
+            background: transparent;
+            border: none;
+            color: #B5B5B5;
+            font-family: 'SBold';
+            font-size: 18px;
+        }
+
+        p
+        {
+            color: #5B5B5B;
+            font-family: 'Regular';
+            font-size: 16px;
+        }
+    }
+
+}
+
+
+ion-content
+{
+    .top-holder
+    {
+        padding: 16px 25px; 
+        .left
+        {
+            h1
+            {
+                color: #5A5A5A;
+                font-family: 'SBold';
+                font-size: 27px;
+                margin: 0;
+            }
+        }
+
+        .right
+        {
+            h4
+            {
+                color: #b5b5b566;
+                font-family: 'Regular';
+                font-size: 14px;
+                margin: 0;
+
+                span
+                {
+                    color: #b5b5b5;
+                }
+            }
+        }
+    }
+
+    .add-btn
+    {
+        padding: 16px 25px;
+
+        ion-button
+        {
+            margin-right: 10px;
+        }
+    }
+
+    .main-grid
+    {
+        padding: 0 25px;
+        width: 100% !important;
+        .holder
+        {
+            background: #100F10;
+            border-radius: 23px;
+            width: 100%;
+            .the-header
+            {
+                padding: 30px 0 10px 20px;
+                h2
+                {
+                    color: #E2E2E2;
+                    font-family: 'SBold';
+                    font-size: 20px;
+                    margin-top: 0;
+                }
+
+                
+            }
+        }
+    
+        .headers
+        {
+            border: 1px solid rgba(112, 112, 112, 0.28);
+            border-left: 0 !important;
+            border-right: 0 !important;
+            padding: 0 20px;
+            h4
+            {
+                color: rgba(132, 132, 132, 0.39);
+                font-size: 16px;
+                margin: 10px 0;
+            }
+        }
+
+        .values
+        {
+         
+            padding: 0 20px;
+            .dates
+            {
+               h5
+               {
+                color: #848484 !important;
+                font-family: 'Regular' !important;
+               }
+            }
+
+            .btn
+            {
+                pointer-events: all;
+                h5
+                {
+                    color: #a0a0a0;
+                    font-family: 'SBold' !important;
+                    font-size: 16px;
+                    margin: 10px 0;
+                }
+            }
+
+            #delete
+            {
+                h5
+                {
+                    color: var(--ion-color-primary);
+                }
+            }
+          
+        }
+
+    }
+
+
+
+}

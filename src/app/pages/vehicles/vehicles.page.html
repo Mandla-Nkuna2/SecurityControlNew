@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="exit()">Exit <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="title-font">VEHICLES</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-item>
+                  <ion-label *ngIf="makeValid" position="floating">Vehicle Make *</ion-label>
+                  <ion-label *ngIf="!makeValid" position="floating" style="color:red !important">Vehicle Make *
+                  </ion-label>
+                  <ion-input [readonly]="view" type="text" [(ngModel)]="fleet.make"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="regValid" position="floating">Registration *</ion-label>
+                  <ion-label *ngIf="!regValid" position="floating" style="color:red !important">Registration *
+                  </ion-label>
+                  <ion-input [readonly]="view" type="text" [(ngModel)]="fleet.registration"
+                    (ngModelChange)="fleet.registration = $event.toLocaleUpperCase()"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="colorValid" position="floating">Colour *</ion-label>
+                  <ion-label *ngIf="!colorValid" position="floating" style="color:red !important">Colour *</ion-label>
+                  <ion-input [readonly]="view" type="text" [(ngModel)]="fleet.color"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="yearValid" position="floating">Year *</ion-label>
+                  <ion-label *ngIf="!yearValid" position="floating" style="color:red !important">Year *</ion-label>
+                  <ion-input [readonly]="view" type="text" [(ngModel)]="fleet.year"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="serviceValid" position="floating">Next Service Date *</ion-label>
+                  <ion-label *ngIf="!serviceValid" position="floating" style="color:red !important">Next Service Date *
+                  </ion-label>
+                  <ion-datetime [readonly]="view" [(ngModel)]="fleet.nextService" min="2018-01-01" max="2050-01-01"
+                    displayFormat="YYYY/MM/DD"></ion-datetime>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label *ngIf="mileageValid" position="floating">Next Service Mileage *</ion-label>
+                  <ion-label *ngIf="!mileageValid" position="floating" style="color:red !important">Next Service Mileage
+                    *</ion-label>
+                  <ion-input [readonly]="view" [(ngModel)]="fleet.nextServiceMileage" type="number"></ion-input>
+                </ion-item>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button style="--background: green;" (click)="check(fleet)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

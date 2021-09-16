@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-title class="title-font" *ngIf="report.name === 'Site Visit Gen'">Site Visit Report</ion-title>
+    <ion-title class="title-font" *ngIf="report.name !== 'Site Visit Gen'">{{report.report}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-row>
+                  <ion-col>
+                    <p style="font-weight: bold">DATE:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.date}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <p style="font-weight: bold">TIME:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.time}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <p style="font-weight: bold">MANAGER/ SUPERVISOR:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.manager}}{{report.user}}{{report.inspector}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf="report.report != 'Vehicle Inspection'">
+                  <ion-col>
+                    <p style="font-weight: bold">SITE:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.site}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf="report.report == 'Vehicle Inspection'">
+                  <ion-col>
+                    <p style="font-weight: bold">REGISTRATION:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.registration}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <p style="font-weight: bold">LATITUDE:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.lat}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <p style="font-weight: bold">LONGITUDE:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.lng}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <p style="font-weight: bold">ACCURACY:</p>
+                  </ion-col>
+                  <ion-col>
+                    <p text-center>{{report.acc}}</p>
+                  </ion-col>
+                </ion-row>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-button expand="full" (click)="download()">
+      <ion-icon name='download'></ion-icon>Download PDF Document
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

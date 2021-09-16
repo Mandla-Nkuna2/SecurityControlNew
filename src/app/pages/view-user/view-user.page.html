@@ -1,0 +1,461 @@
+<!-- 
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-buttons slot="start">
+      <ion-button class="support-btn">
+        Support
+      </ion-button>
+    </ion-buttons>
+    <ion-item lines="none" slot="end">
+      <ion-avatar slot="end">
+        <img src="assets/imgs/user.jpeg" alt="">
+      </ion-avatar>
+      <ion-label>
+        <select name="cars" id="cars">
+          <option value="volvo">Lamu Dlamini</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+        </select>
+        <p>Admin</p>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content class="ion-padding">
+  <div class="top-holder flex al-center jc-between">
+    <div class="left">
+      <h1>User Profile</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/users<span>&nbsp;user Profile</span> </h4>
+    </div>
+  </div>
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75">
+        <div class="holder left">
+          <div class="the-header">
+            <h2>{{ user.name }}</h2>
+          </div>
+
+          <div class="the-content">
+
+            <div class="form">
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Name</ion-label>
+                <ion-item lines="none">
+                  <ion-input class="ion-text-right" type="text" disable > {{ user.name }}</ion-input>
+                </ion-item>
+              </div>
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Email</ion-label>
+                <ion-item lines="none">
+                  <ion-input class="ion-text-right" type="email"  disable > {{ user.email }}</ion-input>
+                </ion-item>
+              </div>
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Contact</ion-label>
+                <ion-item lines="none">
+                  <ion-input class="ion-text-right" type="text"  disable > {{ user.contact }}</ion-input>
+                </ion-item>
+              </div>
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Sites</ion-label>
+                <ion-item *ngFor="let site of sites | async" lines="none">
+                  <ion-input class="ion-text-right" type="text" disable > {{ site.name }}</ion-input>
+                </ion-item>
+              </div>
+
+
+              <div class="btn-holder ion-padding-vertical">
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75">
+                    <ion-button expand="block" id="cancel" fill="outline">
+                      Delete
+                    </ion-button>
+                  </ion-col>
+
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75" offsetXs="0"
+                    offsetSm="0.5" offsetMd="0.5" offsetLg="0.5" offsetXl="0.5">
+                    <ion-button expand="block">
+                      Update Info
+                    </ion-button>
+                  </ion-col>
+
+
+
+                </ion-row>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" class="flex al-start">
+
+        <div class="reports" style="width: 100%;">
+          <h2>{{user.name}}'s Reports</h2>
+          <div class="the-form">
+            <div class="input-item">
+              <ion-label>Please select the report from dropdown which you want to check.</ion-label>
+              <ion-item lines="none">
+
+                <ion-select interface="popover"style="color: white; min-width: 100%;" [(ngModel)]="report"
+                          (ionChange)="loadReports(report)">
+                          <ion-select-option>CLIENT INSTRUCTIONS</ion-select-option>
+                          <ion-select-option>CRIME INCIDENT REPORTS</ion-select-option>
+                          <ion-select-option>DISCIPLINARY REPORTS</ion-select-option>
+                          <ion-select-option>GENERAL INCIDENT REPORTS</ion-select-option>
+                          <ion-select-option *ngIf="user.companyId !== '0qbfVjnyuKE8EAdenn3T'">GENERAL SITE VISIT
+                            REPORTS</ion-select-option>
+                          <ion-select-option>INCIDENT NOTIFICATIONS</ion-select-option>
+                          <ion-select-option>LEAVE APPLICATIONS</ion-select-option>
+                          <ion-select-option>MEETING MINUTES</ion-select-option>
+                          <ion-select-option>RISK ASSESSMENTS</ion-select-option>
+                          <ion-select-option
+                            *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T' || user.companyId === '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">SITE VISIT REPORTS</ion-select-option>
+                          <ion-select-option
+                            *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T' || user.companyId === '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">TENANT VISITS</ion-select-option>
+                          <ion-select-option>TRAINING FORMS</ion-select-option>
+                          <ion-select-option
+                            *ngIf="user.companyId === '0qbfVjnyuKE8EAdenn3T' || user.companyId === '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">TRANSPARENCY REPORTS</ion-select-option>
+                          <ion-select-option>UNIFORM ORDERS</ion-select-option>
+                          <ion-select-option>VEHICLE INSPECTIONS</ion-select-option>
+                        </ion-select>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+      </ion-col>
+
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12" class="flex al-start">
+
+        <div class="holder" style="width: 100%;">
+          <div class="the-header">
+            <h2>Leave Applications</h2>
+          </div>
+
+         
+          <div *ngIf="formValue && normal">
+            <ion-row class="headers">
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                <h4>Date</h4>
+              </ion-col>
+  
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                <h4>Time</h4>
+              </ion-col>
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h4>Manager/Supervisor</h4>
+              </ion-col>
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h4>Site</h4>
+              </ion-col>
+  
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h4>Action</h4>
+              </ion-col>
+            </ion-row>
+  
+
+          <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+              <h5>{{report.date}}</h5>
+            </ion-col>
+
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+              <h5>{{report.time}}</h5>
+            </ion-col>
+
+            <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"   class="dates">
+              <h5>{{report.manager}}</h5>
+            </ion-col>
+            <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+              <h5>{{report.site}}</h5>
+            </ion-col>
+            <ion-col sizeXs="3.5" sizeSm="3.5" sizeMd="3.5" sizeLg="3.5" sizeXl="3.5"  class="flex al-center jc-between">
+
+
+              <div (click)="download(report)" class="btn ion-activatable ripple-parent flex al-center">
+                <ion-icon src="assets/imgs/downloadsm.svg"></ion-icon>
+                <h5>&nbsp;&nbsp;Download</h5>
+                <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              </div>
+
+              <div *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'" (click)="deleteReport(report)"  class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                <h5>&nbsp;&nbsp;Delete</h5>
+                <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              </div>
+            </ion-col>
+          </ion-row>
+          </div>
+
+          <div *ngIf="report === 'DISCIPLINARY REPORTS' || report === 'TRAINING FORMS' || report === 'UNIFORM ORDERS'">
+
+            <ion-row class="headers">
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                <h4>Date</h4>
+              </ion-col>
+  
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                <h4>Time</h4>
+              </ion-col>
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h4>Manager/Supervisor</h4>
+              </ion-col>
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h4>Staff Member</h4>
+              </ion-col>
+  
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h4>Action</h4>
+              </ion-col>
+            </ion-row>
+  
+            <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+                <h5>{{report.date}}</h5>
+              </ion-col>
+  
+              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+                <h5>{{report.time}}</h5>
+              </ion-col>
+  
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"   class="dates">
+                <h5>{{report.mana}}</h5>
+              </ion-col>
+              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                <h5>{{report.so}}</h5>
+              </ion-col>
+              <ion-col sizeXs="3.5" sizeSm="3.5" sizeMd="3.5" sizeLg="3.5" sizeXl="3.5"  class="flex al-center jc-between">
+  
+  
+                <div (click)="download(report)" class="btn ion-activatable ripple-parent flex al-center">
+                  <ion-icon src="assets/imgs/downloadsm.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Download</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+  
+                <div *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'" (click)="deleteReport(report)"  class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                  <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                  <h5>&nbsp;&nbsp;Delete</h5>
+                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                </div>
+              </ion-col>
+            </ion-row>
+            </div>
+          
+            
+            <div *ngIf="report === 'VEHICLE INSPECTIONS'">
+
+              <ion-row class="headers">
+                <ion-col sizeXs="1.8" sizeSm="1.8" sizeMd="1.8" sizeLg="1.8" sizeXl="1.8"  class="dates">
+                  <h4>Date</h4>
+                </ion-col>
+    
+                <ion-col sizeXs="1.2" sizeSm="1.2" sizeMd="1.2" sizeLg="1.2" sizeXl="1.2"  class="dates">
+                  <h4>Time</h4>
+                </ion-col>
+    
+                <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                  <h4>Inspector</h4>
+                </ion-col>
+    
+                <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                  <h4>Registration</h4>
+                </ion-col>
+    
+    
+                <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                  <h4>Action</h4>
+                </ion-col>
+              </ion-row>
+
+              
+              <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
+                <ion-col sizeXs="1.8" sizeSm="1.8" sizeMd="1.8" sizeLg="1.8" sizeXl="1.8"   class="dates">
+                  <h5>{{report.date}}</h5>
+                </ion-col>
+    
+                <ion-col sizeXs="1.2" sizeSm="1.2" sizeMd="1.2" sizeLg="1.2" sizeXl="1.2"   class="dates">
+                  <h5>{{report.time}}</h5>
+                </ion-col>
+    
+                <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"   class="dates">
+                  <h5>{{report.inspector}}</h5>
+                </ion-col>
+                <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                  <h5>{{report.registration}}</h5>
+                </ion-col>
+                <ion-col sizeXs="3.5" sizeSm="3.5" sizeMd="3.5" sizeLg="3.5" sizeXl="3.5"  class="flex al-center jc-between">
+    
+    
+                  <div (click)="download(report)" class="btn ion-activatable ripple-parent flex al-center">
+                    <ion-icon src="assets/imgs/downloadsm.svg"></ion-icon>
+                    <h5>&nbsp;&nbsp;Download</h5>
+                    <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                  </div>
+    
+                  <div *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'" (click)="deleteReport(report)"  class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                    <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                    <h5>&nbsp;&nbsp;Delete</h5>
+                    <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                  </div>
+                </ion-col>
+              </ion-row>
+              </div>
+          
+              
+              <div *ngIf="report === 'LEAVE APPLICATIONS'">
+
+
+                <ion-row class="headers">
+                  <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                    <h4>Date from</h4>
+                  </ion-col>
+      
+                  <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                    <h4>Date to</h4>
+                  </ion-col>
+      
+                  <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                    <h4>Employee</h4>
+                  </ion-col>
+      
+                  <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                    <h4>Site</h4>
+                  </ion-col>
+      
+      
+                  <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                    <h4>Action</h4>
+                  </ion-col>
+                </ion-row>
+
+                
+
+                <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
+                  <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+                    <h5>{{report.from}}</h5>
+                  </ion-col>
+      
+                  <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+                    <h5>{{report.to}}</h5>
+                  </ion-col>
+      
+                  <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"   class="dates">
+                    <h5>{{report.so}}</h5>
+                  </ion-col>
+                  <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                    <h5>{{report.site}}</h5>
+                  </ion-col>
+                  <ion-col sizeXs="3.5" sizeSm="3.5" sizeMd="3.5" sizeLg="3.5" sizeXl="3.5"  class="flex al-center jc-between">
+      
+      
+                    <div (click)="download(report)" class="btn ion-activatable ripple-parent flex al-center">
+                      <ion-icon src="assets/imgs/downloadsm.svg"></ion-icon>
+                      <h5>&nbsp;&nbsp;Download</h5>
+                      <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                    </div>
+      
+                    <div *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'" (click)="deleteReport(report)"  class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                      <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                      <h5>&nbsp;&nbsp;Delete</h5>
+                      <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                    </div>
+                  </ion-col>
+                </ion-row>
+                </div>
+          
+                
+                <div *ngIf="report === 'AR SITE VISITS'">
+
+                  <ion-row class="headers">
+                    <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                      <h4>Date</h4>
+                    </ion-col>
+        
+                    <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                      <h4>Time</h4>
+                    </ion-col>
+        
+                    <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                      <h4>Response Officer</h4>
+                    </ion-col>
+        
+                    <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                      <h4>Site</h4>
+                    </ion-col>
+        
+        
+                    <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                      <h4>Action</h4>
+                    </ion-col>
+                  </ion-row>
+
+                  
+                  <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
+                    <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+                      <h5>{{report.date}}</h5>
+                    </ion-col>
+        
+                    <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+                      <h5>{{report.time}}</h5>
+                    </ion-col>
+        
+                    <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"   class="dates">
+                      <h5>{{report.user}}</h5>
+                    </ion-col>
+                    <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
+                      <h5>{{report.site}}</h5>
+                    </ion-col>
+                    <ion-col sizeXs="3.5" sizeSm="3.5" sizeMd="3.5" sizeLg="3.5" sizeXl="3.5"  class="flex al-center jc-between">
+        
+        
+                      <div (click)="download(report)" class="btn ion-activatable ripple-parent flex al-center">
+                        <ion-icon src="assets/imgs/downloadsm.svg"></ion-icon>
+                        <h5>&nbsp;&nbsp;Download</h5>
+                        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                      </div>
+        
+                      <div *ngIf="user.type === 'Owner' || user.type === 'Account Admin' || user.type === 'Admin'" (click)="deleteReport(report)"  class="btn ion-activatable ripple-parent flex al-center" id="delete">
+                        <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
+                        <h5>&nbsp;&nbsp;Delete</h5>
+                        <ion-ripple-effect type="bounded"></ion-ripple-effect>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  </div>
+                  
+          
+
+
+        
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
+</ion-content>

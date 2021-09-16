@@ -1,0 +1,74 @@
+<!-- 
+<ion-header class="ion-no-border desktop ">
+  <ion-toolbar class="dbar ion-padding-horizontal">
+   <ion-buttons slot="start">
+     <ion-button class="support-btn">
+      Support
+     </ion-button>
+   </ion-buttons>
+   <ion-item lines="none" slot="end" (click)="goMyaccount()">
+    <ion-avatar slot="end">
+     <img src="assets/imgs/user.jpeg" alt="">
+    </ion-avatar>
+   <ion-label>
+    <select name="cars" id="cars">
+      <option value="volvo">Lamu Dlamini</option>
+      <option value="saab">Saab</option>
+      <option value="mercedes">Mercedes</option>
+      <option value="audi">Audi</option>
+    </select>
+    <p>Admin</p>
+   </ion-label>
+  </ion-item>
+  </ion-toolbar>
+</ion-header> -->
+<ion-header class="ion-no-border mobile">
+  <ion-toolbar class="mbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Site Selection</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1>Sites</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/<span>&nbsp;Sites</span> </h4>
+    </div>
+  </div>
+
+  <ion-grid class="main-grid desktop" fixed>
+    <ion-row>
+      <ion-col  sizeXs="12" sizeSm="2.4" sizeMd="2.4" sizeLg="2.4" sizeXl="2.4">
+        <ion-button id="active" (click)="mySites()" expand="block">
+         My Sites
+        </ion-button>
+      </ion-col>
+      <ion-col  sizeXs="12" sizeSm="2.4" sizeMd="2.4" sizeLg="2.4" sizeXl="2.4">
+        <ion-button  (click)="allSites()" expand="block">
+         All Sites
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid class="main-grid mobile mobile-grid" fixed>
+    <ion-row>
+      <ion-col  sizeXs="12" sizeSm="2.4" sizeMd="2.4" sizeLg="2.4" sizeXl="2.4">
+        <ion-button (click)="mySites()" expand="block">
+         My Sites
+        </ion-button>
+      </ion-col>
+      <ion-col  sizeXs="12" sizeSm="2.4" sizeMd="2.4" sizeLg="2.4" sizeXl="2.4">
+        <ion-button (click)="allSites()" expand="block">
+         All Sites
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

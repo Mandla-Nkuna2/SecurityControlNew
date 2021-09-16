@@ -1,0 +1,178 @@
+<ion-header>
+    <ion-toolbar color="primary" mode="ios">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="title-font">SETUP</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content id="setup">
+  <section class="common-img-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="login-card card-block auth-body mr-auto ml-auto">
+            <div class="md-float-material">
+              <div class="auth-box">
+
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="title">
+                      <h4>REPORT SETTINGS</h4>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-header">
+                    <ion-col size="4" class="grid-header-item ion-text-center">REPORT</ion-col>
+                    <ion-col size="6" class="grid-header-item ion-text-center">DEFAULT EMAIL RECIPIENTS</ion-col>
+                    <ion-col size="2">
+                      <ion-icon class="icon-cog" name="cog"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">SITE VISIT REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.visit}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editVisit()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">CRIME INCIDENT REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.incident}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editIncident()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">MEETING REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.meeting}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editMeeting()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">UNIFORM ORDER</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.uniform}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editUnifom()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">TRAINING FORM</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.training}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editTraining()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">VEHICLE INSPECTION</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.vehicle}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editVehicle()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">DISCIPLINARY NOTICE</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.disciplinary}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editDisciplinary()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row"
+                    *ngIf="user.companyId == '0qbfVjnyuKE8EAdenn3T' || user.companyId == '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">
+                    <ion-col size="4" class="grid-row-item ion-text-center">TRANSPARENCY REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.transparency}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editTransparency()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">GEN INCIDENT REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.incidentGen}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editIncGen()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">LEAVE APPLICATION</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.leave}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editLeave()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">OB ENTRY</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.ob}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editOBEntry()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">RISK ASSESSMENT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.assessment}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editAssessment()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row"
+                    *ngIf="user.companyId == '0qbfVjnyuKE8EAdenn3T' || user.companyId == '62370402-ecae-a16e-6f5a-5fe7c4d5532d'">
+                    <ion-col size="4" class="grid-row-item ion-text-center">TENANT VISIT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.tenant}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editTenant()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">INCIDENT NOTIFICATION</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.notification}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editNotification()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">CLIENT INSTRUCTION</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.instruction}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="editInstruction()">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>

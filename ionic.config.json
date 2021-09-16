@@ -1,0 +1,8 @@
+{
+  "name": "new-sc",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "4788e7ff"
+}
