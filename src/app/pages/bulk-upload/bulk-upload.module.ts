@@ -7,12 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { BulkUploadPageRoutingModule } from './bulk-upload-routing.module';
 
 import { BulkUploadPage } from './bulk-upload.page';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    GooglePlaceModule,
     BulkUploadPageRoutingModule
   ],
   declarations: [BulkUploadPage]
