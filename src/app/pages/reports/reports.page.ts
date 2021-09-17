@@ -33,7 +33,7 @@ export class ReportsPage implements OnInit {
   selectedForm = 'sitevisits';
   data;
 
-  constructor(public router: Router, private pdfService: PdfService, public loading: LoadingService, private storage: Storage,
+  constructor(public pdfservice: PdfService, public router: Router, private pdfService: PdfService, public loading: LoadingService, private storage: Storage,
     private afs: AngularFirestore, public toast: ToastService, public alertCtrl: AlertController) { }
 
   ngOnInit() {
@@ -51,49 +51,56 @@ export class ReportsPage implements OnInit {
   }
 
   view(report) {
+
     var reportUrl = report.report;
+    var selectURL = ''
     if (reportUrl === 'Site Visit') {
-      reportUrl = 'site-visit';
+      selectURL = 'site-visit';
     } else if (reportUrl === 'Site Visit Gen') {
-      reportUrl = 'site-visit-gen';
+      selectURL = 'site-visit-gen';
     } else if (reportUrl === 'Training Form') {
-      reportUrl = 'training-form';
+      selectURL = 'training-form';
     } else if (reportUrl === 'Uniform Order') {
-      reportUrl = 'uniform-order';
+      selectURL = 'uniform-order';
     } else if (reportUrl === 'Vehicle Inspection') {
-      reportUrl = 'vehicle-inspection';
+      selectURL = 'vehicle-inspection';
     } else if (reportUrl === 'Crime Incident Report') {
-      reportUrl = 'crime-incident-report';
+      selectURL = 'crime-incident-report';
     } else if (reportUrl === 'Incident Notification') {
-      reportUrl = 'incident-notification';
+      selectURL = 'incident-notification';
     } else if (reportUrl === 'Risk Assessment') {
-      reportUrl = 'risk-assessment';
+      selectURL = 'risk-assessment';
     } else if (reportUrl === 'Incident Report') {
-      reportUrl = 'general-incident-report';
+      selectURL = 'general-incident-report';
     } else if (reportUrl === 'Leave Application') {
-      reportUrl = 'leave-application';
+      selectURL = 'leave-application';
     } else if (reportUrl === 'Disciplinary Report') {
-      reportUrl = 'disciplinary-report';
+      selectURL = 'disciplinary-report';
     } else if (reportUrl === 'Client Meeting') {
-      reportUrl = 'meeting-report';
+      selectURL = 'meeting-report';
     } else if (reportUrl === 'Client Instruction') {
-      reportUrl = 'client-instruction';
+      selectURL = 'client-instruction';
     } else if (reportUrl === 'OB Entry') {
-      reportUrl = 'ob-entry';
+      selectURL = 'ob-entry';
     } else if (reportUrl === 'Tenant Survey') {
-      reportUrl = 'tenant-visit';
+      selectURL = 'tenant-visit';
     } else if (reportUrl === 'Transparency Report') {
-      reportUrl = 'transparency-report';
+      selectURL = 'transparency-report';
     } else if (reportUrl === 'PnP Site Visit') {
-      reportUrl = 'pnp-visit';
+      selectURL = 'pnp-visit';
     } else if (reportUrl === 'AR Site Visit') {
-      reportUrl = 'ar-site-visit';
+      selectURL = 'ar-site-visit';
     } else if (reportUrl === 'AOD') {
-      reportUrl = 'aod';
+      selectURL = 'aod';
     } else if (reportUrl === 'Employee form') {
-      reportUrl = 'emp-performance-form';
+      selectURL = 'emp-performance-form';
     } else if (reportUrl === 'NCR') {
-      reportUrl = 'ncr';
+      selectURL = 'ncr';
+    }
+    else {
+      this.afs.firestore.collection(this.selectedForm).doc(report.key).get().then((page: any) => {
+        this.pdfService.download(page.data())
+      })
     }
 
     this.data = { key: report.key };
@@ -102,14 +109,19 @@ export class ReportsPage implements OnInit {
         data: this.data
       }
     };
-    this.loading.present('Opening Please Wait...').then(() => {
-      this.router.navigate([`${reportUrl}/view`], navigationExtras).then(() => {
-        this.loading.dismiss();
+
+    if (selectURL != '') {
+      this.loading.present('Opening Please Wait...').then(() => {
+        this.router.navigate([`${reportUrl}/view`], navigationExtras).then(() => {
+          this.loading.dismiss();
+        });
       });
-    });
+    }
   }
 
   getForms(form) {
+
+
     if (this.form.key === 'SITE') {
       this.selectedForm = 'sitevisits';
     } else if (this.form.key === 'GEN SITE') {
@@ -153,7 +165,45 @@ export class ReportsPage implements OnInit {
     } else if (this.form.key === 'NON-CONFORMANCE FORM') {
       this.selectedForm = 'ncrs';
     }
-
+    else if (this.form.key === 'APPEAL FORM') {
+      this.selectedForm = 'appealForms';
+    }
+    else if (this.form.key === 'FENCE INSPECTION') {
+      this.selectedForm = 'fenceInspection';
+    }
+    else if (this.form.key === 'GRIEVANCE FORM') {
+      this.selectedForm = 'grievance';
+    }
+    else if (this.form.key === 'PERFORMANCE APPRAISAL') {
+      this.selectedForm = 'performanceAppraisal';
+    }
+    else if (this.form.key === 'GAS EXPLOSION') {
+      this.selectedForm = 'explosion';
+    }
+    else if (this.form.key === 'THEFT REPORT') {
+      this.selectedForm = 'theft';
+    }
+    else if (this.form.key === 'FIRE REPORT') {
+      this.selectedForm = 'fire';
+    }
+    else if (this.form.key === 'TEMPERATURE REPORT') {
+      this.selectedForm = 'temperatureList';
+    }
+    else if (this.form.key === 'PLOYGRAPH FORM') {
+      this.selectedForm = 'polygraph';
+    }
+    else if (this.form.key === 'PAY-QUERY') {
+      this.selectedForm = 'payQuery';
+    }
+    else if (this.form.key === 'EXTINGUISHER CHECKLIST') {
+      this.selectedForm = 'extinguisher';
+    }
+    else if (this.form.key === 'RESIGNATION FORM') {
+      this.selectedForm = 'resign';
+    }
+    else if (this.form.key === 'INJURY REPORT') {
+      this.selectedForm = 'injury';
+    }
     this.downloadForms();
   }
 
@@ -162,7 +212,7 @@ export class ReportsPage implements OnInit {
       const key = this.site.key + '';
       this.reportCollection = this.afs.collection(this.selectedForm, ref =>
         ref.where('companyId', '==', this.companyId).where('siteKey', '==', key).orderBy('date', 'desc')
-          .orderBy('time', 'desc').limit(25));
+          .orderBy('time', 'desc').limit(50));
       this.reports = this.reportCollection.valueChanges();
       this.reports.subscribe(snapshot => {
         if (snapshot.length === 0) {
@@ -173,7 +223,7 @@ export class ReportsPage implements OnInit {
       });
     } else {
       this.reportCollection = this.afs.collection(this.selectedForm, ref =>
-        ref.where('companyId', '==', this.companyId).orderBy('date', 'desc').limit(25));
+        ref.where('companyId', '==', this.companyId).orderBy('date', 'desc').limit(50));
       this.reports = this.reportCollection.valueChanges();
       this.reports.subscribe(snapshot => {
         if (snapshot.length === 0) {

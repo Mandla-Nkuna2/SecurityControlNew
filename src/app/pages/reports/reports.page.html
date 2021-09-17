@@ -252,7 +252,32 @@
             </ion-row> -->
             <ion-row class="grid-row" *ngFor="let report of reports | async; let i = index">
               <ion-col size="1" class="grid-row-item ion-no-padding ion-text-center">{{i + 1}}</ion-col>
-
+              <ion-col *ngIf="report.report === 'site-temperature' " class="grid-row-item ion-no-padding"> SITE
+                TEMPERATURE </ion-col>
+              <ion-col *ngIf="report.report === 'injury' " class="grid-row-item ion-no-padding"> INJURY
+              </ion-col>
+              <ion-col *ngIf="report.report === 'resignation' " class="grid-row-item ion-no-padding">
+                RESSIGNATION </ion-col>
+              <ion-col *ngIf="report.report === 'extinguisher-checklist' " class="grid-row-item ion-no-padding">
+                EXTINGUISHER CHECKLIST </ion-col>
+              <ion-col *ngIf="report.report === 'pay-query' " class="grid-row-item ion-no-padding"> PAY-QUERY
+              </ion-col>
+              <ion-col *ngIf="report.report === 'polygraph' " class="grid-row-item ion-no-padding"> PLOYGRAPH
+              </ion-col>
+              <ion-col *ngIf="report.report === 'fire' " class="grid-row-item ion-no-padding"> FIRE REPORT
+              </ion-col>
+              <ion-col *ngIf="report.report === 'theft' " class="grid-row-item ion-no-padding"> THEFT REPORT
+              </ion-col>
+              <ion-col *ngIf="report.report === 'gas-explosion' " class="grid-row-item ion-no-padding"> GAS
+                EXPLOSION </ion-col>
+              <ion-col *ngIf="report.report === 'performance-appraisal' " class="grid-row-item ion-no-padding">
+                PERFORMANCE APPRAISAL </ion-col>
+              <ion-col *ngIf="report.report === 'grievance' " class="grid-row-item ion-no-padding"> GRIEVANCE
+                FORM </ion-col>
+              <ion-col *ngIf="report.report === 'fence-inspection' " class="grid-row-item ion-no-padding"> FENCE
+                INSPECTION </ion-col>
+              <ion-col *ngIf="report.report === 'appeal' " class="grid-row-item ion-no-padding"> APPEAL FORM
+              </ion-col>
               <ion-col size='5' size='5' *ngIf="report.report === 'Site Visit'" class="grid-row-item ion-no-padding">SITE VISIT
                 REPORT</ion-col>
               <ion-col size='5' size='5' *ngIf="report.report === 'PnP Site Visit'" class="grid-row-item ion-no-padding">PNP SITE
