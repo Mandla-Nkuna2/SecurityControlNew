@@ -1,0 +1,104 @@
+ion-content
+{
+    .top-holder
+    {
+        padding: 16px 25px; 
+        .left
+        {
+            h1
+            {
+                color: #5A5A5A;
+                font-family: 'SBold';
+                font-size: 27px;
+                margin: 0;
+            }
+        }
+
+        .right
+        {
+            h4
+            {
+                color: #b5b5b566;
+                font-family: 'Regular';
+                font-size: 14px;
+                margin: 0;
+
+                span
+                {
+                    color: #b5b5b5;
+                }
+            }
+        }
+    }
+    .selected {
+        color: #5A5A5A;
+        background-color: #FF4343;
+        border-radius: 10px;
+    }
+    .notSelected {
+        color: #5A5A5A;
+        background-color: rgb(0, 0, 0);
+        border-radius: 10px;
+    }
+    .explanation {
+        color: #5A5A5A;
+        text-align: center;
+        margin-left: 5vh;
+        margin-right: 5vh;
+    }
+    .main-grid
+    {
+        padding: 0 25px;
+        width: 100% !important;
+        .holder
+        {
+            background: #100F10;
+            border-radius: 23px;
+            width: 100%;
+            .the-header
+            {
+                padding: 30px 0 10px 20px;
+                h2
+                {
+                    color: #E2E2E2;
+                    font-family: 'SBold';
+                    font-size: 20px;
+                    margin-top: 0;
+                }
+
+                
+            }
+        }
+    
+        .headers
+        {
+            border: 1px solid rgba(112, 112, 112, 0.28);
+            border-left: 0 !important;
+            border-right: 0 !important;
+            padding: 0 20px;
+            h4
+            {
+                color: rgba(132, 132, 132, 0.39);
+                font-size: 16px;
+                margin: 10px 0;
+            }
+        }
+
+        .values
+        {
+         
+            padding: 0 20px;
+            .dates
+            {
+               ion-input
+               {
+                color: #848484 !important;
+                font-family: 'Regular' !important;
+               }
+            }
+          
+        }
+
+    }
+  
+}   
