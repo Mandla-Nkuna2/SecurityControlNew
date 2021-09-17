@@ -21,6 +21,11 @@ export class BulkUploadPage implements OnInit {
   sites = [];
   guards = [];
   @ViewChild('placesRef') placesRef: GooglePlaceDirective;
+  guardOption = '';
+  options = ['No Site', 'Select Site']
+  userSites = []
+  guardsAvailable = true;
+  guardSite;
 
   constructor(private BUService: BulkUploadService, private alertCtrl: AlertController,
     private afs: AngularFirestore, private loading: LoadingService, private toast: ToastService) { }
@@ -30,6 +35,27 @@ export class BulkUploadPage implements OnInit {
 
   changeTab(type) {
     this.selected = type;
+    this.sites = [];
+    this.guards = [];
+    this.guardsAvailable = true;
+  }
+
+  getSites(guardOption) {
+    if (guardOption === 'No Site') {
+      this.guardsAvailable = false;
+    } else {
+      this.guardsAvailable = true;
+    }
+    this.BUService.getUser().then((user) => {
+      this.BUService.getUserSites(user).then(sites => {
+        this.userSites = sites;
+      })
+    })
+  }
+
+  selectedSite(event) {
+    this.guardSite = event.value;
+    this.guardsAvailable = false;
   }
 
   downloadTemplate() {
@@ -52,7 +78,13 @@ export class BulkUploadPage implements OnInit {
         if (this.selected === 'Sites') {
           this.sites = list;
         } else {
-          this.guards = list;
+          if (this.guardOption === 'No Site') {
+            this.guards = list;
+          } else {
+            this.BUService.setGuardSite(list, this.guardSite).then(newList => {
+              this.guards = newList;
+            })
+          }
         }
       })
     }).catch(() => {
@@ -80,6 +112,11 @@ export class BulkUploadPage implements OnInit {
     site.address = add;
     site.lat = address.geometry.location.lat();
     site.lng = address.geometry.location.lng();
+  }
+
+  setGuardSite(event, item) {
+    item.site = event.value.name;
+    item.siteId = event.value.key;
   }
 
   save() {

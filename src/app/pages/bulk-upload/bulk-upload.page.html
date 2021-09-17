@@ -37,10 +37,28 @@
     Download {{selected}} Template
   </ion-button>
 
-  <ion-button (click)="attach()">
+  <ion-button (click)="attach()" *ngIf="selected === 'Sites'">
     Upload {{selected}} Template
   </ion-button>
   <input type="file" #imageChooser (change)="uploadTemplate($event)" [hidden]='true' />
+
+  <ion-button (click)="attach()" *ngIf="selected === 'Guards'" [disabled]="guardsAvailable">
+    Upload {{selected}} Template
+  </ion-button>
+  <input type="file" #imageChooser (change)="uploadTemplate($event)" [hidden]='true' />
+
+  <ion-row>
+    <ion-col>
+      <ionic-selectable style="text-align: left;" [items]="options" [(ngModel)]="guardOption"
+        (onChange)="getSites(guardOption)">
+      </ionic-selectable>
+    </ion-col>
+    <ion-col *ngIf="guardOption !== 'No Site'">
+      <ionic-selectable style="text-align: left;" [items]="userSites" (onChange)="selectedSite($event)"
+        itemValueField="name" itemTextField="name" [canSearch]="true">
+      </ionic-selectable>
+    </ion-col>
+  </ion-row>
 
   <ion-grid class="main-grid" fixed *ngIf="guards.length !== 0 || sites.length !== 0">
     <ion-row class="ion-align-items-center">
@@ -97,6 +115,63 @@
             <ion-col class="dates">
               <ion-input [ngStyle]="{'border':item.email === '' ? '1px solid red' : '' }" [(ngModel)]="item.email">
               </ion-input>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div class="holder" *ngIf="selected === 'Guards'">
+          <ion-button (click)="save()" color="success">
+            Save {{selected}}
+          </ion-button>
+          <ion-row class="headers">
+            <ion-col>
+              <h4>Name</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Site</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Company Number</h4>
+            </ion-col>
+            <ion-col>
+              <h4>ID Number</h4>
+            </ion-col>
+            <ion-col>
+              <h4>PSIRA Number</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Grade</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Cell Number</h4>
+            </ion-col>
+          </ion-row>
+          <ion-row class="values" style="width: 100% !important;" *ngFor="let item of guards">
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.name === '' ? '1px solid red' : '' }" [(ngModel)]="item.name"></ion-input>
+            </ion-col>
+            <ion-col class="dates" *ngIf="item.site !== ''">
+              <ion-input [ngStyle]="{'border':item.site === '' ? '1px solid red' : '' }" [(ngModel)]="item.site"></ion-input>
+            </ion-col>
+            <ion-col class="dates" *ngIf="item.site === ''">
+              <ionic-selectable style="text-align: left;" [items]="userSites" (onChange)="setGuardSite($event, item)"
+              itemValueField="name" itemTextField="name" [canSearch]="true">
+            </ionic-selectable>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.CoNo === '' ? '1px solid red' : '' }" [(ngModel)]="item.CoNo"></ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.id === '' ? '1px solid red' : '' }" [(ngModel)]="item.id"></ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.AssNo === '' ? '1px solid red' : '' }" [(ngModel)]="item.AssNo"></ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.grade === '' ? '1px solid red' : '' }" [(ngModel)]="item.grade"></ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.cell === '' ? '1px solid red' : '' }" [(ngModel)]="item.cell"></ion-input>
             </ion-col>
           </ion-row>
         </div>
