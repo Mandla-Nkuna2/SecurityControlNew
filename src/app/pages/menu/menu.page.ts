@@ -157,7 +157,11 @@ export class MenuPage implements OnInit {
       url: '/site-visit-summary',
       icon: 'pie-chart'
     },
-   
+    {
+      title: 'BULK UPLOAD',
+      url: '/bulk-upload',
+      icon: 'pie-chart'
+    },
   ];
 
   pages4 = [

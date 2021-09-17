@@ -1,8 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AlertController } from '@ionic/angular';
 import { retry } from 'rxjs/operators';
 import { BulkUploadService } from 'src/app/services/bulk-upload.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
+import { Address } from 'ngx-google-places-autocomplete/objects/address';
 
 @Component({
   selector: 'app-bulk-upload',
@@ -15,8 +20,10 @@ export class BulkUploadPage implements OnInit {
   @ViewChild('imageChooser', { static: false }) filePickerRef: ElementRef<HTMLInputElement>;
   sites = [];
   guards = [];
+  @ViewChild('placesRef') placesRef: GooglePlaceDirective;
 
-  constructor(private afStorage: AngularFireStorage, private BUService: BulkUploadService, private alertCtrl: AlertController) { }
+  constructor(private BUService: BulkUploadService, private alertCtrl: AlertController,
+    private afs: AngularFirestore, private loading: LoadingService, private toast: ToastService) { }
 
   ngOnInit() {
   }
@@ -37,6 +44,60 @@ export class BulkUploadPage implements OnInit {
 
   attach() {
     this.filePickerRef.nativeElement.click();
+  }
+
+  uploadTemplate(event: Event) {
+    this.BUService.onFileChange(event).then((data) => {
+      this.BUService.configure(data, this.selected).then((list) => {
+        if (this.selected === 'Sites') {
+          this.sites = list;
+        } else {
+          this.guards = list;
+        }
+      })
+    }).catch(() => {
+      this.errorAlert();
+    })
+  }
+
+  async errorAlert() {
+    var alert = await this.alertCtrl.create({
+      header: 'An Error Occured',
+      message: 'This file could not be uploaded. Please try again',
+      buttons: [
+        {
+          text: 'OKAY',
+          handler: data => {
+          }
+        },
+      ]
+    })
+    return alert.present();
+  }
+
+  public handleAddressChange(address: Address, site) {
+    var add = address.formatted_address;
+    site.address = add;
+    site.lat = address.geometry.location.lat();
+    site.lng = address.geometry.location.lng();
+  }
+
+  save() {
+    this.loading.present(`Saving ${this.selected}...`).then(() => {
+      if (this.selected === 'Sites') {
+        this.sites.forEach(site => {
+          this.afs.collection('sites').doc(site.key).set(site);
+        })
+      } else {
+        this.guards.forEach(guard => {
+          this.afs.collection('guards').doc(guard.key).set(guard);
+        })
+      }
+      this.loading.dismiss();
+      this.sites = [];
+      this.guards = [];
+      this.toast.show('Saved Successfully');
+    })
   }
 
 }
