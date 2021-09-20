@@ -33,6 +33,7 @@
     "@ionic/storage": "^2.3.1",
     "angular2-signaturepad": "https://github.com/innovativethinkingteam/signature_pad",
     "angular2-uuid": "^1.1.1",
+    "axios": "^0.21.4",
     "cordova-android": "9.1.0",
     "firebase": "^7.16.0",
     "firebase-admin": "^9.4.2",

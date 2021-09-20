@@ -32,6 +32,7 @@ import { WorkOrderPageModule } from './pages/work-order/work-order.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ViewOrderPageModule } from './pages/view-order/view-order.module';
 import { CameraService } from './services/camera.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -54,7 +55,8 @@ import { CameraService } from './services/camera.service';
     MapReportDetailsPageModule,
     WorkOrderPageModule,
     ViewOrderPageModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [
     StatusBar,

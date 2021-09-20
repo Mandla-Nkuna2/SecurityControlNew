@@ -152,7 +152,10 @@ const routes: Routes = [
         path: 'payfast',
         loadChildren: () => import('../payfast/payfast.module').then( m => m.PayfastPageModule)
       },
-    
+      {
+        path: 'bulk-upload',
+        loadChildren: () => import('../bulk-upload/bulk-upload.module').then( m => m.BulkUploadPageModule)
+      },
      
     
     

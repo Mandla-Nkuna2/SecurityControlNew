@@ -1,0 +1,112 @@
+<ion-content>
+  <div class="top-holder flex al-center jc-between">
+    <div class="left">
+      <h1>Bulk Uploads</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/Bulk Uploads</h4>
+    </div>
+  </div>
+
+  <ion-grid>
+    <ion-row style="text-align: center;">
+      <ion-col (click)="changeTab('Sites')"
+        [ngClass]="{'notSelected': selected !== 'Sites','selected': selected === 'Sites'}">
+        Sites
+      </ion-col>
+      <ion-col (click)="changeTab('Guards')"
+        [ngClass]="{'notSelected': selected === 'Sites','selected': selected !== 'Sites'}">
+        Guards
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="explanation">
+    Welcome to Security Control Bulk Uploads: The easiest way to upload mass data. <br>
+    Instead of importing each item at a time, try the convenient way!
+    <br><br>
+    How does it work?<br>
+    The first step is to download the template. This will make sure that the format is correct. Input the data according
+    to the template headings. Please do not edit the headings or structure.
+    <br>Once all your data is inputted, all you need to do is upload it here. The new data will be displayed for your
+    convenience. Make sure all the data is correct. Then you can go ahead and save! Easy as that!
+  </div>
+
+  <ion-button (click)="downloadTemplate()">
+    Download {{selected}} Template
+  </ion-button>
+
+  <ion-button (click)="attach()">
+    Upload {{selected}} Template
+  </ion-button>
+  <input type="file" #imageChooser (change)="uploadTemplate($event)" [hidden]='true' />
+
+  <ion-grid class="main-grid" fixed *ngIf="guards.length !== 0 || sites.length !== 0">
+    <ion-row class="ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+        <div class="holder" *ngIf="selected === 'Sites'">
+          <ion-button (click)="save()" color="success">
+            Save {{selected}}
+          </ion-button>
+          <ion-row class="headers">
+            <ion-col>
+              <h4>Name </h4>
+            </ion-col>
+            <ion-col>
+              <h4>Client</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Client Email</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Address</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Site Contact Number</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Site Contact Email</h4>
+            </ion-col>
+          </ion-row>
+          <ion-row class="values" style="width: 100% !important;" *ngFor="let item of sites">
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.name === '' ? '1px solid red' : '' }" [(ngModel)]="item.name">
+              </ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.client === '' ? '1px solid red' : '' }" [(ngModel)]="item.client">
+              </ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.clientEmail === '' ? '1px solid red' : '' }"
+                [(ngModel)]="item.clientEmail"></ion-input>
+            </ion-col>
+            <ion-col class="dates" *ngIf="item.address !== ''">
+              <ion-input [(ngModel)]="item.address">
+              </ion-input>
+            </ion-col>
+            <ion-col class="dates" *ngIf="item.address === ''" style="border: 1px solid red;">
+              <input class="input" ngx-google-places-autocomplete #placesRef="ngx-places"
+                (onAddressChange)="handleAddressChange($event, item)">
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.contact === '' ? '1px solid red' : '' }" [(ngModel)]="item.contact">
+              </ion-input>
+            </ion-col>
+            <ion-col class="dates">
+              <ion-input [ngStyle]="{'border':item.email === '' ? '1px solid red' : '' }" [(ngModel)]="item.email">
+              </ion-input>
+            </ion-col>
+          </ion-row>
+        </div>
+
+      </ion-col>
+    </ion-row>
+    <!-- </ion-row> -->
+  </ion-grid>
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
+</ion-content>
