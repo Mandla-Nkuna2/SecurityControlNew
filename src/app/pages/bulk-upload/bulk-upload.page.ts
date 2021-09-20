@@ -56,6 +56,7 @@ export class BulkUploadPage implements OnInit {
   selectedSite(event) {
     this.guardSite = event.value;
     this.guardsAvailable = false;
+    this.guards = [];
   }
 
   downloadTemplate() {
