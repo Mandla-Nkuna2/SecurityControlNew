@@ -156,7 +156,10 @@ const routes: Routes = [
         path: 'bulk-upload',
         loadChildren: () => import('../bulk-upload/bulk-upload.module').then( m => m.BulkUploadPageModule)
       },
-     
+      {
+        path: 'chat-sales',
+        loadChildren: () => import('../chat-sales/chat-sales.module').then( m => m.ChatSalesPageModule)
+      },
     
     
     ]

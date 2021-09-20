@@ -162,6 +162,11 @@ export class MenuPage implements OnInit {
       url: '/bulk-upload',
       icon: 'pie-chart'
     },
+    {
+      title: 'SALES CHAT',
+      url: '/chat-sales',
+      icon: 'pie-chart'
+    },
   ];
 
   pages4 = [
