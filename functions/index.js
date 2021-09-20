@@ -13,6 +13,7 @@ const BUCKET = 'security-control-app.appspot.com';
 admin.initializeApp();
 var moment = require('moment');
 const db = admin.database();
+const axios = require('axios');
 
 const CONFIG_CLIENT_ID = '748137076693-2kb6mbas64tjv6vpogsk6t6tiuoo598b.apps.googleusercontent.com';
 const CONFIG_CLIENT_SECRET = '27Hx3xP5cQWkiyIuMT54Rp0V';
@@ -3776,7 +3777,7 @@ function getSiteVisit(report) {
 
         }
 
-   body.push([{ text: 'Any Incidents Reported Since Last Visit?', style: 'headLabel' }, { text: report.incidents }]);
+        body.push([{ text: 'Any Incidents Reported Since Last Visit?', style: 'headLabel' }, { text: report.incidents }]);
         if (report.incidents === 'Yes') {
             body.push([{ text: 'Type of Incident', style: 'headLabel' }, { text: report.incType }]);
             body.push([{ text: 'Date', style: 'headLabel' }, { text: report.incDateTime }]);
@@ -8596,3 +8597,81 @@ function theft(report, companyLogo, color) {  // change the name of the fuunctio
         resolve(docDefinition);
     })
 }
+
+exports.newSalesMsg = functions.firestore
+    .document(`/chats/{uid}/sales-messages/{uid2}`)
+    .onCreate((snap) => {
+        const newMsg = snap.data();
+        if (newMsg.fromUser) {
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSalesMsg',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.newSalesReply = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    return admin.firestore().collection(`chats/${req.body.userId}/sales-messages`).doc(newMsg.key).set(newMsg).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.newSupportMsg = functions.firestore
+    .document(`/chats/{uid}/messages/{uid2}`)
+    .onCreate((snap) => {
+        const newMsg = snap.data();
+        if (newMsg.fromUser) {
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSupportMsg',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.newSupportReply = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    return admin.firestore().collection(`chats/${req.body.userId}/messages`).doc(newMsg.key).set(newMsg).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
