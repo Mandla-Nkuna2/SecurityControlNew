@@ -3769,7 +3769,7 @@ function getSiteVisit(report) {
                 if (element.guardSig !== '' && element.guardSig !== undefined) {
                     body.push([{ text: 'Guard Signature', style: 'headLabel' },
                     { image: element.guardSig, width: 100, alignment: 'center' }]);
-                }
+                }site
 
             });
 
@@ -6160,6 +6160,8 @@ exports.appealForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().appeal != undefined){ report.userEmail = report.userEmail + ';' + doc.data().appeal }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return appealForm(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `appeal-form/${report.key}.pdf`; // CHANGE name here
@@ -6363,6 +6365,8 @@ exports.temperatureList = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().temperature != undefined){ report.userEmail = report.userEmail + ';' + doc.data().temperature }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return tempList(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Temperature-List/${report.key}.pdf`; // CHANGE name here
@@ -6489,6 +6493,8 @@ exports.performanceAppraisal = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().performance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().performance }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return perform(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Performance - Appraisal / ${report.key}.pdf`; // CHANGE name here
@@ -6723,6 +6729,8 @@ exports.fenceInspection = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().fence != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fence }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fenceIN(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fence - Inspection / ${report.key}.pdf`; // CHANGE name here
@@ -6913,7 +6921,8 @@ exports.grieve = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().grievance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().grievance }
+ return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return grieve(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Grieve - report / ${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -7095,6 +7104,8 @@ exports.poly = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().polygraph != undefined){ report.userEmail = report.userEmail + ';' + doc.data().polygraph }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return polyG(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Polygraph - Form / ${report.key}.pdf`; // CHANGE name here
@@ -7275,6 +7286,8 @@ exports.pay = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+          if (doc.data().payquery !== undefined){ report.userEmail = report.userEmail + ';' + doc.data().payquery }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return payQ(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Pay Query - Form / ${report.key}.pdf`; // CHANGE name here
@@ -7485,6 +7498,8 @@ exports.injury = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().injury != undefined){ report.userEmail = report.userEmail + ';' + doc.data().injury }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return injuryR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Injury - report / ${report.key}.pdf`; // CHANGE name here
@@ -7665,6 +7680,8 @@ exports.firerereport = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            
+            if (doc.data().fire != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fire }
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fireR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fire - report / ${report.key}.pdf`; // CHANGE name here
@@ -7850,6 +7867,8 @@ exports.explosion = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().gas != undefined){ report.userEmail = report.userEmail + ';' + doc.data().gas }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return explosionR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Explosion - report / ${report.key}.pdf`; // CHANGE name here
@@ -8031,6 +8050,8 @@ exports.resignation = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().resignate != undefined){ report.userEmail = report.userEmail + ';' + doc.data().resignate }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return resignationF(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Resignation / ${report.key}.pdf`; // CHANGE name here
@@ -8209,6 +8230,8 @@ exports.extinguisher = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().extinguisher != undefined){ report.userEmail = report.userEmail + ';' + doc.data().extinguisher }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return extinguisherR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fire-Extinguisher-Checklist/${report.key}.pdf`; // CHANGE name here
@@ -8369,7 +8392,8 @@ exports.theftForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().theft != undefined){ report.userEmail = report.userEmail + ';' + doc.data().theft }
+ return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return theft(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Theft-form/${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {

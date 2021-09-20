@@ -20,13 +20,13 @@ export class AuthenticationService {
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore
   ) {
-    this.platform.ready().then(() => { 
+    this.platform.ready().then(() => {
       this.ifLoggedIn();
     });
   }
 
   ifLoggedIn() {
-    
+
     this.storage.get('user').then((user) => {
       if (user) {
         this.authState.next(true);
@@ -39,13 +39,13 @@ export class AuthenticationService {
   }
 
   reset(email) {
-  
+
     return new Promise<any>((resolve, reject) => {
       this.afAuth.sendPasswordResetEmail(email).then(() => {
         resolve(true)
       }),
         err => reject(err)
-  })
+    })
   }
 
   updateCompany(company) {
@@ -64,7 +64,7 @@ export class AuthenticationService {
       this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
         .then(
           res =>
-        
+
             this.afAuth.authState.pipe(take(1)).subscribe(auth => {
               if (auth && auth.uid) {
                 const newUser = {
@@ -72,18 +72,20 @@ export class AuthenticationService {
                   name: user.name,
                   email: user.email,
                   companyId: user.companyId,
-                  company: '',
-                  type: 'Account Owner',
+                  company: user.companyName,
+                  type: 'Account Admin',
                   permission: 'Admin',
                   process: 'New',
                   site: '',
                   siteId: '',
                   contact: 0,
-                  password: user.password 
-                
+                  password: user.password
+
                 }
                 this.afs.collection('users').doc(auth.uid).set(newUser).then(() => {
                   this.storage.set('user', newUser).then(() => {
+                    this.authState.next(true);
+                    this.router.navigate(['menu'])
                     resolve(res)
                   })
                 })
@@ -95,13 +97,13 @@ export class AuthenticationService {
 
   login(email, password) {
     return new Promise<any>((resolve, reject) => {
-      
+
       this.afAuth.signInWithEmailAndPassword(email, password)
         .then(
           res =>
             this.afAuth.authState.pipe(take(1)).subscribe(auth => {
               if (auth && auth.uid) {
-                
+
                 this.afs.firestore.collection('users').doc(auth.uid).get().then((doc) => {
                   this.storage.set('user', doc.data()).then(() => {
                     this.authState.next(true);
@@ -109,7 +111,6 @@ export class AuthenticationService {
                       this.router.navigate(['work-orders']);
                     } else {
                       this.router.navigate(['menu']);
-                      //welcome
                     }
                     resolve(res)
                   });
@@ -123,7 +124,7 @@ export class AuthenticationService {
   logout() {
     return new Promise((resolve, reject) => {
       if (this.afAuth.currentUser) {
-          this.storage.remove('user').then(() => {
+        this.storage.remove('user').then(() => {
           this.router.navigate(['login']).then(() => {
             this.afAuth.signOut().then(() => {
               this.authState.next(false);
