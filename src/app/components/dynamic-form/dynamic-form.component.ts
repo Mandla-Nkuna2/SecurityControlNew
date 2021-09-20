@@ -53,7 +53,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   hasErrors(index) {
-    return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(''+index).touched;  
+    return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(`${index}`).touched;  
   }
 
   onSubmit(){
