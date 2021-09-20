@@ -5,7 +5,7 @@ import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoadingService } from 'src/app/services/loading.service';
-// import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic";
+import { PushNotificationsService } from 'src/app/services/push-notifications.service';
 
 @Component({
   selector: 'app-menu',
@@ -205,7 +205,8 @@ export class MenuPage implements OnInit {
 
   thompsons = false;
 
-  constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService) {
+  constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService,
+    private pushService: PushNotificationsService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
@@ -217,14 +218,11 @@ export class MenuPage implements OnInit {
       this.app = false;
     } else {
       this.app = true;
+      this.getToken();
     }
-  
-    
-    
     this.storage.get('user').then((user) => {
       this.user.photo = user.photo;
       this.user.type = user.type;
-      this.getToken();
       this.thompsonCheck().then(() => {
         this.user.companyId = user.companyId;
         if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
@@ -261,20 +259,7 @@ export class MenuPage implements OnInit {
 
   getToken() {
     this.storage.get('user').then(user => {
-      // FCM.getToken().then(token => {
-        // console.log('Token: ' + token)
-        // this.afs.collection('tokens').doc(user.key).set({ token: token, key: user.key });
-      // });
-      /*
-      // Recieve Notifications
-      FCM.onNotification().subscribe(data => {
-        if (data.wasTapped) {
-          console.log('Received Notification in background');
-        } else {
-          console.log('Received Notification in foreground');
-        }
-      });
-      */
+      this.pushService.getToken(user);
     });
   }
 
