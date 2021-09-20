@@ -25,6 +25,7 @@
     "@ionic-native/core": "^5.34.0",
     "@ionic-native/file": "^5.34.0",
     "@ionic-native/file-opener": "^5.34.0",
+    "@ionic-native/firebase-x": "^5.36.0",
     "@ionic-native/geolocation": "^5.34.0",
     "@ionic-native/in-app-browser": "^5.34.0",
     "@ionic-native/splash-screen": "^5.34.0",
@@ -65,6 +66,7 @@
     "@typescript-eslint/parser": "4.16.1",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-firebasex": "^13.0.1",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -97,7 +99,8 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-firebasex": {}
     },
     "platforms": [
       "android"
