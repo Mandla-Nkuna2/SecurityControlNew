@@ -5,7 +5,7 @@ import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 import { HttpClient } from '@angular/common/http';
-import axios, { AxiosResponse } from 'axios';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ import axios, { AxiosResponse } from 'axios';
 export class BulkUploadService {
 
   user;
-  constructor(private storage: Storage, private http: HttpClient) { }
+  constructor(private storage: Storage, private http: HttpClient, private afs: AngularFirestore) { }
 
   onFileChange(ev) {
     return new Promise<any>((resolve, reject) => {
@@ -93,7 +93,6 @@ export class BulkUploadService {
             })
           } else {
             this.assessGuards(item).then((newItem) => {
-              console.log('New: ', newItem)
               var formattedItem = {
                 Key: UUID.UUID(),
                 grade: newItem.Grade,
@@ -157,7 +156,6 @@ export class BulkUploadService {
     return new Promise<any>(async (resolve, reject) => {
       this.getPosts(address).subscribe(
         (response: any) => {
-          console.log(response)
           var latlng = {
             lat: response.results[0].geometry.location.lat,
             lng: response.results[0].geometry.location.lng
@@ -171,7 +169,7 @@ export class BulkUploadService {
   }
 
   getPosts(address) {
-    var newAddress = address.replaceAll(' ', '+'); 
+    var newAddress = address.replaceAll(' ', '+');
     var url = `https://maps.googleapis.com/maps/api/geocode/json?address=${newAddress}&key=AIzaSyA7V48MzDIKUvfKm_1AjtRD2rXfyohBIJA`
     return this.http.get(url);
   }
@@ -179,7 +177,7 @@ export class BulkUploadService {
   assessGuards(item) {
     return new Promise<any>((resolve, reject) => {
       if (item.Full_Name === undefined) {
-        item.Full_Name = 'Guard X';
+        item.Full_Name = '';
       }
       if (item.Company_Number === undefined) {
         item.Company_Number = '';
@@ -198,6 +196,30 @@ export class BulkUploadService {
       }
       resolve(item);
     })
+  }
+
+  getUserSites(user) {
+    return new Promise<any>((resolve, reject) => {
+      var allsites = [];
+      this.afs.collection(`users/${user.key}/sites`).ref.orderBy('name').get().then(sites => {
+        sites.forEach((site: any) => {
+          allsites.push(site.data())
+        })
+        resolve(allsites);
+      })
+    })
+  }
+
+  setGuardSite(list, site) {
+    return new Promise<any>((resolve, reject) => {
+      var newList = [];
+      list.forEach(guard => {
+        guard.site = site.name;
+        guard.siteId = site.key;
+        newList.push(guard);
+      });
+      resolve(newList);
+    });
   }
 
 }

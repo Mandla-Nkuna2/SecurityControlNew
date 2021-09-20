@@ -8,6 +8,7 @@ import { BulkUploadPageRoutingModule } from './bulk-upload-routing.module';
 
 import { BulkUploadPage } from './bulk-upload.page';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { IonicSelectableModule } from 'ionic-selectable'
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
     FormsModule,
     IonicModule,
     GooglePlaceModule,
+    IonicSelectableModule,
     BulkUploadPageRoutingModule
   ],
   declarations: [BulkUploadPage]

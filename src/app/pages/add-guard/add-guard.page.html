@@ -39,16 +39,16 @@
                 <ion-item>
                   <ion-label *ngIf="idValid" position="floating">ID Number *</ion-label>
                   <ion-label *ngIf="!idValid" position="floating" style="color: red !important">ID Number *</ion-label>
-                    <ion-input type="text" [(ngModel)]="guard.id" >
-                    </ion-input>
+                  <ion-input type="text" [(ngModel)]="guard.id">
+                  </ion-input>
                 </ion-item>
 
                 <ion-item>
                   <ion-label *ngIf="assValid" position="floating">PSIRA Number *</ion-label>
                   <ion-label *ngIf="!assValid" position="floating" style="color: red !important">PSIRA Number *
                   </ion-label>
-                    <ion-input type="number" [(ngModel)]="guard.AssNo" >
-                    </ion-input>
+                  <ion-input type="number" [(ngModel)]="guard.AssNo">
+                  </ion-input>
                 </ion-item>
 
                 <ion-item>
@@ -68,18 +68,18 @@
                   <ion-label *ngIf="siteValid" position="floating">Current Site *</ion-label>
                   <ion-label *ngIf="!siteValid" position="floating" style="color: red !important">Current Site *
                   </ion-label>
-                  <ion-input  *ngIf="id === 'edit'" [(ngModel)]="guard.site"></ion-input>
+                  <ion-input *ngIf="id === 'edit'" [(ngModel)]="guard.site"></ion-input>
 
                 </ion-item>
 
-               
+
 
                 <ion-item>
-                  <ion-label  *ngIf="id === 'edit'" position="floating">Change to:</ion-label>
+                  <ion-label *ngIf="id === 'edit'" position="floating">Change to:</ion-label>
 
-                  <ionic-selectable  style="text-align: left;"  [items]="sites"
-                  (onChange)="getSite($event)" itemValueField="name" itemTextField="name" [canSearch]="true">
-                </ionic-selectable>
+                  <ionic-selectable style="text-align: left;" [items]="sites" (onChange)="getSite($event)"
+                    itemValueField="name" itemTextField="name" [canSearch]="true">
+                  </ionic-selectable>
 
                 </ion-item>
 
