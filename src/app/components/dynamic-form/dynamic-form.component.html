@@ -1,0 +1,30 @@
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title style="text-align: center;"><h1>{{ formTitle }}</h1></ion-card-title>
+    </ion-card-header>
+    <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+      <div formArrayName="inputs" *ngFor="let input of formArray.controls; let i =index">
+        <ion-item *ngIf="dynamicInputs[i].inputType =='select' && dynamicInputs[i].items">
+          <ion-label position="stacked">{{dynamicInputs[i].label}}</ion-label>
+          <ion-select interface="popover" [formControlName]="i">
+            <ion-select-option *ngFor="let item of dynamicInputs[i].items" value="{{ item }}">{{ item }}</ion-select-option>
+          </ion-select>
+          <ion-text *ngIf="hasErrors(i)" color="danger">
+            <p>Input required</p>
+          </ion-text>
+        </ion-item>
+        <ion-item *ngIf="dynamicInputs[i].inputType =='normal'">
+          <ion-label position="stacked">{{ dynamicInputs[i].label }}</ion-label>
+          <ion-input type="text" [formControlName]="i"></ion-input>
+          <ion-text *ngIf="hasErrors(i)" color="danger">
+            <p>Input required</p>
+          </ion-text>
+        </ion-item>
+      </div>
+      <ion-button type="submit" expand="block" fill="clear" shape="round">
+        Submit
+      </ion-button>
+    </form>  
+  </ion-card>
+</ion-content>

@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -53,6 +54,7 @@ import { CameraService } from './services/camera.service';
     MapReportDetailsPageModule,
     WorkOrderPageModule,
     ViewOrderPageModule,
+    ReactiveFormsModule
   ],
   providers: [
     StatusBar,

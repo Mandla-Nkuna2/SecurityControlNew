@@ -8,6 +8,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { LoginPage } from './login.page';
+import { DynamicFormComponent } from 'src/app/components/dynamic-form/dynamic-form.component';
 
 const routes: Routes = [
   {

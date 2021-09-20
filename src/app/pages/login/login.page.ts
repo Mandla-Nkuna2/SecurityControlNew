@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Platform, AlertController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Router } from '@angular/router';
+import { DynamicInput } from 'src/app/models/dynamic-input.model';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage {
+export class LoginPage{
 
   constructor(public router: Router, public loading: LoadingService, private authService: AuthenticationService,
     public platform: Platform, public alertCtrl: AlertController) {
    
   }
-
+  dynamicInputs: DynamicInput[]=[];
   email=''
   password = ''
 
@@ -33,7 +33,7 @@ export class LoginPage {
     });
   });
   }
-
+  
   async presentAlert(err) {
     const alert = await this.alertCtrl.create({
       header: 'Uhh ohh...',
