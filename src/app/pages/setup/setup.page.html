@@ -1,11 +1,11 @@
 <ion-header>
-    <ion-toolbar color="primary" mode="ios">
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title class="title-font">SETUP</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="primary" mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="title-font">SETUP</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content id="setup">
   <section class="common-img-bg">
@@ -166,6 +166,141 @@
                       </ion-button>
                     </ion-col>
                   </ion-row>
+
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">APPEAL FORM</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.appeal}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('appeal')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">TEMPERATRURE CHECKLIST</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.temperature}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('temperature')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">PERFORMANCE APPRAISAL
+                    </ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.performance}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('performance')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">FENCE INSPECTION
+                    </ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.incident}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('fence')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">GRIEVANCE FORM</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.grievance}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('grievance')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">POLYGRAPH REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.polygraph}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('polygraph')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">PAY-QUERY REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.payquery}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('payquery')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">RESIGNATION FORM</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.resignate}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('resignate')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user. companyId === 'gC9ZUArZzn1rlIBRZHLv'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">INJURY REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.injury}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('injury')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">FIRE REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.fire}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('fire')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user. companyId === 'gC9ZUArZzn1rlIBRZHLv'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">THEFT REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.theft}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('theft')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">GAS EXPLOSION REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.gas}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('gas')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row *ngIf="user.companyId === 'gC9ZUArZzn1rlIBRZHLv' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d'" class="grid-row">
+                    <ion-col size="4" class="grid-row-item ion-text-center">EXTINGUISHER CHECKLIST REPORT</ion-col>
+                    <ion-col size="6" class="grid-row-item" style="line-height: 20px">{{company.extinguisher}}</ion-col>
+                    <ion-col size="2" class="last-col ion-text-center">
+                      <ion-button icon-only clear (click)="edit('extinguisher')">
+                        <ion-icon name="build"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+
+
                 </ion-grid>
 
               </div>

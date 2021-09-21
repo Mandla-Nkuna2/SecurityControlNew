@@ -4,10 +4,10 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          
-            <div class="col-md-6" style="margin: 0 auto; padding-top: 30px">
-                <img class="auth-form__image reset" src="assets/icon/icon.png" role="img" />
-            </div>
+
+          <div class="col-md-6" style="margin: 0 auto; padding-top: 30px">
+            <img class="auth-form__image reset" src="assets/icon/icon.png" role="img" />
+          </div>
 
           <div class="login-card card-block auth-body mr-auto ml-auto">
 
@@ -23,6 +23,13 @@
               <div class="md-float-material">
 
                 <ion-item>
+                  <ion-input [(ngModel)]="user.companyName" placeholder="Company Name"></ion-input>
+                  <span class="md-line"></span>
+                </ion-item>
+                <div class="form__message" *ngIf="!companyValue">Please enter a Company name.</div>
+
+
+                <ion-item>
                   <ion-input [(ngModel)]="user.name" placeholder="Your Full Name"></ion-input>
                   <span class="md-line"></span>
                 </ion-item>
@@ -30,61 +37,60 @@
                 <div class="form__message" *ngIf="!nameValue">Please enter a valid name.</div>
 
                 <ion-item>
-                  <ion-input [(ngModel)]="user.email" type="email"
-                    placeholder="Your Email Address"></ion-input>
+                  <ion-input [(ngModel)]="user.email" type="email" placeholder="Your Email Address"></ion-input>
                   <span class="md-line"></span>
                 </ion-item>
 
-              <div class="form__message" *ngIf="!emailValue">
-                Please enter your email.
+                <div class="form__message" *ngIf="!emailValue">
+                  Please enter your email.
+                </div>
+                <div class="form__message" *ngIf="!validEmailValue">Please enter a valid email
+                  address.</div>
+
+                <ion-item>
+                  <ion-input type="password" placeholder="Password" [(ngModel)]="user.password">
+                  </ion-input>
+                  <span class="md-line"></span>
+                </ion-item>
+
+                <div class="form__message" *ngIf="!passwordValue">Please enter your
+                  password.</div>
+
+                <div class="form__message" *ngIf="!passwordLength">Password must be at
+                  least 8 characters long.</div>
+
+                <ion-item>
+                  <ion-input type="password" placeholder="Confirm Password" [(ngModel)]="user.passwordConfirm">
+                  </ion-input>
+                  <span class="md-line"></span>
+                </ion-item>
+
+                <div class="form__message" *ngIf="!confirmPasswordValue">Please
+                  confirm your password.</div>
+
+                <div class="form__message" *ngIf="!passwordMatch">Passwords
+                  don't match.</div>
+
+                <p style="color: #666666" class="ion-text-center">By signing up you agree to the <a
+                    routerLink="/view-terms" routeDirection="root">Terms of Use</a> and <a
+                    routerLink="/view-privacy-policy" routeDirection="root">Privacy Policy</a>.
+                </p>
+
+                <ion-button color="success" expand="block" (click)="register(user)">Sign
+                  Up</ion-button>
+                <div style="color:#666666; margin-top: 20px;" class="ion-text-center">Already have an account? <a
+                    routerLink="/login" routeDirection="root">Login</a></div>
+
               </div>
-              <div class="form__message" *ngIf="!validEmailValue">Please enter a valid email
-                address.</div>
-
-              <ion-item>
-                <ion-input type="password" placeholder="Password" [(ngModel)]="user.password">
-                </ion-input>
-                <span class="md-line"></span>
-              </ion-item>
-
-              <div class="form__message" *ngIf="!passwordValue">Please enter your
-                password.</div>
-
-              <div class="form__message" *ngIf="!passwordLength">Password must be at
-                least 8 characters long.</div>
-
-              <ion-item>
-                <ion-input type="password" placeholder="Confirm Password"
-                  [(ngModel)]="user.passwordConfirm"></ion-input>
-                <span class="md-line"></span>
-              </ion-item>
-
-              <div class="form__message" *ngIf="!confirmPasswordValue">Please
-                confirm your password.</div>
-
-              <div class="form__message" *ngIf="!passwordMatch">Passwords
-                don't match.</div>
-
-              <p style="color: #666666" class="ion-text-center">By signing up you agree to the <a routerLink="/view-terms"
-                  routeDirection="root">Terms of Use</a> and <a routerLink="/view-privacy-policy"
-                  routeDirection="root">Privacy Policy</a>.
-              </p>
-
-              <ion-button color="success" expand="block" (click)="register(user)">Sign
-                Up</ion-button>
-              <div style="color:#666666; margin-top: 20px;" class="ion-text-center">Already have an account? <a routerLink="/login"
-                  routeDirection="root">Login</a></div>
 
             </div>
-
+            <!-- end of form -->
           </div>
-          <!-- end of form -->
+          <!-- Authentication card end -->
         </div>
-        <!-- Authentication card end -->
+        <!-- end of col-sm-12 -->
       </div>
-      <!-- end of col-sm-12 -->
-    </div>
-    <!-- end of row -->
+      <!-- end of row -->
     </div>
     <!-- end of container-fluid -->
   </section>

@@ -1,79 +1,122 @@
-<ion-header>
-  <ion-toolbar color="primary" mode="ios">
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-button class="support-btn">
+        Support
+      </ion-button>
     </ion-buttons>
-    <ion-title class="title-font">SITE VISIT SUMMARY</ion-title>
+    <ion-item lines="none" slot="end">
+      <ion-avatar slot="end">
+        <img src="assets/imgs/user.jpeg" alt="">
+      </ion-avatar>
+      <ion-label>
+        <select name="cars" id="cars">
+          <option value="volvo">Lamu Dlamini</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+        </select>
+        <p>Admin</p>
+      </ion-label>
+    </ion-item>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
-<ion-content *ngIf="user.type == 'Owner' || user.type == 'Admin' || user.type == 'Account Admin'">
-  <section class="common-img-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-            <div class="md-float-material">
-              <div class="auth-box">
-
-                <ion-grid>
-
-                  <ion-row>
-                    <ion-col class="ion-text-center">
-                      <ion-button color="success" (click)="download()">
-                        <ion-icon name="cloud-download" slot="start"></ion-icon>Download Summaries
-                      </ion-button>
-                    </ion-col>
-                  </ion-row>
-
-                  <div class="fonts">
-
-                    <ion-row class="grid-header">
-                      <ion-col size="1.5" class="grid-header-item">SELECTION</ion-col>
-                      <ion-col size="2.7" class="grid-header-item">SITE NAME</ion-col>
-                      <ion-col size="2" class="grid-header-item">LAST VISIT</ion-col>
-                      <ion-col size="2.5" class="grid-header-item">VISIT BY</ion-col>
-                      <ion-col size="2" class="grid-header-item">ISSUES</ion-col>
-                      <ion-col size="1.3" class="ion-text-center">
-                        <ion-icon name="arrow-forward-circle-outline"></ion-icon>
-                      </ion-col>
-                    </ion-row>
-
-                    <ion-row class="grid-row" *ngFor="let site of sites | async">
-                      <ion-col size="1.5" class="grid-row-item">
-                        <ion-checkbox [(ngModel)]="site.selected" (ionChange)="addToList(site)"></ion-checkbox>
-                      </ion-col>
-                      <ion-col size="2.7" class="grid-row-item">{{site.name}}</ion-col>
-                      <ion-col size="2" class="grid-row-item">{{site.lastVisit | date:'fullDate'}}</ion-col>
-                      <ion-col size="2.5" class="grid-row-item">{{site.visitBy}}</ion-col>
-                      <ion-col size="2" *ngIf="site.status === undefined" class="grid-row-item">{{site.status}}
-                      </ion-col>
-                      <ion-col size="2" *ngIf="site.status === 'ALERT!!!'" class="grid-row-item"
-                        style="background:red !important">
-                        {{site.status}}
-                      </ion-col>
-                      <ion-col size="2" *ngIf="site.status === 'NA'" class="grid-row-item"
-                        style="background:yellow !important">
-                        {{site.status}}
-                      </ion-col>
-                      <ion-col size="2" *ngIf="site.status === 'NP'" class="grid-row-item"
-                        style="background:greenyellow !important">
-                        {{site.status}}</ion-col>
-                      <ion-col size="1.3" class="last-col ion-text-center">
-                        <ion-button *ngIf="site.visitKey !== null" fill="clear" (click)="view(site)">
-                          <ion-icon name="arrow-forward-circle-outline"></ion-icon>
-                        </ion-button>
-                      </ion-col>
-                    </ion-row>
-
-                  </div>
-                </ion-grid>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- <ion-content *ngIf="user.type == 'Owner' || user.type == 'Admin' || user.type == 'Account Admin'"> -->
+  <ion-content > 
+    <div class="top-holder flex al-center jc-between">
+    <div class="left">
+      <h1>Site Visit Summary</h1>
     </div>
-  </section>
+
+    <div class="right path-holder">
+      <h4>Home/<span>&nbsp;Summary</span> </h4>
+    </div>
+  </div>
+
+
+  <div class="btn-holder add-btn">
+    <ion-button (click)="download()">
+      Download Summaries
+    </ion-button>
+  </div>
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+        <div class="holder">
+          <div class="the-header flex al-center jc-between">
+            <h2>Summary</h2>
+           <div class="search-holder">
+            <ion-searchbar placeholder="" inputmode="decimal" type="decimal"  [debounce]="250" showCancelButton="never"></ion-searchbar>
+           </div>
+          </div>
+
+          <ion-row class="headers">
+            <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+              <h4>Site Name</h4>
+            </ion-col>
+
+            <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+              <h4>Last Visit</h4>
+            </ion-col>
+
+            <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+              <h4>Visit By</h4>
+            </ion-col>
+
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" >
+              <h4>Issues</h4>
+            </ion-col>
+
+
+            <ion-col class="flex al-center jc-end" sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" >
+              <h4>Action</h4>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="values " style="width: 100% !important;"  *ngFor="let site of sites | async">
+            <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3" class="dates flex al-center">
+              <ion-checkbox [(ngModel)]="site.selected" (ionChange)="addToList(site)"></ion-checkbox>
+              <h5>&nbsp;&nbsp;{{site.name}}</h5>
+            </ion-col>
+
+            <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3" class="dates">
+              <h5>{{site.lastVisit | date:'EEE, MMM d, y' }}</h5>
+            </ion-col>
+
+            <ion-col sizeXs="3" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3"   class="dates">
+              <h5>{{site.visitBy}}</h5>
+            </ion-col>
+
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+              <ion-button *ngIf="site.status === 'ALERT!!!'"  expand="block" id="alert">
+                {{site.status}}
+               </ion-button>      
+                    <ion-button  *ngIf="site.status === 'NP'" expand="block" id="np">
+                {{site.status}}
+               </ion-button>       
+                   <ion-button  *ngIf="site.status === 'NA'" expand="block" id="na">
+                {{site.status}}
+               </ion-button>
+            </ion-col>
+            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="flex al-center jc-end">
+              <div  *ngIf="site.visitKey !== null"  (click)="view(site)" class="btn ion-activatable ripple-parent flex al-center">
+                <ion-icon name="eye"></ion-icon>
+                <h5>&nbsp;&nbsp;View</h5>
+                <ion-ripple-effect type="bounded"></ion-ripple-effect>
+              </div>
+            </ion-col>
+          </ion-row>
+
+     
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
 </ion-content>
