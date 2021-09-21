@@ -34,6 +34,8 @@ import { ViewOrderPageModule } from './pages/view-order/view-order.module';
 import { CameraService } from './services/camera.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
+import { AnalyticsService } from './services/analytics.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -74,6 +76,8 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
     Geolocation,
     InAppBrowser,
     FirebaseX,
+    GoogleAnalytics,
+    AnalyticsService
   ],
   bootstrap: [AppComponent]
 })
