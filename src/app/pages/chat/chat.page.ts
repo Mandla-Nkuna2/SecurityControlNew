@@ -17,7 +17,7 @@ export class ChatPage implements OnInit {
   chatsCollection: AngularFirestoreCollection<any>;
   chats: Observable<any[]>;
 
-  chat = { key: '', userId: '', user: '', companyId: '', createdAt: 0, message: '', photo: '', attachment: '', status: 'unread' };
+  chat = { key: '', userId: '', user: '', companyId: '', createdAt: 0, message: '', photo: '', attachment: '', status: 'unread', fromUser: true };
   currentUser = '';
   now;
 
