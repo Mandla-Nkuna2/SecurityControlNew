@@ -8652,6 +8652,7 @@ exports.newSalesMsg = functions.firestore
 
 exports.newSalesReply = functions.https.onRequest((req, res) => {
     var newMsg = req.body;
+    var msg;
     return admin.firestore().collection(`chats/${req.body.userId}/sales-messages`).doc(newMsg.key).set(newMsg).then(() => {
         msg = JSON.stringify('Done');
         return res.send(msg);
@@ -8691,6 +8692,7 @@ exports.newSupportMsg = functions.firestore
 
 exports.newSupportReply = functions.https.onRequest((req, res) => {
     var newMsg = req.body;
+    var msg;
     return admin.firestore().collection(`chats/${req.body.userId}/messages`).doc(newMsg.key).set(newMsg).then(() => {
         msg = JSON.stringify('Done');
         return res.send(msg);
