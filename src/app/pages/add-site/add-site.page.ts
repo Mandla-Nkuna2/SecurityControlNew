@@ -9,6 +9,7 @@ import { UUID } from 'angular2-uuid';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-add-site',
@@ -46,7 +47,8 @@ export class AddSitePage implements OnInit {
 
   constructor(private actionCtrl: ActionSheetController, public platform: Platform, public alertCtrl: AlertController,
     private afs: AngularFirestore, public toast: ToastService, public loadingCtrl: LoadingController, public router: Router,
-    public navCtrl: NavController, public loading: LoadingService, private storage: Storage, public activatedRoute: ActivatedRoute) {
+    public navCtrl: NavController, public loading: LoadingService, private storage: Storage, public activatedRoute: ActivatedRoute,
+    private analyticsService: AnalyticsService) {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
@@ -141,6 +143,7 @@ export class AddSitePage implements OnInit {
     if (this.new === true) {
       this.loading.present('Saving Please Wait...').then(() => {
         this.afs.collection('sites').doc(this.site.key).set(this.site).then(() => {
+          this.analyticsService.trackEvent("Added", "Added Site", "User Added A New Site", 1)
           this.router.navigate(['all-sites']).then(() => {
             this.loading.dismiss();
           });

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UUID } from 'angular2-uuid';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-add-guard',
@@ -54,13 +55,12 @@ export class AddGuardPage implements OnInit {
 
   constructor(private actionCtrl: ActionSheetController, public platform: Platform, public alertCtrl: AlertController,
     private afs: AngularFirestore, public toast: ToastService, public camera: Camera, public loadingCtrl: LoadingController,
-    public navCtrl: NavController, public loading: LoadingService, private storage: Storage,
+    public navCtrl: NavController, public loading: LoadingService, private storage: Storage, private analyticsService: AnalyticsService,
     public activatedRoute: ActivatedRoute, public router: Router) {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {
-    
     if (document.URL.indexOf('http://localhost') === 0 || document.URL.indexOf('ionic') === 0 || document.URL.indexOf('https://localhost') === 0) {
       this.isApp = true;
     }
@@ -268,6 +268,7 @@ export class AddGuardPage implements OnInit {
 
                   this.loading.present('Creating Please Wait...');
                   this.afs.collection('guards').doc(this.guard.Key).set(this.guard).then(() => {
+                    this.analyticsService.trackEvent("Added", "Added Guard", "User Added A New Guard", 1)
                     this.toast.show(`Guard ${this.guard.name} Successfully Added!`);
                     this.loading.dismiss();
                     this.navCtrl.pop();

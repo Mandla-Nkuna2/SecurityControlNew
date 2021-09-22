@@ -38,6 +38,7 @@ export class ChatSalesPage implements OnInit {
     this.chats = [];
     this.chatService.getUser().then(user => {
       this.user = user;
+      console.log(this.user.key)
       this.getChatSub();
     })
   }

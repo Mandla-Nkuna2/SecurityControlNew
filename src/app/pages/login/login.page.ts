@@ -4,6 +4,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Router } from '@angular/router';
 import { DynamicInput } from 'src/app/models/dynamic-input.model';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { DynamicInput } from 'src/app/models/dynamic-input.model';
 export class LoginPage{
 
   constructor(public router: Router, public loading: LoadingService, private authService: AuthenticationService,
-    public platform: Platform, public alertCtrl: AlertController) {
+    public platform: Platform, public alertCtrl: AlertController, private analyticsService: AnalyticsService) {
    
   }
   dynamicInputs: DynamicInput[]=[];
@@ -22,9 +23,9 @@ export class LoginPage{
 
   login() {
     this.loading.present('Authenticating Please Wait').then(() => {
-     
       this.authService.login(this.email, this.password)
         .then(res => {
+          this.analyticsService.trackEvent("Login", "Logged_In", "Existing User Logged In", 1)
           this.loading.dismiss();
       }).catch(err => {
         this.loading.dismiss().then(() => {

@@ -80,6 +80,11 @@ export class MenuPage implements OnInit {
     //   url: '/cost',
     //   icon: 'card'
     // },
+    {
+      title: 'SALES CHAT',
+      url: '/chat-sales',
+      icon: 'pie-chart'
+    },
   ];
 
   pages2 = [
