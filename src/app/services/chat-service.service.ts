@@ -59,10 +59,39 @@ export class ChatServiceService {
         timeStamp: moment(new Date()).format('YYYY/MM/DD HH:mm'),
         message: msg,
         attachment: attachment,
-        read: false
+        read: false,
+        fromUser: true,
       }
       this.afs.collection(`chats/${user.key}/sales-messages`).doc(newMsg.key).set(newMsg);
       resolve();
+    })
+  }
+
+  getSalesCount(user) {
+    return new Observable((s) => {
+      this.afs.collection(`chats/${user.key}/sales-messages`).valueChanges().subscribe((messages) => {
+        let count = 0;
+        messages.forEach((message: any) => {
+          if (message.fromUser === false && message.read === false) {
+            count = count + 1;
+          }
+        });
+        s.next(count);
+      })
+    })
+  }
+
+  getSupportCount(user) {
+    return new Observable((s) => {
+      this.afs.collection(`chats/${user.key}/messages`).valueChanges().subscribe((messages) => {
+        let count = 0;
+        messages.forEach((message: any) => {
+          if (message.fromUser === false && message.read === false) {
+            count = count + 1;
+          }
+        });
+        s.next(count);
+      })
     })
   }
 }
