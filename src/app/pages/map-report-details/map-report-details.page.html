@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary" mode="ios">
+  <ion-toolbar  mode="ios">
     <ion-title class="title-font" *ngIf="report.name === 'Site Visit Gen'">Site Visit Report</ion-title>
     <ion-title class="title-font" *ngIf="report.name !== 'Site Visit Gen'">{{report.report}}</ion-title>
     <ion-buttons slot="end">
@@ -94,7 +94,7 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar color="primary" mode="ios">
+  <ion-toolbar  mode="ios">
     <ion-button expand="full" (click)="download()">
       <ion-icon name='download'></ion-icon>Download PDF Document
     </ion-button>
