@@ -1,5 +1,5 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -34,7 +34,7 @@ import { ViewOrderPageModule } from './pages/view-order/view-order.module';
 import { CameraService } from './services/camera.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
-
+import { ComponentsModule } from './components/components.module'
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -57,7 +57,8 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
     WorkOrderPageModule,
     ViewOrderPageModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ComponentsModule
   ],
   providers: [
     StatusBar,
@@ -75,7 +76,7 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
     InAppBrowser,
     FirebaseX,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [NO_ERRORS_SCHEMA]
 })
-export class AppModule {}
- 
+export class AppModule { }

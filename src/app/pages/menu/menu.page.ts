@@ -26,6 +26,11 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
+      title: 'FORMS-tets',
+      url: '/forms-test',
+      icon: 'clipboard'
+    },
+    {
       title: 'SITES',
       url: '/sites',
       icon: 'globe'
@@ -89,6 +94,11 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
+      title: 'FORMS-tets',
+      url: '/forms-test',
+      icon: 'clipboard'
+    },
+    {
       title: 'SITES',
       url: '/sites',
       icon: 'globe'
@@ -120,6 +130,11 @@ export class MenuPage implements OnInit {
     {
       title: 'FORMS',
       url: '/forms',
+      icon: 'clipboard'
+    },
+    {
+      title: 'FORMS-tets',
+      url: '/forms-test',
       icon: 'clipboard'
     },
     {
@@ -168,6 +183,11 @@ export class MenuPage implements OnInit {
     {
       title: 'FORMS',
       url: '/forms',
+      icon: 'clipboard'
+    },
+    {
+      title: 'FORMS-tets',
+      url: '/forms-test',
       icon: 'clipboard'
     },
     {
@@ -238,7 +258,7 @@ export class MenuPage implements OnInit {
         }
         this.companysCollection = this.afs.collection('companys', ref => ref.where('key', '==', user.companyId));
         this.companys = this.companysCollection.snapshotChanges().pipe(map(changes => {
-          return changes.map     ((a: any) => { 
+          return changes.map((a: any) => {
             const info = a.payload.doc.data() as any;
             const key = a.payload.doc.id;
             return { key, ...info };
