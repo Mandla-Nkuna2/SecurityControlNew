@@ -463,3 +463,64 @@
 <!--
   *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'"
 -->
+
+
+<ion-header class="ion-no-border mobile">
+  <ion-toolbar class="mtool">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button fill='clear'>
+        <ion-icon slot="icon-only" name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1>Forms</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/<span>&nbsp;Welcome</span> </h4>
+    </div>
+  </div>
+  <ion-grid fixed class="main-grid desktop">
+    <ion-row>
+      <ion-col size="2.4" *ngFor="let form of forms">
+        <ion-item lines="none" (click)="changeState(form)">
+          <ion-label class="ion-text-center">
+            <img [src]="form.img" alt="" *ngIf="!form.isChecked">
+            <img [src]="form.imga" alt=""  *ngIf="form.isChecked">
+            <ion-icon name='eye'></ion-icon>
+            <h2>{{form.name}}</h2>
+          </ion-label>
+          <ion-checkbox  [value]="form.value" [checked]="form.isChecked"></ion-checkbox>
+        </ion-item>
+  
+      </ion-col>
+      <ion-col size="6"></ion-col>
+    </ion-row>
+  
+  </ion-grid>
+
+  <ion-grid fixed class="main-grid mobile mobile-grid">
+    <ion-row>
+      <ion-col size="6" *ngFor="let form of formsmobile">
+        <ion-item lines="none" (click)="changeStateMobile(form)">
+          <ion-label class="ion-text-center">
+            <img [src]="form.img" alt="">
+            <h2>{{form.name}}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  
+  </ion-grid>
+
+  <div class="footer desktop">
+    <!-- <p  class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p> -->
+  </div>
+</ion-content>
