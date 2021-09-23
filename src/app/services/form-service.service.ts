@@ -252,28 +252,14 @@ export class FormServiceService {
     })
     return promise;
   }
-  public saveForm(formName: string, uid: string, form: any) {
-    return new Promise((resolve, reject) => {
-      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
-        resolve('compelte')
-      }).catch((error) => {
-        reject(error);
-      })
 
-    })
-  }
   retryInBackground(formName: string, uid: string, form: any) {
     setInterval(() => {
       this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
       });
     }, 1000)
   }
-  storeForm(name: string, form: any) {
-    return new Promise((resolve, reject) => {
 
-    })
-
-  }
   public getCollectionByFilter(link: string, option: string, value: string) {
     return new Promise((resolve, reject) => {
       this.completeLink(link).then(() => {
@@ -312,7 +298,21 @@ export class FormServiceService {
         }
       });
     })
-
-
   }
+
+  public saveForm(formName: string, uid: string, form: any) {
+    return new Promise((resolve, reject) => {
+      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
+        resolve('compelte')
+      }).catch((error) => {
+        reject(error);
+      })
+    })
+  }
+  public storeForm() {
+    return new Promise((resolve, reject) => {
+
+    })
+  }
+
 }
