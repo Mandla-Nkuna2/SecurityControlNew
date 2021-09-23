@@ -262,6 +262,12 @@ export class FormServiceService {
 
     })
   }
+  retryInBackground(formName: string, uid: string, form: any) {
+    setInterval(() => {
+      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
+      });
+    }, 1000)
+  }
   storeForm(name: string, form: any) {
     return new Promise((resolve, reject) => {
 

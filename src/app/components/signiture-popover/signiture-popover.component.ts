@@ -1,6 +1,5 @@
 import { UiService } from '../../services/ui.service';
 import { Component, ViewChild, Input } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
 
