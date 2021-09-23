@@ -13,6 +13,7 @@ export class DynamicFormComponent implements OnInit {
   @Input() dynamicInputs: DynamicInput[];
   @Input() formTitle: string;
   @Output() formObject: EventEmitter<any>;
+  imagesArray=[];
   newFormObj ={};
   formArray: FormArray;
   dynamicForm: FormGroup;
@@ -41,7 +42,8 @@ export class DynamicFormComponent implements OnInit {
         else{
           this.formArray.push(this.formBuilder.control(''))
         }
-      }else{
+      }
+      if(input.inputType == 'normal'){
         if(input.required){
           this.formArray.push(this.formBuilder.control('', Validators.required))
         }
@@ -49,7 +51,20 @@ export class DynamicFormComponent implements OnInit {
           this.formArray.push(this.formBuilder.control(''))
         }
       }
+      if(input.inputType == 'signaturePad'){
+        //assign to a variable, also should have a validation check
+      }
+      if(input.inputType == 'camera'){
+
+      }
     })
+  }
+
+  onImageEvent(event, fieldName){
+    let item = this.imagesArray.find(fieldName);
+    if(!item){
+      this.imagesArray.push({ [`${fieldName}`]: event })
+    }
   }
 
   hasErrors(index) {
@@ -61,8 +76,15 @@ export class DynamicFormComponent implements OnInit {
       return this.uiService.showToaster("Fill in all fields!", "danger", 2000, "bottom")
     }
     this.dynamicInputs.forEach((input, index)=>{
-      this.newFormObj = {...this.newFormObj , ...{[`${input.fieldName}`] : this.dynamicForm.value.inputs[index]}}
+      if(input.inputType !== "camera" && input.inputType !== "signaturePad"){
+        this.newFormObj = {...this.newFormObj , ...{[`${input.fieldName}`] : this.dynamicForm.value.inputs[index]}}
+      }
     })
+    if(this.imagesArray.length>0){
+      this.imagesArray.forEach((image: any)=>{
+        this.newFormObj = {...this.newFormObj, ...image}
+      })
+    }
     this.formObject.emit(this.newFormObj);
   }
 
