@@ -1,0 +1,12 @@
+<div *ngIf="isApp" class="camera-holder">
+  <ion-button (click)="openImageActionSheet()" expand="block" fill="clear" shape="round">
+    <ion-icon slot="icon-only" name="camera"></ion-icon>
+  </ion-button>
+</div>
+<div *ngIf="!isApp" class="camera-holder">
+  <ion-button ion-button (click)="picture.click()" icon-left>
+    <ion-icon name="camera"></ion-icon>Staff Photo
+  </ion-button>
+  <input #picture style="display:none;" type="file" accept="image/*" capture="camera"
+    (change)="selectImage($event)">
+</div>
