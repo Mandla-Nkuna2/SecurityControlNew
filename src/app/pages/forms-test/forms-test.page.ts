@@ -36,7 +36,6 @@ export class FormsTest implements OnInit {
       this.companyId = user.companyId;
       this.user = user;
       this.userKey = user.key
-      console.log(user);
 
 
       this.afs.collection(`users/${user.key}/sites`).ref.get().then((sites) => {
@@ -52,9 +51,22 @@ export class FormsTest implements OnInit {
     });
     this.inputs = this.formsService.visit.filter(x => x.hidden == false);
     this.inputs.forEach((input: DynamicInput) => {
-      if (input.link) {
+      if (input.link && !input.linkFilterName) {
         this.formsService.getCollection(input.link).then((items: any[]) => {
+          if (input.itemIsObject) {
+            items.sort((a, b) => (a[input.itemsDisplayVal] > b[input.itemsDisplayVal]) ? 1 : -1)
+          }
           input.items = items;
+        })
+      }
+      else if (input.link && input.linkFilterName && input.linkFilterValue) {
+        this.formsService.completeLink(input.linkFilterValue).then((filterValue: string) => {
+          this.formsService.getCollectionByFilter(input.link, input.linkFilterName, filterValue).then((items: any[]) => {
+            if (input.itemIsObject) {
+              items.sort((a, b) => (a[input.itemsDisplayVal] > b[input.itemsDisplayVal]) ? 1 : -1)
+            }
+            input.items = items;
+          })
         })
       }
     })

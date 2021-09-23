@@ -31,6 +31,22 @@ export class FormServiceService {
 
     },
     {
+      label: 'Registration',
+      fieldName: 'registration',
+      required: true,
+      controlType: "select",
+      link: 'fleet',
+      linkFilterName: 'companyId',
+      linkFilterValue: '{companyId}',
+      itemIsObject: true,
+      itemsDisplayVal: 'registration',
+      itemsSaveVal: 'key',
+      items: [],
+      value: '',
+      hidden: false,
+
+    },
+    {
       label: 'Site Name',
       fieldName: 'site',
       required: true,
