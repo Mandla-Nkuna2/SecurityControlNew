@@ -140,6 +140,7 @@ export class FleetPage implements OnInit {
                 latest: false
               };
               this.afs.collection(`vehicles`).doc(vehicle.key).delete().then(() => {
+                this.afs.collection(`fleet`).doc(vehicle.key).delete()
                 this.alertCtrl.dismiss();
                 this.loading.dismiss().then(() => {
                   this.toast.show('Vehicle Successfully Deleted!');

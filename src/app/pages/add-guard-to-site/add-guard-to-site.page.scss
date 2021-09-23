@@ -1,11 +1,13 @@
 ion-content {
   --ion-background-color:#000000;
 }
-ion-label {
-  color: #3880ff !important;
-}
+// ion-label {
+//   color: #3880ff !important;
+// }
 ion-item {
-  --ion-background-color: #ffffff !important;
+  border-radius: 8px;
+  color: white;
+  --ion-background-color: rgba(43, 39, 39, 0.541) !important;
 }
 ion-searchbar {
   --ion-background-color: #ffffff !important;
@@ -34,11 +36,11 @@ ion-searchbar {
 .grid-row-item {
   border-right: solid #b6090e;
   line-height: 45px;
-  background-color: #fff;
+  background-color: black;
   font-size: 1.2em;
 }
 .last-col {
-  background-color: #fff;
+  background-color: black;
 }
 .fixed-content {
   left: 0;
@@ -121,7 +123,7 @@ ion-searchbar {
   margin-right: auto!important;
 }
 .auth-box {
-  background-color: #ffffff;
+  background-color: black;
   border-radius: 8px;
   margin: 20px 0 0 0;
   padding: 20px;
@@ -176,7 +178,7 @@ hr {
   overflow: visible;
 }
 .auth-box {
-  background-color: #ffffff;
+  background-color: black;
   border-radius: 8px;
   margin: 20px 0 0 0;
   padding: 5px;

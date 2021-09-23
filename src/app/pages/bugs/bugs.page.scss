@@ -23,11 +23,11 @@
 .grid-row-item {
   border-right: solid #b6090e;
   line-height: 45px;
-  background-color: #fff;
+  background-color: black;
   font-size: 1.2em;
 }
 .last-col {
-  background-color: #fff;
+  background-color: black;
   font-size: 2.4em;
 }
 .icon-edit {
@@ -67,8 +67,9 @@
   border-top: solid #b6090e;
   border-right: solid #b6090e;
   text-align: center;
-  background: #fff;
-  color: #000;
+ background: black;
+ color:white;
+
   text-transform: uppercase;
 }
 .button-menu {
@@ -157,7 +158,7 @@
   margin-right: auto !important;
 }
 .auth-box {
-  background-color: #fff;
+  background-color: black;
   border-radius: 8px;
   margin: 20px 0 0 0;
   padding: 20px;
@@ -212,7 +213,7 @@ hr {
   overflow: visible;
 }
 .auth-box {
-  background-color: #fff;
+  background-color: black;
   border-radius: 8px;
   margin: 20px 0 0 0;
   padding: 5px;
