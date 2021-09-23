@@ -60,6 +60,15 @@ export class FormServiceService {
       disabled: true
     },
     {
+      label: 'Manager',
+      fieldName: 'managerName',
+      required: true,
+      controlType: "normal",
+      value: '{name}',
+      hidden: false,
+      disabled: true
+    },
+    {
       label: 'OB Number',
       fieldName: 'ob',
       required: true,
@@ -291,7 +300,13 @@ export class FormServiceService {
           else if (question.value.includes('@date')) {
             question.value = moment().format('YYYY-MM-DD').toString();
           }
+          else if (question.value.includes('{')) {
+            this.completeLink(question.value).then((val: string) => {
+              question.value = val;
+            });
+          }
         }
+
         i = i + 1;
         if (i == questions.length) {
           resolve(questions)

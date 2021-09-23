@@ -17,6 +17,7 @@ export class DynamicInput {
   populateQuestionItems?: {
     questionKeyName: string;
     questionKeyValue: string;
+    collectionPath: string;
     collectionFilterName?: string;
     collectionFilterValue?: string;
   }

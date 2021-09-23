@@ -124,8 +124,6 @@ export class DynamicFormComponent implements OnInit {
     return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(`${index}`).touched;
   }
 
-
-
   determinCondition(condition: string) {
     if (!condition) {
       return true;
@@ -180,12 +178,10 @@ export class DynamicFormComponent implements OnInit {
 
   onImageEvent(event, fieldName) {
     let exists = false;
-
     if (!exists) {
       this.newFormObj[fieldName] = event
       if (this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0).length > 0) {
         this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0)[0][fieldName] = 'added';
-
       }
     }
   }
@@ -196,15 +192,11 @@ export class DynamicFormComponent implements OnInit {
     this.lastIndex = this.lastIndex + (this.dynamicInputs.length)
     this.slideIndex = this.slideIndex + 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
-
   }
   prevSlide() {
-
     this.slideIndex = this.slideIndex - 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
-
-
   }
 
   onSubmit() {
