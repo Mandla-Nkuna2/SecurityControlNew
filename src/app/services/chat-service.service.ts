@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
-import { UUID } from 'angular2-uuid';
 import moment from 'moment';
 import { Observable } from 'rxjs';
 
@@ -46,6 +45,11 @@ export class ChatServiceService {
 
   sendSalesChat(user, msg, attachment) {
     return new Promise<void>((resolve, reject) => {
+      var newUser = {
+        key: user.key,
+        name: user.name
+      }
+      this.afs.collection(`chats`).doc(user.key).set(newUser, { merge: true });
       let currentTime = moment().format('YYYY-MM-DD HH:mm:ss').toString();
       currentTime = currentTime.replace(' ', '@');
       currentTime = currentTime.replace(':', '$');
@@ -59,10 +63,59 @@ export class ChatServiceService {
         timeStamp: moment(new Date()).format('YYYY/MM/DD HH:mm'),
         message: msg,
         attachment: attachment,
-        read: false
+        read: false,
+        fromUser: true
       }
       this.afs.collection(`chats/${user.key}/sales-messages`).doc(newMsg.key).set(newMsg);
       resolve();
+    })
+  }
+
+  sendSupportChat(user, msg, attachment) {
+    return new Promise<void>((resolve, reject) => {
+      var newUser = {
+        key: user.key,
+        name: user.name
+      }
+      this.afs.collection(`chats`).doc(user.key).set(newUser, { merge: true });
+      let currentTime = moment().format('YYYY-MM-DD HH:mm:ss').toString();
+      currentTime = currentTime.replace(' ', '@');
+      currentTime = currentTime.replace(':', '$');
+      var newMsg = {
+        key: currentTime,
+        userId: user.key,
+        user: user.name,
+        companyId: user.companyId,
+        date: moment(new Date()).format('YYYY/MM/DD'),
+        time: moment(new Date()).format('HH:mm'),
+        timeStamp: moment(new Date()).format('YYYY/MM/DD HH:mm'),
+        message: msg,
+        attachment: attachment,
+        read: false,
+        fromUser: true
+      }
+      this.afs.collection(`chats/${user.key}/messages`).doc(newMsg.key).set(newMsg);
+      resolve();
+    })
+  }
+
+  public readSalesChats(userId) {
+    this.afs.collection(`chats/${userId}/sales-messages`).ref.where('fromUser', '==', false).where('read', '==', false).get().then(msgs => {
+      msgs.forEach((msg: any) => {
+        this.afs.collection(`chats/${userId}/sales-messages`).doc(msg.data().key).update({
+          read: true
+        })
+      })
+    })
+  }
+
+  public readSupportChats(userId) {
+    this.afs.collection(`chats/${userId}/messages`).ref.where('fromUser', '==', false).where('read', '==', false).get().then(msgs => {
+      msgs.forEach((msg: any) => {
+        this.afs.collection(`chats/${userId}/messages`).doc(msg.data().key).update({
+          read: true
+        })
+      })
     })
   }
 }
