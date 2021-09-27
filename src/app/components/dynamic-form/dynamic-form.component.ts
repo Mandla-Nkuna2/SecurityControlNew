@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { UiService } from './../../services/ui.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -31,9 +32,13 @@ export class DynamicFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private uiService: UiService,
-    public formService: FormServiceService
+    private formService: FormServiceService,
+    private storage: Storage
   ) {
     this.formObject = new EventEmitter();
+    this.storage.get('formObject').then((formObject)=>{
+        
+    })
   }
 
   ngOnInit() {
@@ -53,6 +58,9 @@ export class DynamicFormComponent implements OnInit {
     })
   }
 
+  ionViewWillLeave(){
+
+  }
 
   checkSlides() {
     return new Promise((resolve, reject) => {

@@ -17,3 +17,7 @@ ion-card-title {
   flex-direction: row; 
   text-align: center;
 }
+ion-input{
+  --placeholder-opacity: 1;
+  --placeholder-color	: black;
+}

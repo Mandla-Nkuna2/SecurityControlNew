@@ -9,7 +9,9 @@ export class DynamicInput {
   value?: string;
   hidden: boolean;
   link?: string;
-  itemsDisplayVal?: string
+  linkFilterName?: string;
+  linkFilterValue?: string;
+  itemsDisplayVal?: string;
   itemsSaveVal?: string;
   itemIsObject?: boolean;
   condition?: string;
@@ -17,8 +19,8 @@ export class DynamicInput {
   populateQuestionItems?: {
     questionKeyName: string;
     questionKeyValue: string;
+    collectionPath: string;
     collectionFilterName?: string;
     collectionFilterValue?: string;
   }
 }
-

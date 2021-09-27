@@ -3,6 +3,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { DynamicInput } from '../models/dynamic-input.model'
 import * as moment from 'moment';
+import { ActionSheetController } from '@ionic/angular';
+import { PdfService } from './pdf.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +27,22 @@ export class FormServiceService {
       fieldName: 'duty',
       required: true,
       controlType: "normal",
+      items: [],
+      value: '',
+      hidden: false,
+
+    },
+    {
+      label: 'Registration',
+      fieldName: 'registration',
+      required: true,
+      controlType: "select",
+      link: 'fleet',
+      linkFilterName: 'companyId',
+      linkFilterValue: '{companyId}',
+      itemIsObject: true,
+      itemsDisplayVal: 'registration',
+      itemsSaveVal: 'key',
       items: [],
       value: '',
       hidden: false,
@@ -56,6 +74,15 @@ export class FormServiceService {
       required: true,
       controlType: "normal",
       value: '@date',
+      hidden: false,
+      disabled: true
+    },
+    {
+      label: 'Manager',
+      fieldName: 'managerName',
+      required: true,
+      controlType: "normal",
+      value: '{name}',
       hidden: false,
       disabled: true
     },
@@ -208,7 +235,9 @@ export class FormServiceService {
   ]
   constructor(
     private afs: AngularFirestore,
-    private storage: Storage
+    private storage: Storage,
+    public actionCtrl: ActionSheetController,
+    private pdfService: PdfService
   ) { }
   public getCollection(link: string) {
     const promise = new Promise((resolve, reject) => {
@@ -291,7 +320,13 @@ export class FormServiceService {
           else if (question.value.includes('@date')) {
             question.value = moment().format('YYYY-MM-DD').toString();
           }
+          else if (question.value.includes('{')) {
+            this.completeLink(question.value).then((val: string) => {
+              question.value = val;
+            });
+          }
         }
+
         i = i + 1;
         if (i == questions.length) {
           resolve(questions)
@@ -314,5 +349,44 @@ export class FormServiceService {
 
     })
   }
-
+  async completeActionSheet(newFormObject: any) {
+    const actionSheet = await this.actionCtrl.create({
+      header: 'Options: ',
+      cssClass: 'actionSheet',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Submit and Exit',
+          icon: 'paper-plane',
+          cssClass: 'successAction',
+          handler: () => {
+            // this.continue();
+          }
+        },
+        {
+          text: 'Download PDF Document',
+          icon: 'download',
+          cssClass: 'secondaryAction',
+          handler: () => {
+            // this.downloadPdf();
+          }
+        },
+        {
+          text: 'Exit Inspection',
+          icon: 'close',
+          cssClass: 'dangerAction',
+          handler: () => {
+            // this.exit();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        }]
+    });
+    await actionSheet.present();
+  }
+  downloadPdf(newFormObj: any) {
+    this.pdfService.download(newFormObj)
+  }
 }

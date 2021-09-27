@@ -26,8 +26,8 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
-      title: 'FORMS-tets',
-      url: '/forms-test',
+      title: 'Form',
+      url: '/form',
       icon: 'clipboard'
     },
     {
@@ -94,8 +94,8 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
-      title: 'FORMS-tets',
-      url: '/forms-test',
+      title: 'Form',
+      url: '/form',
       icon: 'clipboard'
     },
     {
@@ -133,8 +133,8 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
-      title: 'FORMS-tets',
-      url: '/forms-test',
+      title: 'Form',
+      url: '/form',
       icon: 'clipboard'
     },
     {
@@ -196,8 +196,8 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
-      title: 'FORMS-tets',
-      url: '/forms-test',
+      title: 'Form',
+      url: '/form',
       icon: 'clipboard'
     },
     {
