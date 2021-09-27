@@ -1,5 +1,5 @@
 import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
-import { ToastController, ActionSheetController, Platform, PopoverController } from '@ionic/angular';
+import { ToastController, ActionSheetController, Platform, PopoverController, AlertController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { SigniturePadComponent } from '../components/signiture-popover/signiture-popover.component';
 
@@ -13,7 +13,8 @@ export class UiService {
     private actionSheetController: ActionSheetController,
     private platform: Platform,
     private camera: Camera,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private alertController: AlertController
   ) { }
 
   async showToaster(msg, clr, duration?, position?) {
@@ -54,6 +55,29 @@ export class UiService {
         ]
       });
       return await actionSheet.present();
+    })
+  }
+
+  async openConfirmationAlert(msg, confirmBtnText?, cancelBtnText?){
+    return new Promise(async (resolve)=>{
+      const alert = await this.alertController.create({
+        message: msg,
+        buttons: [
+          {
+            text: confirmBtnText ? confirmBtnText : 'Confirm',
+            handler: ()=>{
+              resolve(true)
+            }
+          },
+          {
+            text: cancelBtnText ? cancelBtnText : 'Cancel',
+            handler: ()=>{
+              resolve(false)
+            }
+          }
+        ]
+      })
+      await alert.present();
     })
   }
 

@@ -3,6 +3,9 @@
     <ion-card-header>
       <ion-card-title style="text-align: center;">
         <h1>{{ formTitle }}</h1>
+        <ion-button (click)="onExit()" fill="clear">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
       </ion-card-title>
       <div style="width: 100%; display: flex;">
         <div class="slide-btn">
