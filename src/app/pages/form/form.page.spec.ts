@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { FormsTest } from './forms-test.page';
+import { Form } from './form.page';
 
-describe('FormsTest', () => {
-  let component: FormsTest;
-  let fixture: ComponentFixture<FormsTest>;
+describe('Form', () => {
+  let component: Form;
+  let fixture: ComponentFixture<Form>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [FormsTest],
+      declarations: [Form],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FormsTest);
+    fixture = TestBed.createComponent(Form);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

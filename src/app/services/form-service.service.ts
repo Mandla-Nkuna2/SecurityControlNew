@@ -3,6 +3,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { DynamicInput } from '../models/dynamic-input.model'
 import * as moment from 'moment';
+import { ActionSheetController } from '@ionic/angular';
+import { PdfService } from './pdf.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -233,7 +235,9 @@ export class FormServiceService {
   ]
   constructor(
     private afs: AngularFirestore,
-    private storage: Storage
+    private storage: Storage,
+    public actionCtrl: ActionSheetController,
+    private pdfService: PdfService
   ) { }
   public getCollection(link: string) {
     const promise = new Promise((resolve, reject) => {
@@ -345,5 +349,44 @@ export class FormServiceService {
 
     })
   }
-
+  async completeActionSheet(newFormObject: any) {
+    const actionSheet = await this.actionCtrl.create({
+      header: 'Options: ',
+      cssClass: 'actionSheet',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Submit and Exit',
+          icon: 'paper-plane',
+          cssClass: 'successAction',
+          handler: () => {
+            // this.continue();
+          }
+        },
+        {
+          text: 'Download PDF Document',
+          icon: 'download',
+          cssClass: 'secondaryAction',
+          handler: () => {
+            // this.downloadPdf();
+          }
+        },
+        {
+          text: 'Exit Inspection',
+          icon: 'close',
+          cssClass: 'dangerAction',
+          handler: () => {
+            // this.exit();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        }]
+    });
+    await actionSheet.present();
+  }
+  downloadPdf(newFormObj: any) {
+    this.pdfService.download(newFormObj)
+  }
 }

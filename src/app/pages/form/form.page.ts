@@ -5,11 +5,11 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { DynamicInput } from '../../models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service'
 @Component({
-  selector: 'app-forms',
-  templateUrl: './forms-test.page.html',
-  styleUrls: ['./forms-test.page.scss'],
+  selector: 'app-form',
+  templateUrl: './form.page.html',
+  styleUrls: ['./form.page.scss'],
 })
-export class FormsTest implements OnInit {
+export class Form implements OnInit {
 
   sites = [];
   companyId;

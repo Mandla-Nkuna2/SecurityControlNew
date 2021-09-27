@@ -157,8 +157,8 @@ const routes: Routes = [
         loadChildren: () => import('../bulk-upload/bulk-upload.module').then(m => m.BulkUploadPageModule)
       },
       {
-        path: 'forms-test',
-        loadChildren: () => import('../forms-test/forms-test.module').then(m => m.FormsPageModule)
+        path: 'form',
+        loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule)
       },
 
 
