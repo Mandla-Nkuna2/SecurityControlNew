@@ -1,85 +1,142 @@
-<ion-header>
-  <ion-toolbar color="primary" mode="ios">
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title *ngIf="new" class="title-font">ADD SITE</ion-title>
-    <ion-title *ngIf="!new" class="title-font">EDIT SITE</ion-title>
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal">
+   <ion-buttons slot="start">
+     <ion-button class="support-btn">
+      Support
+     </ion-button>
+   </ion-buttons>
+   <ion-item lines="none" slot="end" (click)="goMyaccount()">
+    <ion-avatar slot="end">
+     <img src="assets/imgs/user.jpeg" alt="">
+    </ion-avatar>
+   <ion-label>
+    <select name="cars" id="cars">
+      <option value="volvo">Lamu Dlamini</option>
+      <option value="saab">Saab</option>
+      <option value="mercedes">Mercedes</option>
+      <option value="audi">Audi</option>
+    </select>
+    <p>Admin</p>
+   </ion-label>
+  </ion-item>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
-<ion-content scrollbar-y-auto>
-  <section class="common-img-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-            <div class="md-float-material">
-              <div class="auth-box">
+<ion-content>
+    <div class="top-holder flex al-center jc-between">
+      <div class="left">
+        <h1 *ngIf="!new">Edit Site</h1>
+        <h1 *ngIf="new">Add New Site</h1>
+      </div>
 
-                <ion-item>
-                  <ion-label *ngIf="nameValue" position="floating">Site Name *</ion-label>
-                  <ion-label *ngIf="!nameValue" position="floating" style="color: red !important">Site Name *
-                  </ion-label>
-                  <ion-input [(ngModel)]="site.name" (ngModelChange)="site.name = $event.toLocaleUpperCase()">
-                  </ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label *ngIf="clientValue" position="floating">Client Name *</ion-label>
-                  <ion-label *ngIf="!clientValue" position="floating" style="color: red !important">Client Name *
-                  </ion-label>
-                  <ion-input [(ngModel)]="site.client">
-                  </ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label *ngIf="clientValue" position="floating">Client Email *</ion-label>
-                  <ion-label *ngIf="!clientValue" position="floating" style="color: red !important">Client Email *
-                  </ion-label>
-                  <ion-input [(ngModel)]="site.email">
-                  </ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label *ngIf="addressValue" position="stacked" style="margin-bottom: 10px !important;">Site
-                    Address *
-                  </ion-label>
-                  <ion-label *ngIf="!addressValue" position="stacked" style="color: red !important">Site Address *
-                  </ion-label>
-                  <input class="form-control" ngx-google-places-autocomplete #placesRef="ngx-places"
-                    (onAddressChange)="handleAddressChange($event)" [value]="site.address">
-                </ion-item>
-
-                <ion-item>
-                  <ion-label *ngIf="contactValue" position="floating">Site Contact Number *</ion-label>
-                  <ion-label *ngIf="!contactValue" position="floating" style="color: red !important">Site Contact Number
-                    *</ion-label>
-                  <ion-input [(ngModel)]="site.contact">
-                  </ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label *ngIf="emailValue" position="floating">Site Contact Email *</ion-label>
-                  <ion-label *ngIf="!emailValue" position="floating" style="color: red !important">Site Contact Email *
-                  </ion-label>
-                  <ion-input [(ngModel)]="site.recipient">
-                  </ion-input>
-                </ion-item>
-
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="right path-holder">
+        <h4>Home/Sites/My Sites/<span>&nbsp;Site</span> </h4>
       </div>
     </div>
-  </section>
-</ion-content>
 
-<ion-footer>
-  <ion-toolbar color="primary" mode="ios">
-    <ion-button expand="full" (click)="check()">
-      <ion-icon name="checkmark"></ion-icon>Save Site
-    </ion-button>
-  </ion-toolbar>
-</ion-footer>
+    <ion-grid class="main-grid" fixed>
+      <ion-row class="ion-justify-content-center ion-align-items-center">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="10" sizeLg="8" sizeXl="10">
+          <div class="holder left">
+            <div class="the-header">
+              <h2> Site</h2>
+            </div>
+
+            <div class="the-content">
+                <div class="the-form">
+      
+                <ion-row>
+                  <ion-col size="12">
+                    <div class="input-item">
+                      <ion-label  *ngIf="nameValue">Site Name*</ion-label>
+                      <ion-label  *ngIf="!nameValue" style="color: red !important">Site Name*</ion-label>
+                      <ion-item lines="none">
+                        <ion-input type="text" [(ngModel)]="site.name" (ngModelChange)="site.name = $event.toLocaleUpperCase()"></ion-input>
+                      </ion-item>
+                    </div>
+                  </ion-col>
+
+                  <ion-col  sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75">
+                    <div class="input-item">
+                      <ion-label  *ngIf="clientValue">Client Name*</ion-label>
+                      <ion-label  *ngIf="!clientValue" style="color: red !important">Client Name*</ion-label>
+                      <ion-item lines="none">
+                        <ion-input type="text"  [(ngModel)]="site.client"></ion-input>
+                      </ion-item>
+                    </div>
+                  </ion-col>
+
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75" offsetXs="0" offsetSm="0.5" offsetMd="0.5"  offsetLg="0.5"  offsetXl="0.5">
+                    <div class="input-item">
+                      <ion-label *ngIf="clientValue">Client Email Address*</ion-label>
+                      <ion-label *ngIf="!clientValue" style="color: red !important">Client Email Address*</ion-label>
+                      <ion-item lines="none">
+                        <ion-input type="email" [(ngModel)]="site.email"></ion-input>
+                      </ion-item>
+                    </div>
+                  </ion-col>
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75">
+                    <div class="input-item">
+                      <ion-label *ngIf="addressValue">Site Address*</ion-label>
+                      <ion-label *ngIf="!addressValue" style="color: red !important">Site Address*</ion-label>
+                      <ion-item lines="none">
+                        <ion-input ngx-google-places-autocomplete #placesRef="ngx-places"
+                        (onAddressChange)="handleAddressChange($event)" [value]="site.address" placeholder="Enter a Location"></ion-input>
+                      </ion-item>
+                    </div>
+                  </ion-col>
+
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75"  offsetXs="0" offsetSm="0.5" offsetMd="0.5"  offsetLg="0.5"  offsetXl="0.5">
+                    <div class="input-item">
+                      <ion-label *ngIf="contactValue">Site Contact Number*</ion-label>
+                      <ion-label *ngIf="!contactValue" style="color: red !important">Site Contact Number*</ion-label>
+                      <ion-item lines="none">
+                        <ion-input [(ngModel)]="site.contact"></ion-input>
+                      </ion-item>
+                    </div>
+                  </ion-col>
+
+                  <ion-col size="12">
+                    <div class="input-item">
+                      <ion-label *ngIf="emailValue" >Site Email Address*</ion-label>
+                      <ion-label *ngIf="!emailValue" style="color: red !important" >Site Email Address*</ion-label>
+                      <ion-item lines="none">
+                        <ion-input [(ngModel)]="site.recipient"></ion-input>
+                      </ion-item>
+                    </div>
+                  </ion-col>
+      
+                </ion-row>
+
+                
+                 
+
+      
+                  <div class="btn-holder ion-padding-top">
+                    <ion-row>
+                      <!-- <ion-col  sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75">
+                        <ion-button expand="block" id="cancel" fill="outline">
+                          Cancel
+                        </ion-button>
+                      </ion-col> -->
+
+                      <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75"  offsetXs="0" offsetSm="0.5" offsetMd="0.5"  offsetLg="0.5"  offsetXl="0.5">
+                        <ion-button expand="block" (click)="check()">
+                          Save
+                        </ion-button>
+                      </ion-col>
+
+
+                    
+                    </ion-row>
+                  </div>
+      
+      
+                </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+</ion-content> 

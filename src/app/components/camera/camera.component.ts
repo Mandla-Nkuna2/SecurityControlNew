@@ -29,7 +29,7 @@ export class CameraComponent implements OnInit {
     else {
       this.isApp = false;
     }
-    console.log(this.isApp);
+
   }
 
   async openImageActionSheet() {

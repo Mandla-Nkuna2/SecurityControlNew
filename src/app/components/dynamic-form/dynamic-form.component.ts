@@ -15,6 +15,7 @@ export class DynamicFormComponent implements OnInit {
   @Input() staticFields: any;
   @Output() formObject: EventEmitter<any>;
   newFormObj: any = {};
+
   formArray: FormArray;
   dynamicForm: FormGroup;
 
@@ -87,6 +88,7 @@ export class DynamicFormComponent implements OnInit {
       }
       if (input.controlType == 'normal') {
         if (input.required) {
+
           this.formArray.push(this.formBuilder.control('', Validators.required))
         }
         else {
@@ -116,8 +118,16 @@ export class DynamicFormComponent implements OnInit {
           image[input.fieldName] = '';
           this.imagesArray.push(image)
         }
+
       }
     })
+  }
+
+  onImageEvent(event, fieldName){
+    let item = this.imagesArray.find(fieldName);
+    if(!item){
+      this.imagesArray.push({ [`${fieldName}`]: event })
+    }
   }
 
   hasErrors(index) {
@@ -207,8 +217,14 @@ export class DynamicFormComponent implements OnInit {
     this.dynamicInputs.forEach((input, index) => {
       if (input.controlType !== "camera" && input.controlType !== "signaturePad") {
         this.newFormObj = { ...this.newFormObj, ...{ [`${input.fieldName}`]: this.dynamicForm.value.inputs[index] } }
+
       }
     })
+    if(this.imagesArray.length>0){
+      this.imagesArray.forEach((image: any)=>{
+        this.newFormObj = {...this.newFormObj, ...image}
+      })
+    }
     this.formObject.emit(this.newFormObj);
   }
   isValid(): boolean {

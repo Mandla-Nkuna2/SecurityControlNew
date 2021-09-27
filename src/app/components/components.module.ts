@@ -21,5 +21,6 @@ import { CameraComponent } from './camera/camera.component'
     ImageCropperModule,
   ],
   entryComponents: [PopoverComponent]
+
 })
 export class ComponentsModule { }

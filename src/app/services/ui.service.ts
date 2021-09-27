@@ -14,6 +14,7 @@ export class UiService {
     private platform: Platform,
     private camera: Camera,
     private popoverController: PopoverController
+
   ) { }
 
   async showToaster(msg, clr, duration?, position?) {
@@ -28,6 +29,7 @@ export class UiService {
 
   async openActionSheet(useAlbum: boolean) {
     return new Promise(async (resolve, reject) => {
+
       let actionSheet = await this.actionSheetController.create({
         header: 'Option',
         cssClass: 'action-sheets-basic-page',
@@ -40,6 +42,7 @@ export class UiService {
               this.captureImage(useAlbum).then((imageString) => {
                 resolve(imageString)
               }).catch(onError => reject(onError)); //false
+
             }
           },
           {
@@ -49,6 +52,7 @@ export class UiService {
               this.captureImage(useAlbum).then((imageString) => {
                 resolve(imageString)
               }).catch(onError => reject(onError)) //true
+
             }
           },
         ]
@@ -86,6 +90,7 @@ export class UiService {
 
   captureImage(useAlbum: boolean) {
     return new Promise((resolve, reject) => {
+
       const options: CameraOptions = {
         quality: 90,
         targetWidth: 300,
@@ -101,6 +106,7 @@ export class UiService {
       this.camera.getPicture(options).then((imageData) => {
         resolve('data:image/jpeg;base64,' + imageData);
       }).catch((error) => {
+
         console.log(error)
         reject(error);
       })

@@ -31,7 +31,7 @@ view;
 
 
   constructor(public actionCtrl: ActionSheetController,private popoverController:PopoverController,
-    public PdfService:PdfService, private platform: Platform, public geolocation: Geolocation,
+    public pdfService:PdfService, private platform: Platform, public geolocation: Geolocation,
     private afs: AngularFirestore, public toast: ToastService, public loadingCtrl: LoadingController,
     public alertCtrl: AlertController, public navCtrl: NavController, private storage: Storage,
     public loading: LoadingService, public router: Router, public activatedRoute: ActivatedRoute) {
@@ -115,9 +115,6 @@ view;
 
 
   ngOnInit() {
-
-   
-
     if (this.id === 'new') { 
       this.appeal.report = 'appeal'
       this.storage.get('user').then((user) => {
@@ -202,7 +199,7 @@ view;
           // icon: 'save',
           // cssClass: 'successAction',
           handler: () => {
-            this.PdfService.download(this.appeal).then(()=>{
+            this.pdfService.download(this.appeal).then(()=>{
                             this.save()
                           })
           },

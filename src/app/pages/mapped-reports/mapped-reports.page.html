@@ -1,9 +1,10 @@
-<ion-header>
-    <ion-toolbar color="primary" mode="ios">
+
+  <ion-header >
+    <ion-toolbar class="mbar">
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title class="title-font">MAPPED REPORTS</ion-title>
+      <ion-title>Mapped Reports</ion-title>
     </ion-toolbar>
   </ion-header>
   
@@ -11,8 +12,8 @@
     <div id="map" style="width:100%; height:100%;"></div>
   </ion-content>
   
-  <ion-footer id="map_page">
-    <ion-toolbar color="primary">
+  <ion-footer >
+    <ion-toolbar style="--background: black">
       <ion-row>
         <ion-col class="ion-text-center">
           <ion-item>
@@ -61,7 +62,7 @@
           </ion-item>
         </ion-col>
         <ion-col class="ion-text-center">
-          <ion-button icon-left (click)="filter(map, location)">
+          <ion-button  fill="outline" style="color: white;" icon-left (click)="filter(map, location)">
             <ion-icon name="search"></ion-icon>Filter
           </ion-button>
         </ion-col>
