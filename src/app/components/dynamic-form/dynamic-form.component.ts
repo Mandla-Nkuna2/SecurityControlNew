@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { UiService } from './../../services/ui.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -14,11 +15,10 @@ export class DynamicFormComponent implements OnInit {
   @Input() formTitle: string;
   @Input() staticFields: any;
   @Output() formObject: EventEmitter<any>;
-  newFormObj: any = {};
 
+  newFormObj: any = {};
   formArray: FormArray;
   dynamicForm: FormGroup;
-
   slideIndex = 0;
   noOfSlides = 0;
   dynamicInputsSlides: DynamicInput[][] = [];
@@ -32,9 +32,13 @@ export class DynamicFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private uiService: UiService,
-    public formService: FormServiceService
+    private formService: FormServiceService,
+    private storage: Storage
   ) {
     this.formObject = new EventEmitter();
+    this.storage.get('formObject').then((formObject)=>{
+        
+    })
   }
 
   ngOnInit() {
@@ -54,6 +58,9 @@ export class DynamicFormComponent implements OnInit {
     })
   }
 
+  ionViewWillLeave(){
+
+  }
 
   checkSlides() {
     return new Promise((resolve, reject) => {
@@ -88,7 +95,6 @@ export class DynamicFormComponent implements OnInit {
       }
       if (input.controlType == 'normal') {
         if (input.required) {
-
           this.formArray.push(this.formBuilder.control('', Validators.required))
         }
         else {
@@ -118,23 +124,15 @@ export class DynamicFormComponent implements OnInit {
           image[input.fieldName] = '';
           this.imagesArray.push(image)
         }
-
       }
     })
-  }
-
-  onImageEvent(event, fieldName){
-    let item = this.imagesArray.find(fieldName);
-    if(!item){
-      this.imagesArray.push({ [`${fieldName}`]: event })
-    }
   }
 
   hasErrors(index) {
     return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(`${index}`).touched;
   }
 
-  determinCondition(condition: string) {
+  determineCondition(condition: string) {
     if (!condition) {
       return true;
     }
@@ -188,10 +186,12 @@ export class DynamicFormComponent implements OnInit {
 
   onImageEvent(event, fieldName) {
     let exists = false;
+
     if (!exists) {
       this.newFormObj[fieldName] = event
       if (this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0).length > 0) {
         this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0)[0][fieldName] = 'added';
+
       }
     }
   }
@@ -202,11 +202,15 @@ export class DynamicFormComponent implements OnInit {
     this.lastIndex = this.lastIndex + (this.dynamicInputs.length)
     this.slideIndex = this.slideIndex + 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
+
   }
   prevSlide() {
+
     this.slideIndex = this.slideIndex - 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
+
+
   }
 
   onSubmit() {
@@ -217,7 +221,6 @@ export class DynamicFormComponent implements OnInit {
     this.dynamicInputs.forEach((input, index) => {
       if (input.controlType !== "camera" && input.controlType !== "signaturePad") {
         this.newFormObj = { ...this.newFormObj, ...{ [`${input.fieldName}`]: this.dynamicForm.value.inputs[index] } }
-
       }
     })
     if(this.imagesArray.length>0){

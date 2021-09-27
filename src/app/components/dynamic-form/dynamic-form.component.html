@@ -2,16 +2,15 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title style="text-align: center;">
-        <h1>{{ formTitle }}ssss</h1>
+        <h1>{{ formTitle }}</h1>
       </ion-card-title>
       <div style="width: 100%; display: flex;">
-        <div style="width: 20%;flex-direction: row; text-align: center;">
+        <div class="slide-btn">
           <ion-button *ngIf="noOfSlides>=1 && slideIndex>0" color="danger" (click)="prevSlide()">Previous</ion-button>
-
         </div>
         <div style="width: 60%;flex-direction: row;">
         </div>
-        <div style="width: 20%;flex-direction: row; text-align: center;">
+        <div class="slide-btn">
           <ion-button *ngIf="noOfSlides>=1 && slideIndex< noOfSlides " color="success" (click)="nextSlide()">Next
           </ion-button>
         </div>
@@ -20,7 +19,7 @@
     </ion-card-header>
     <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" *ngIf="show">
       <div formArrayName="inputs" *ngFor="let input of dynamicInputs; let i =index">
-        <ion-item *ngIf="input.controlType =='select' && determinCondition(input.condition)">
+        <ion-item *ngIf="input.controlType =='select' && determineCondition(input.condition)">
 
           <ion-label position="stacked">{{input.label}}</ion-label>
           <ion-select interface="popover" [formControlName]="lastIndex + i" *ngIf="input.itemIsObject"
@@ -38,7 +37,7 @@
             <p>Input required</p>
           </ion-text>
         </ion-item>
-        <ion-item *ngIf="input.controlType =='normal' " [ngClass]="{'hide':  !determinCondition(input.condition)}">
+        <ion-item *ngIf="input.controlType =='normal' " [ngClass]="{'hide':  !determineCondition(input.condition)}">
 
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-input [type]="input.inputType" [formControlName]="lastIndex+ i" [placeholder]="input.value"
@@ -86,7 +85,6 @@
             <p>Input required</p>
           </ion-text>
         </ion-item>
-
       </div>
       <ion-button type="submit" expand="block" fill="clear" shape="round"
         *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">

@@ -9,7 +9,9 @@ The dynamic form component takes in an array of dynamic inputs and generates a f
 
 Below is a description of the different properties that are usable on the component
 
-### Properties
+## Properties
+
+![images](../../../assets/imgs/inputsOutputs.png)
 
 * formTitle 
     * Description - This is basically the title that will appear as a header on the generated Form
@@ -31,6 +33,8 @@ Below is a description of the different properties that are usable on the compon
 
 ## Dynamic Input Model
 
+![images](../../../assets/imgs/model1.png)
+
 * label - the label for the input
 * fieldName - an object key that will be assigned a value by its input and appended to the form object eg if fieldName is car, and user inputs "vw" we get { car: "vw" }
 * required - this adds null/empty validation checks to the input
@@ -41,12 +45,16 @@ Below is a description of the different properties that are usable on the compon
 * value - an optional defaut value for the input
 * hidden - whether the input is hiden or not
 * link - an optional property that accepts a path to a collection or document on firebase
+* linkFilterName - an optional name/key value for the filter
+* linkFilterValue - the value that corresponds to the linkFilterName
 * itemsDisplayVal - an optional property that specifies which key to dispay from an array of objects eg if surname is passed and the array is [{ name: "Bob", surname: "Syko" },{ name: "Chuck", surname: "Norris" }], the surname values will be displayed
 * itemsSaveVal -an optional property key of item to be saved from the array of select objects. 
 * itemIsObject - an optional property that specifies if the array of items for the select input, is an array of strings or an array of objects 
 * condition - an optional property
 * onNewSlide - an optional property that specifies if this input and the proceeding ones, start on a new slide.
-* populateQuestionItems
-* 
-
-
+* populateQuestionItems - an optional property used to populate other questions items.
+    * questionKeyName - the name of the key used for question population.
+    * questionKeyValue - the value that accompanies the questionKeyName.
+    * collectionPath - the path to the desired collection.
+    * collectionFilterName - used to filter through the collection.
+    * collectionFilterValue - the value that accompanies the collectionFilterName specified by a $ sign, eg $siteId, would get the siteId value from the new form object.

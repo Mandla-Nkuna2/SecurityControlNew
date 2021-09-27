@@ -6,12 +6,12 @@ export class DynamicInput {
   disabled?: boolean;
   inputType?: string;
   items?: any[];
-  value?: string; //key values: @date, @time, for user storage use {}, eg {name} will get user from storage
+  value?: string;
   hidden: boolean;
   link?: string;
   linkFilterName?: string;
   linkFilterValue?: string;
-  itemsDisplayVal?: string
+  itemsDisplayVal?: string;
   itemsSaveVal?: string;
   itemIsObject?: boolean;
   condition?: string;
@@ -19,9 +19,8 @@ export class DynamicInput {
   populateQuestionItems?: {
     questionKeyName: string;
     questionKeyValue: string;
-    collectionPath: string; //forgot this one , i dont know where it disapeared too, its basically the link
+    collectionPath: string;
     collectionFilterName?: string;
     collectionFilterValue?: string;
   }
 }
-
