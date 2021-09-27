@@ -46,7 +46,7 @@
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
         <div class="holder">
           <div class="the-header flex al-center jc-between">
-            <h2>Fleet</h2>
+            <h2>Fleet Inspection</h2>
             <div class="search-holder">
               <ion-searchbar placeholder="" inputmode="decimal" type="text" [(ngModel)]="searchterm"
               (ngModelChange)="searchterm = $event.toLocaleUpperCase()" (ionInput)="search($event)"
@@ -60,16 +60,16 @@
               <h4>Make </h4>
             </ion-col>
 
-            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5">
+            <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2">
               <h4>Registration</h4>
             </ion-col>
 
-            <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5">
-              <h4>Last Date Inspection</h4>
+            <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2">
+              <h4>Last Date</h4>
             </ion-col>
 
             <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5">
-              <h4>Inspection By</h4>
+              <h4>By</h4>
             </ion-col>
 
 
@@ -85,11 +85,11 @@
                 <h5>{{vehicle.make}}</h5>
               </ion-col>
 
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5" class="dates">
+              <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2" class="dates">
                 <h5>{{vehicle.registration}}</h5>
               </ion-col>
 
-              <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5" class="dates">
+              <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2" class="dates">
                 <h5>{{vehicle.inspection}}</h5>
               </ion-col>
 

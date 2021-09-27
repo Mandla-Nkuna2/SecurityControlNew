@@ -13,6 +13,7 @@ const BUCKET = 'security-control-app.appspot.com';
 admin.initializeApp();
 var moment = require('moment');
 const db = admin.database();
+const axios = require('axios');
 
 const CONFIG_CLIENT_ID = '748137076693-2kb6mbas64tjv6vpogsk6t6tiuoo598b.apps.googleusercontent.com';
 const CONFIG_CLIENT_SECRET = '27Hx3xP5cQWkiyIuMT54Rp0V';
@@ -3769,14 +3770,14 @@ function getSiteVisit(report) {
                 if (element.guardSig !== '' && element.guardSig !== undefined) {
                     body.push([{ text: 'Guard Signature', style: 'headLabel' },
                     { image: element.guardSig, width: 100, alignment: 'center' }]);
-                }
+                }site
 
             });
 
 
         }
 
-   body.push([{ text: 'Any Incidents Reported Since Last Visit?', style: 'headLabel' }, { text: report.incidents }]);
+        body.push([{ text: 'Any Incidents Reported Since Last Visit?', style: 'headLabel' }, { text: report.incidents }]);
         if (report.incidents === 'Yes') {
             body.push([{ text: 'Type of Incident', style: 'headLabel' }, { text: report.incType }]);
             body.push([{ text: 'Date', style: 'headLabel' }, { text: report.incDateTime }]);
@@ -6160,6 +6161,8 @@ exports.appealForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().appeal != undefined){ report.userEmail = report.userEmail + ';' + doc.data().appeal }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return appealForm(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `appeal-form/${report.key}.pdf`; // CHANGE name here
@@ -6363,6 +6366,8 @@ exports.temperatureList = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().temperature != undefined){ report.userEmail = report.userEmail + ';' + doc.data().temperature }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return tempList(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Temperature-List/${report.key}.pdf`; // CHANGE name here
@@ -6489,6 +6494,8 @@ exports.performanceAppraisal = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().performance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().performance }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return perform(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Performance - Appraisal / ${report.key}.pdf`; // CHANGE name here
@@ -6723,6 +6730,8 @@ exports.fenceInspection = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().fence != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fence }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fenceIN(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fence - Inspection / ${report.key}.pdf`; // CHANGE name here
@@ -6913,7 +6922,8 @@ exports.grieve = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().grievance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().grievance }
+ return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return grieve(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Grieve - report / ${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -7095,6 +7105,8 @@ exports.poly = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().polygraph != undefined){ report.userEmail = report.userEmail + ';' + doc.data().polygraph }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return polyG(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Polygraph - Form / ${report.key}.pdf`; // CHANGE name here
@@ -7275,6 +7287,8 @@ exports.pay = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+          if (doc.data().payquery !== undefined){ report.userEmail = report.userEmail + ';' + doc.data().payquery }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return payQ(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Pay Query - Form / ${report.key}.pdf`; // CHANGE name here
@@ -7485,6 +7499,8 @@ exports.injury = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().injury != undefined){ report.userEmail = report.userEmail + ';' + doc.data().injury }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return injuryR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Injury - report / ${report.key}.pdf`; // CHANGE name here
@@ -7665,6 +7681,8 @@ exports.firerereport = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            
+            if (doc.data().fire != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fire }
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fireR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fire - report / ${report.key}.pdf`; // CHANGE name here
@@ -7850,6 +7868,8 @@ exports.explosion = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().gas != undefined){ report.userEmail = report.userEmail + ';' + doc.data().gas }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return explosionR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Explosion - report / ${report.key}.pdf`; // CHANGE name here
@@ -8031,6 +8051,8 @@ exports.resignation = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().resignate != undefined){ report.userEmail = report.userEmail + ';' + doc.data().resignate }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return resignationF(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Resignation / ${report.key}.pdf`; // CHANGE name here
@@ -8209,6 +8231,8 @@ exports.extinguisher = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
+            if (doc.data().extinguisher != undefined){ report.userEmail = report.userEmail + ';' + doc.data().extinguisher }
+
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return extinguisherR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fire-Extinguisher-Checklist/${report.key}.pdf`; // CHANGE name here
@@ -8369,7 +8393,8 @@ exports.theftForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().theft != undefined){ report.userEmail = report.userEmail + ';' + doc.data().theft }
+ return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return theft(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Theft-form/${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -8596,3 +8621,169 @@ function theft(report, companyLogo, color) {  // change the name of the fuunctio
         resolve(docDefinition);
     })
 }
+
+exports.newSalesMsg = functions.firestore
+    .document(`/chats/{uid}/sales-messages/{uid2}`)
+    .onCreate((snap) => {
+        const newMsg = snap.data();
+        if (newMsg.fromUser) {
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSalesMsg',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.newSalesReply = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/sales-messages`).doc(newMsg.key).set(newMsg).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.newSupportMsg = functions.firestore
+    .document(`/chats/{uid}/messages/{uid2}`)
+    .onCreate((snap) => {
+        const newMsg = snap.data();
+        if (newMsg.fromUser) {
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSupportMsg',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.newSupportReply = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/messages`).doc(newMsg.key).set(newMsg).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.readSalesMsg = functions.firestore
+    .document(`/chats/{uid}/sales-messages/{uid2}`)
+    .onUpdate((snap) => {
+        const newMsg = snap.after.data();
+        const oldMsg = snap.before.data();
+        functions.logger.info(newMsg, oldMsg);
+        if (oldMsg.read === false && newMsg.read === true) {
+            console.log('Read Msg')
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSalesMsgRead',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.readSupportMsg = functions.firestore
+    .document(`/chats/{uid}/messages/{uid2}`)
+    .onUpdate((snap) => {
+        const newMsg = snap.after.data();
+        const oldMsg = snap.before.data();
+        functions.logger.info(newMsg, oldMsg);
+        if (oldMsg.read === false && newMsg.read === true) {
+            console.log('Read Msg')
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSupportMsgRead',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.SupportMsgRead = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/messages`).doc(newMsg.key).update({ read: true }).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.SalesMsgRead = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/sales-messages`).doc(newMsg.key).update({ read: true }).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})

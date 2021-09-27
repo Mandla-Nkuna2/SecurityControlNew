@@ -159,11 +159,10 @@ const routes: Routes = [
       {
         path: 'forms-test',
         loadChildren: () => import('../forms-test/forms-test.module').then(m => m.FormsPageModule)
-      },
-
-
-
-
+      },{
+        path: 'chat-sales',
+        loadChildren: () => import('../chat-sales/chat-sales.module').then( m => m.ChatSalesPageModule)
+      }
     ]
   },
   {

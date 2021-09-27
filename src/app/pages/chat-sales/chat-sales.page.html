@@ -1,0 +1,137 @@
+<ion-header class="ion-no-border">
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1>Chat To Sales</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/<span>&nbsp;Sales</span> </h4>
+    </div>
+  </div>
+  <ion-toolbar class="mobile mbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Chat To Sales</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-row class="messageUnit">
+    <ion-col size="8" class="other-message">
+      <h6>{{firstMsg.message}}</h6>
+    </ion-col>
+  </ion-row>
+
+  <div *ngFor="let chat of chats" class="messageUnit" >
+
+    <div *ngIf="!chat.fromUser">
+
+      <ion-row>
+        <ion-col size="8" class="other-message">
+          <img *ngIf="chat.attachment && chat.attachment !==''" [src]="chat.attachment"
+            style="max-height: 200px; max-width: 200px;" (click)="viewAttachment(chat.attachment)">
+          <h6>{{chat.message}}</h6>
+          <div *ngIf="today === chat.date" class="ion-text-right">
+            {{chat.time}}
+          </div>
+          <div *ngIf="today !== chat.date" class="ion-text-right">
+            {{chat.time}} {{chat.date | date: 'd/MM/YY'}}
+          </div>
+        </ion-col>
+      </ion-row>
+
+    </div>
+
+    <div *ngIf="chat.fromUser">
+
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col size="8" class="my-message">
+          <img *ngIf="chat.attachment && chat.attachment !==''" [src]="chat.attachment"
+            style="max-height: 200px; max-width: 200px;" (click)="viewAttachment(chat.attachment)">
+          <h6>{{chat.message}}</h6>
+          <div *ngIf="today === chat.date" class="ion-text-right">
+            {{chat.time}}
+            <ion-icon *ngIf="!chat.read" name="checkmark"></ion-icon>
+            <ion-icon *ngIf="chat.read" name="checkmark-done"></ion-icon>
+          </div>
+          <div *ngIf="today !== chat.date" class="ion-text-right">
+            {{chat.time}} {{chat.date | date: 'd/MM/YY'}}
+            <ion-icon *ngIf="!chat.read" name="checkmark"></ion-icon>
+            <ion-icon *ngIf="chat.read" name="checkmark-done"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+
+    </div>
+
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar *ngIf="!app">
+    <ion-row *ngIf="attachment !== ''">
+      <ion-col style="color: #666666; text-align: center;">
+        <img [src]="attachment" style="max-width: 40px;">
+      </ion-col>
+      <ion-col style="color: #666666; text-align: center;">
+        Image attached...
+      </ion-col>
+      <ion-col style="color: red; text-align: center;">
+        <ion-icon (click)="remove()" name="close"></ion-icon>
+      </ion-col>
+      <ion-col size="1"></ion-col>
+      <ion-col size="1"></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="10">
+        <textarea spellcheck=true placeholder="Your message..." autosize maxRows="3" [(ngModel)]="newMsg"
+          class="message-input" (keyup.enter)="sendMsg()"></textarea>
+      </ion-col>
+      <ion-col>
+        <ion-button fill="clear" color="success" [disabled]="newMsg === '' && attachment === ''" (click)="sendMsg()">
+          <ion-icon name="send" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button (click)="picture.click()" fill="clear">
+          <ion-icon name="attach" slot="icon-only"></ion-icon>
+        </ion-button>
+        <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
+          capture="camera">
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="app">
+    <ion-row *ngIf="attachment !== ''">
+      <ion-col style="color: #666666; text-align: center;">
+        <img [src]="attachment" style="max-width: 40px;">
+      </ion-col>
+      <ion-col style="color: #666666; text-align: center;">
+        Image attached...
+      </ion-col>
+      <ion-col style="color: red; text-align: center;">
+        <ion-icon (click)="remove()" name="close"></ion-icon>
+      </ion-col>
+      <ion-col size="1"></ion-col>
+      <ion-col size="1"></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="9">
+        <textarea spellcheck=true placeholder="Your message..." autosize maxRows="3" [(ngModel)]="newMsg"
+          class="message-input-app" (keyup.enter)="sendMsg()"></textarea>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="send" size="small" (click)="sendMsg()" style="color: green;margin-top: 40%;"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="attach" size="small" (click)="attach()" style="color: red; margin-top: 40%;"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
+    capture="camera">
+  </ion-toolbar>
+</ion-footer>

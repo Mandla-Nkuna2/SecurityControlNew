@@ -105,6 +105,81 @@ ion-content
 }
 
 
+
+ion-toolbar{
+    --background: #1B1C1D !important;
+
+    ion-buttons
+    {
+        ion-menu-button
+        {
+            --color: white !important;
+        }
+
+        ion-button
+        {
+            --color: white !important;
+        }
+        
+
+    }
+    ion-back-button
+    {
+        --color: white;
+        text-transform: none;
+        font-size: 14px;
+    }
+
+    ion-title
+    {
+        color: white !important;
+    }
+
+}
+.mtool
+{
+    --background: #1B1C1D;
+
+    ion-buttons
+    {
+        ion-menu-button
+        {
+            --color: white;
+        }
+    }
+
+    ion-title
+    {
+        color: white !important;
+    }
+}
+ion-label{
+    color: white;
+}
+
+
+ion-list{
+    background: black !important;
+}
+ion-item{
+    --background: black;
+    color: white;
+}
+
+
+
+ion-slide {
+    background: black;
+    background-color: black !important;
+}
+
+ion-footer {
+    --background: #100F10 !important; 
+    ion-col{
+        background: black;
+    } 
+} 
+
 .the-form
 {
     .input-item

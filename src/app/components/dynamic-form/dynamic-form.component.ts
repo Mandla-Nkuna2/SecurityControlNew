@@ -14,10 +14,10 @@ export class DynamicFormComponent implements OnInit {
   @Input() formTitle: string;
   @Input() staticFields: any;
   @Output() formObject: EventEmitter<any>;
+
   newFormObj: any = {};
   formArray: FormArray;
   dynamicForm: FormGroup;
-
   slideIndex = 0;
   noOfSlides = 0;
   dynamicInputsSlides: DynamicInput[][] = [];
@@ -124,9 +124,7 @@ export class DynamicFormComponent implements OnInit {
     return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(`${index}`).touched;
   }
 
-
-
-  determinCondition(condition: string) {
+  determineCondition(condition: string) {
     if (!condition) {
       return true;
     }
@@ -217,6 +215,11 @@ export class DynamicFormComponent implements OnInit {
         this.newFormObj = { ...this.newFormObj, ...{ [`${input.fieldName}`]: this.dynamicForm.value.inputs[index] } }
       }
     })
+    if(this.imagesArray.length>0){
+      this.imagesArray.forEach((image: any)=>{
+        this.newFormObj = {...this.newFormObj, ...image}
+      })
+    }
     this.formObject.emit(this.newFormObj);
   }
   isValid(): boolean {

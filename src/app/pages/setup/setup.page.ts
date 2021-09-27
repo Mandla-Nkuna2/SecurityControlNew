@@ -19,7 +19,7 @@ export class SetupPage implements OnInit {
     startDate: Date, endDate: Date
   };
 
-  company = {
+  company:any = {
     name: '',
     address: '',
     country: '',
@@ -111,8 +111,8 @@ export class SetupPage implements OnInit {
         });
       }));
       this.users.subscribe(users => {
-        users.forEach(user => {
-          this.user.type = user.type;
+       users.forEach(user => {
+         this.user.type = user.type;
           this.user.companyId = user.companyId;
           this.companysCollection = this.afs.collection('companies', ref => ref.where('key', '==', `${this.user.companyId}`));
           this.companys = this.companysCollection.snapshotChanges().pipe(map(changes => {
@@ -142,6 +142,19 @@ export class SetupPage implements OnInit {
               this.company.tenant = company.tenant;
               this.company.notification = company.notification;
               this.company.instruction = company.instruction;
+              this.company.theft = company.theft;
+              this.company.fire = company.fire;
+              this.company.appeal = company.appeal;
+              this.company.extinguisher = company.extinguisher;
+              this.company.polygraph = company.polygraph;
+              this.company.performance = company.performance;
+              this.company.fence = company.fence;
+              this.company.grievance = company.grievance;
+              this.company.payquery = company.payquery;
+              this.company.resignate = company.resignate;
+              this.company.gas = company.gas;
+              this.company.injury = company.injury;
+           
             });
           });
         });
@@ -157,6 +170,24 @@ export class SetupPage implements OnInit {
       user: this.company.visitUser,
       client: this.company.visitClient
     };
+    const modal = await this.modalCtrl.create({
+      component: AddEmailPage,
+      componentProps: { report: this.report }
+    });
+    return await modal.present();
+  }
+
+  
+  async edit(rep) {
+
+    this.report = {
+      name: rep,
+      email: this.company[`${rep}`],
+      key: this.company.key,
+      user: this.company.incidentUser,
+      client: this.company.incidentClient
+    };
+
     const modal = await this.modalCtrl.create({
       component: AddEmailPage,
       componentProps: { report: this.report }

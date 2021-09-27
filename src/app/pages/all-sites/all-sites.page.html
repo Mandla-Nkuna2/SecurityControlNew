@@ -1,87 +1,58 @@
-<ion-header>
-    <ion-toolbar color="primary" mode="ios">
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <ion-title class="title-font">ALL SITES</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content>
-    <ion-fab *ngIf="!app && permission" vertical="bottom" horizontal="end" slot="fixed" activated="true">
-      <ion-fab-button color="primary">
-        <ion-icon name="settings"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-list side="top">
-        <ion-fab-button color="primary" (click)="addSite()" data-desc="Add New Site">
-          <ion-icon name="ios-add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-    </ion-fab>
-  
-    <section class="common-img-bg">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="login-card card-block auth-body mr-auto ml-auto">
-              <div class="md-float-material">
-                <div class="auth-box">
-  
-                  <ion-grid class="ion-text-center">
-  
-                    <ion-row>
-                      <ion-col class="ion-text-right" size="4.5"
-                        style="color: #488aff; line-height: 50px; font-size: 20px">
-                        Search Sites:</ion-col>
-                      <ion-col style="border: solid 1px #488aff; max-width: 450px;">
-                        <ion-searchbar style="border: solid 1px #488aff" type="text" [(ngModel)]="searchterm"
-                        (ngModelChange)="searchterm = $event.toLocaleUpperCase()" (ionInput)="search($event)"
-                          (keydown)="search($event)"></ion-searchbar>
-                      </ion-col>
-                    </ion-row>
-  
-                    <div *ngIf="searching">
-                      <ion-row class="grid-header">
-                        <ion-col size="9" class="grid-header-item">SITE NAME</ion-col>
-                        <ion-col>
-                          <ion-icon name="cog"></ion-icon>
-                        </ion-col>
-                      </ion-row>
-  
-                      <ion-row class="grid-row" *ngFor="let site of sitesValues">
-                        <ion-col size="9" class="grid-row-item ion-text-center">{{ site.name }}</ion-col>
-                        <ion-col class="last-col ion-text-center">
-                          <ion-button (click)="viewSite(site)">
-                            <ion-icon name="arrow-forward-circle-outline" class="icon-more"></ion-icon>
-                          </ion-button>
-                        </ion-col>
-                      </ion-row>
-                    </div>
-  
-                    <div *ngIf="!searching">
-                      <ion-row class="grid-header">
-                        <ion-col size="9" class="grid-header-item">SITE NAME</ion-col>
-                        <ion-col>
-                          <ion-icon name="cog"></ion-icon>
-                        </ion-col>
-                      </ion-row>
-  
-                      <ion-row class="grid-row" *ngFor="let site of sites | async">
-                        <ion-col size="9" class="grid-row-item ion-text-center">{{ site.name }}</ion-col>
-                        <ion-col class="last-col ion-text-center">
-                          <ion-button (click)="viewSite(site)">
-                            <ion-icon name="arrow-forward-circle-outline" class="icon-more"></ion-icon>
-                          </ion-button>
-                        </ion-col>
-                      </ion-row>
-                    </div>
-                  </ion-grid>
-  
-                </div>
-              </div>
-            </div>
+ 
+<ion-header class="ion-no-border">
+  <ion-toolbar class="mtool">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="sites" text="My Sites"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="mysites">
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1>My Sites</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/Sites<span>&nbsp;My Sites</span> </h4>
+    </div>
+  </div>
+
+
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+        <div class="holder left">
+          <div class="the-header">
+            <h2>My Sites</h2>
           </div>
+
+          <ion-grid fixed>
+            <ion-row class="headers">
+              <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9">
+                <h4>Site Name</h4>
+              </ion-col>
+              <ion-col sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+                <h4>Action</h4>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngFor="let site of sites | async" class="values">
+              <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9" class="dates">
+                <h5>{{ site.name }}</h5>
+              </ion-col>
+              <ion-col (click)="viewSite(site)" sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+              <h5>View Details</h5>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
         </div>
-      </div>
-    </section>
-  </ion-content>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  
+</ion-content>

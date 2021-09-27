@@ -19,17 +19,17 @@ export class AddEmailPage implements OnInit {
     user: '',
   };
 
-  update;
+  update: any = {};
   public split;
 
   constructor(public alertCtrl: AlertController, public toast: ToastService, private afs: AngularFirestore,
-    public loadingCtrl: LoadingController, public navParams: NavParams, public loading: LoadingService, 
+    public loadingCtrl: LoadingController, public navParams: NavParams, public loading: LoadingService,
     public modalCtrl: ModalController) {
-      this.report = navParams.get('report');
+    this.report = navParams.get('report');
   }
 
   ngOnInit() {
-    
+
   }
 
   async save(report) {
@@ -55,7 +55,7 @@ export class AddEmailPage implements OnInit {
         visitClient: report.client
       };
     }
-    if (this.report.name === 'INCIDENT REPORT') {
+    else if (this.report.name === 'INCIDENT REPORT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -64,7 +64,7 @@ export class AddEmailPage implements OnInit {
         incidentClient: report.client
       };
     }
-    if (this.report.name === 'MEETING REPORT') {
+    else if (this.report.name === 'MEETING REPORT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -73,7 +73,7 @@ export class AddEmailPage implements OnInit {
         meetingClient: report.client
       };
     }
-    if (this.report.name === 'UNIFORM ORDER') {
+    else if (this.report.name === 'UNIFORM ORDER') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -82,7 +82,7 @@ export class AddEmailPage implements OnInit {
         uniformClient: report.client
       };
     }
-    if (this.report.name === 'TRAINING FORM') {
+    else if (this.report.name === 'TRAINING FORM') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -91,7 +91,7 @@ export class AddEmailPage implements OnInit {
         trainingClient: report.client
       };
     }
-    if (this.report.name === 'VEHICLE INSPECTION') {
+    else if (this.report.name === 'VEHICLE INSPECTION') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -100,7 +100,7 @@ export class AddEmailPage implements OnInit {
         vehicleClient: report.client
       };
     }
-    if (this.report.name === 'DISCIPLINARY NOTICE') {
+    else if (this.report.name === 'DISCIPLINARY NOTICE') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -109,7 +109,7 @@ export class AddEmailPage implements OnInit {
         disciplinaryClient: report.client
       };
     }
-    if (this.report.name === 'TRANSPARENCY REPORT') {
+    else if (this.report.name === 'TRANSPARENCY REPORT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -118,7 +118,7 @@ export class AddEmailPage implements OnInit {
         transparencyClient: report.client
       };
     }
-    if (this.report.name === 'GENERAL INCIDENT REPORT') {
+    else if (this.report.name === 'GENERAL INCIDENT REPORT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -127,7 +127,7 @@ export class AddEmailPage implements OnInit {
         incidentGenClient: report.client
       };
     }
-    if (this.report.name === 'LEAVE APPLICATION') {
+    else if (this.report.name === 'LEAVE APPLICATION') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -136,7 +136,7 @@ export class AddEmailPage implements OnInit {
         leaveClient: report.client
       };
     }
-    if (this.report.name === 'AR VISIT') {
+    else if (this.report.name === 'AR VISIT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -145,7 +145,7 @@ export class AddEmailPage implements OnInit {
         arVisitClient: report.client
       };
     }
-    if (this.report.name === 'OB ENTRY') {
+    else if (this.report.name === 'OB ENTRY') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -154,7 +154,7 @@ export class AddEmailPage implements OnInit {
         obClient: report.client
       };
     }
-    if (this.report.name === 'RISK ASSESSMENT') {
+    else if (this.report.name === 'RISK ASSESSMENT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -163,7 +163,7 @@ export class AddEmailPage implements OnInit {
         assessmentClient: report.client
       };
     }
-    if (this.report.name === 'TENANT VISIT') {
+    else if (this.report.name === 'TENANT VISIT') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -172,7 +172,7 @@ export class AddEmailPage implements OnInit {
         tenantClient: report.client
       };
     }
-    if (this.report.name === 'CLIENT INSTRUCTION') {
+    else if (this.report.name === 'CLIENT INSTRUCTION') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -181,7 +181,7 @@ export class AddEmailPage implements OnInit {
         instructionClient: report.client
       };
     }
-    if (this.report.name === 'INCIDENT NOTIFICATION') {
+    else if (this.report.name === 'INCIDENT NOTIFICATION') {
       const str = report.email + '';
       this.split = str.split(/[ ,]+/).join(',');
       this.update = {
@@ -190,7 +190,15 @@ export class AddEmailPage implements OnInit {
         notificationClient: report.client
       };
     }
-    this.afs.collection('companies').doc(this.report.key).update(this.update).then(() => {
+
+    else {
+      let inn = report.name
+      const str = report.email + '';
+      this.split = str.split(/[ ,]+/).join(',');
+      this.update[`${inn}`] = this.split
+    }
+
+    this.afs.collection('companies').doc(this.report.key).set(this.update, { merge: true }).then(() => {
       this.toast.show('Email Addresses Saved!');
       this.modalCtrl.dismiss();
       this.loading.dismiss();
