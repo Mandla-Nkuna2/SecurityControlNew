@@ -19,7 +19,7 @@
     </ion-card-header>
     <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" *ngIf="show">
       <div formArrayName="inputs" *ngFor="let input of dynamicInputs; let i =index">
-        <ion-item *ngIf="input.controlType =='select' && determinCondition(input.condition)">
+        <ion-item *ngIf="input.controlType =='select' && determineCondition(input.condition)">
 
           <ion-label position="stacked">{{input.label}}</ion-label>
           <ion-select interface="popover" [formControlName]="lastIndex + i" *ngIf="input.itemIsObject"
@@ -37,7 +37,7 @@
             <p>Input required</p>
           </ion-text>
         </ion-item>
-        <ion-item *ngIf="input.controlType =='normal' " [ngClass]="{'hide':  !determinCondition(input.condition)}">
+        <ion-item *ngIf="input.controlType =='normal' " [ngClass]="{'hide':  !determineCondition(input.condition)}">
 
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-input [type]="input.inputType" [formControlName]="lastIndex+ i" [placeholder]="input.value"
