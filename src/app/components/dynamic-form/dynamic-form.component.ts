@@ -74,7 +74,6 @@ export class DynamicFormComponent implements OnInit {
       if(shouldSave){
         this.storage.set(this.formAlias, this.newFormObj).then(()=>{
           this.navController.navigateRoot('welcome')
-          console.log("saved")
         }).catch(error=>console.log(error))
       }else{
         this.navController.navigateRoot('welcome')
