@@ -344,9 +344,9 @@ export class FormServiceService {
       })
     })
   }
-  public storeForm() {
+  storeForm() {
     return new Promise((resolve, reject) => {
-
+      
     })
   }
   async completeActionSheet(newFormObject: any) {

@@ -1,3 +1,4 @@
+import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UiService } from './../../services/ui.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -15,6 +16,7 @@ export class DynamicFormComponent implements OnInit {
   @Input() formTitle: string;
   @Input() staticFields: any;
   @Output() formObject: EventEmitter<any>;
+  formAlias: string;
 
   newFormObj: any = {};
   formArray: FormArray;
@@ -33,12 +35,10 @@ export class DynamicFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private uiService: UiService,
     private formService: FormServiceService,
-    private storage: Storage
+    private storage: Storage,
+    private navController: NavController
   ) {
     this.formObject = new EventEmitter();
-    this.storage.get('formObject').then((formObject)=>{
-        
-    })
   }
 
   ngOnInit() {
@@ -56,12 +56,31 @@ export class DynamicFormComponent implements OnInit {
         this.show = true;
       })
     })
+    this.formAlias = this.convertTitleToAlias();
+    this.storage.get(this.formAlias).then((newFormObject)=>{
+      if(newFormObject){
+        this.newFormObj = newFormObject
+      }
+    })
   }
 
-  ionViewWillLeave(){
-
+  convertTitleToAlias(){
+    let alias = this.formTitle;
+    return alias.replace(/ +/g, "").replace(alias[0], alias[0].toLowerCase());
   }
 
+  onExit(){
+    this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave)=>{
+      if(shouldSave){
+        this.storage.set(this.formAlias, this.newFormObj).then(()=>{
+          this.navController.navigateRoot('welcome')
+        }).catch(error=>console.log(error))
+      }else{
+        this.navController.navigateRoot('welcome')
+      }
+    })
+  }
+  
   checkSlides() {
     return new Promise((resolve, reject) => {
       let newSlideIndicators = this.dynamicInputs.filter(x => x.onNewSlide);
