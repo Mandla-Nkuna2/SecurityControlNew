@@ -11,18 +11,24 @@ Below is a description of the different properties that are usable on the compon
 
 ## Properties
 
-![images](../../../assets/imgs/inputsOutputs.png)
+![images](../../../assets/imgs/inputsOutputs1.png)
 
 * formTitle 
     * Description - This is basically the title that will appear as a header on the generated Form
     * Attribute - formTitle
-    * type - string
-    * default - undefined  
+    * Type - string
+    * Default - undefined  
 
 * dynamicInputs
     * Description - This is an array of dynamic inputs that describes the how the form must be generated and its order. So the 1st object in the array will be the 1st inputControl to be displayed and so forth
     * Attribute - dynamicInputs
     * Type - DynamicInput [ ]
+    * Default - undefined
+
+* staticFields
+    * Description - This is an object of static fields that are assigned to the form object by default. eg, if you want to pass a specific userKey to be appended to the object along with a user email it would be assigned as { key: 'asdasd', email: 'user@user.com' }
+    * Attribute - staticFields
+    * Type - { } as any
     * Default - undefined
 
 ### Output Events
