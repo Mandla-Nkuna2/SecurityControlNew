@@ -211,7 +211,6 @@ export class AddUserPage implements OnInit {
             var key = site.key + '';
             this.afs.collection(`users/${this.user.key}/sites`).doc(key).set({ name: site.name, key: key });
           })
-          this.analyticsService.trackEvent("Added", "Added User", "User Added A New User", 1)
           this.router.navigate(['users']).then(() => {
             this.loading.dismiss();
           });
@@ -234,6 +233,15 @@ export class AddUserPage implements OnInit {
         });
       });
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Add a user',
+        screen_class: 'AddUserPage'
+      });
+    })
   }
 
 }

@@ -6,6 +6,7 @@ import { ToastService } from '../../services/toast.service';
 import { Storage } from '@ionic/storage';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-fleet',
@@ -38,7 +39,8 @@ export class FleetPage implements OnInit {
 
   constructor(private platform: Platform, public loadingCtrl: LoadingController, public toast: ToastService,
     public alertCtrl: AlertController, private afs: AngularFirestore, public modalCtrl: ModalController, public navCtrl: NavController,
-    private storage: Storage, public loading: LoadingService, public router: Router, public activatedRoute: ActivatedRoute) {
+    private storage: Storage, public loading: LoadingService, public router: Router, public activatedRoute: ActivatedRoute,
+    private analyticsService: AnalyticsService) {
   }
 
   ngOnInit() {
@@ -151,6 +153,15 @@ export class FleetPage implements OnInit {
       ]
     });
     return await prompt.present();
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Fleet',
+        screen_class: 'FleetPage'
+      });
+    })
   }
 }
 

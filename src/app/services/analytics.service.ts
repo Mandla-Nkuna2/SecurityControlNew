@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { Platform } from '@ionic/angular';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { AnalyticsEvent, AnalyticsScreenView } from '../models/analytics.model';
+
 declare let gtag: Function;
 
 @Injectable({
@@ -9,42 +11,47 @@ declare let gtag: Function;
 export class AnalyticsService {
 
   trackerId = 'G-0F1C81YWSV';
-  constructor(private ga: GoogleAnalytics, private platform: Platform) { }
+  constructor(private platform: Platform, private firebaseX: FirebaseX) { }
 
-  public trackView(page: string) {
-    this.ga.startTrackerWithId(this.trackerId)
-      .then(() => {
-        this.ga.trackView(page).then(() => {
-          console.log('tracked')
-        });
-      })
-      .catch(e => {
-        console.log('Error starting GoogleAnalytics', e);
-      });
-  }
-  public trackEvent(page: string, event: string, label?: string, value?: any) {
+  public logAnalyticsEvent(event, param) {
     if (this.platform.is('cordova')) {
-      this.trackEventApp(page, event, label, value);
+      this.logEventApp(event, param);
     } else {
-      this.trackEventWeb(page, event, label, value);
+      this.logEventWeb(event, param);
     }
   }
 
-  trackEventApp(page: string, event: string, label?: string, value?: any) {
-    this.ga.startTrackerWithId(this.trackerId)
-      .then(() => {
-        this.ga.trackEvent('App: ' + page, event, label, value).then(() => {
-          console.log('App Tracked')
-        });
-      })
-      .catch(e => {
-        console.log('Error starting GoogleAnalytics', e);
-      });
+  public async logEventApp(
+    event: AnalyticsEvent,
+    param: AnalyticsScreenView
+  ) {
+    console.log('log event');
+    console.log(event);
+    console.log(param);
+    await this.firebaseX.logEvent(event, param);
+  }
+
+  logEventWeb(event: AnalyticsEvent, param: AnalyticsScreenView) {
+    gtag('event', event, {
+      page_title: param.screen_name,
+      page_location: param.screen_class,
+      page_path: param.screen_class,
+      send_to: 'G-0F1C81YWSV'
+    })
+  }
+
+  trackViewWeb(pageTitle, path) {
+    gtag('event', 'page_view', {
+      page_title: pageTitle,
+      page_location: path,
+      page_path: path,
+      send_to: 'G-0F1C81YWSV'
+    })
   }
 
   trackEventWeb(page: string, event: string, label?: string, value?: any) {
-    gtag('event', page, {
-      eventCategory: 'Web: ' +page,
+    gtag('event', 'action_click', {
+      eventCategory: 'Web: ' + page,
       eventLabel: label,
       eventAction: event,
       eventValue: value

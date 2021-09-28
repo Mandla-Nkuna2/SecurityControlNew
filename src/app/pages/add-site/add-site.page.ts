@@ -143,7 +143,6 @@ export class AddSitePage implements OnInit {
     if (this.new === true) {
       this.loading.present('Saving Please Wait...').then(() => {
         this.afs.collection('sites').doc(this.site.key).set(this.site).then(() => {
-          this.analyticsService.trackEvent("Added", "Added Site", "User Added A New Site", 1)
           this.router.navigate(['all-sites']).then(() => {
             this.loading.dismiss();
           });
@@ -159,6 +158,15 @@ export class AddSitePage implements OnInit {
         });
       });
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Add a site',
+        screen_class: 'AddSitePage'
+      });
+    })
   }
 
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, Platform } from '@ionic/angular';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,7 +13,7 @@ export class ForgotPasswordPage implements OnInit {
 
  
   constructor(public navCtrl: NavController, private authService: AuthenticationService, public loading: LoadingService,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController, private platform: Platform, private analyticsService: AnalyticsService) {
    }
 
   ngOnInit() {
@@ -62,6 +63,15 @@ export class ForgotPasswordPage implements OnInit {
       buttons: ['OK']
     });
     return await alert.present();
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Reset Password',
+        screen_class: 'ResetPasswordPage'
+      });
+    })
   }
 
 }

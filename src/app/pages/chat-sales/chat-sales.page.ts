@@ -3,6 +3,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ActionSheetController, IonContent, Platform } from '@ionic/angular';
 import moment from 'moment';
 import { Subscription } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { ToastService } from 'src/app/services/toast.service';
 
@@ -27,7 +28,7 @@ export class ChatSalesPage implements OnInit {
 
   @ViewChild(IonContent) contentArea: IonContent;
 
-  constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService) { }
+  constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     if (this.platform.is('mobile')) {
@@ -136,6 +137,15 @@ export class ChatSalesPage implements OnInit {
 
   ionViewWillLeave() {
     this.messagesSub.unsubscribe();
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Sales Chat',
+        screen_class: 'SalesChatPage'
+      });
+    })
   }
 
 }

@@ -105,7 +105,6 @@ export class RegistrationPage implements OnInit {
       this.check(user).then(() => {
         this.auth.register(this.user)
           .then((res) => {
-            this.analyticsService.trackEvent("Sign_Up", "Signed_Up", "New User Signed Up", 1)
             this.router.navigate(['menu']).then(() => {
               this.loading.dismiss();
             })
@@ -126,6 +125,15 @@ export class RegistrationPage implements OnInit {
       buttons: ['OK']
     });
     return await alert.present();
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Register',
+        screen_class: 'RegisterPage'
+      });
+    })
   }
 
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
-import { NavController, IonContent, ModalController, ActionSheetController, AlertController } from '@ionic/angular';
+import { NavController, IonContent, ModalController, ActionSheetController, AlertController, Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-chat',
@@ -34,7 +35,8 @@ export class ChatPage implements OnInit {
   @ViewChild(IonContent) content: IonContent;
 
   constructor(public alertCtrl: AlertController, private camera: Camera, public actionCtrl: ActionSheetController,
-    public modalController: ModalController, private afs: AngularFirestore, private storage: Storage, public navCtrl: NavController) { }
+    public modalController: ModalController, private afs: AngularFirestore, private storage: Storage, public navCtrl: NavController,
+    private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.now = new Date().getTime();
@@ -186,6 +188,15 @@ export class ChatPage implements OnInit {
       this.chat.attachment = '';
       this.content.scrollToBottom();
     });
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Support Chat',
+        screen_class: 'SupportChatPage'
+      });
+    })
   }
 
 }

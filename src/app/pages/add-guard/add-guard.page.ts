@@ -23,7 +23,7 @@ export class AddGuardPage implements OnInit {
     Key: '', grade: '', photo: '', id: null, AssNo: null, companyId: '', name: '', CoNo: '', cell: null, annualUsed: null,
     annualAccrued: null, workDays: null, siteId: '', site: '', learnershipNo: '', learnershipDate: '',
   };
-  change=true
+  change = true
   window: any;
   usersCollection: AngularFirestoreCollection<any>;
   users: Observable<any[]>;
@@ -91,7 +91,7 @@ export class AddGuardPage implements OnInit {
         this.afs.collection('guards').doc(this.data.key).ref.get().then((guard: any) => {
           this.passedForm = guard.data();
           console.log(this.passedForm);
-          
+
           if (this.passedForm) {
             this.guard = this.passedForm;
           }
@@ -130,18 +130,18 @@ export class AddGuardPage implements OnInit {
   }
 
   async getSites() {
-       await this.storage.get('user').then((user) => {
+    await this.storage.get('user').then((user) => {
       this.afs.collection(`users/${user.key}/sites`).ref.get().then((sites) => {
         sites.forEach((site: any) => {
           if (site.data().name && site.data().name !== '') {
             this.sites.push({ key: site.data().key, name: site.data().name });
           }
         });
-        this.storage.set('sites', this.sites); 
+        this.storage.set('sites', this.sites);
         console.log('sites', this.sites);
-              
+
       });
-      
+
     });
     return this.sites;
   }
@@ -166,9 +166,9 @@ export class AddGuardPage implements OnInit {
   }
 
   getSite(guard) {
-    this.change=false
-  this.guard.site=guard.value.name
-  this.guard.siteId=guard.value.key
+    this.change = false
+    this.guard.site = guard.value.name
+    this.guard.siteId = guard.value.key
 
   }
 
@@ -268,7 +268,7 @@ export class AddGuardPage implements OnInit {
 
                   this.loading.present('Creating Please Wait...');
                   this.afs.collection('guards').doc(this.guard.Key).set(this.guard).then(() => {
-                    this.analyticsService.trackEvent("Added", "Added Guard", "User Added A New Guard", 1)
+                    //this.analyticsService.trackEvent("Added New Guard", "Added Guard", "User Added A New Guard", 1)
                     this.toast.show(`Guard ${this.guard.name} Successfully Added!`);
                     this.loading.dismiss();
                     this.navCtrl.pop();
@@ -334,7 +334,7 @@ export class AddGuardPage implements OnInit {
 
                   this.loading.present('Updating Please Wait...');
                   console.log('guradr update', this.guard);
-                  
+
                   this.afs.collection('guards').doc(this.guard.Key).update(this.guard).then(() => {
                     this.toast.show(`Guard ${this.guard.name} Successfully Updated!`);
                     this.loading.dismiss();
@@ -375,6 +375,15 @@ export class AddGuardPage implements OnInit {
       this.nameValid = false;
       this.invalidMsg();
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Add a guard',
+        screen_class: 'AddGuardPage'
+      });
+    })
   }
 }
 

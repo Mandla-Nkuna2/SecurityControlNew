@@ -11,30 +11,39 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage{
+export class LoginPage {
 
   constructor(public router: Router, public loading: LoadingService, private authService: AuthenticationService,
     public platform: Platform, public alertCtrl: AlertController, private analyticsService: AnalyticsService) {
-   
+
   }
-  dynamicInputs: DynamicInput[]=[];
-  email=''
+  dynamicInputs: DynamicInput[] = [];
+  email = ''
   password = ''
 
   login() {
     this.loading.present('Authenticating Please Wait').then(() => {
       this.authService.login(this.email, this.password)
         .then(res => {
-          this.analyticsService.trackEvent("Login", "Logged_In", "Existing User Logged In", 1)
+          //this.analyticsService.trackEvent("User Logged In", "Logged_In", "Existing User Logged In", 1)
           this.loading.dismiss();
-      }).catch(err => {
-        this.loading.dismiss().then(() => {
-          this.presentAlert(err);
+        }).catch(err => {
+          this.loading.dismiss().then(() => {
+            this.presentAlert(err);
+          });
         });
     });
-  });
   }
-  
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Sign In',
+        screen_class: 'SignInPage'
+      });
+    })
+  }
+
   async presentAlert(err) {
     const alert = await this.alertCtrl.create({
       header: 'Uhh ohh...',

@@ -6,7 +6,6 @@ import { Router, NavigationEnd } from '@angular/router';
 import { AuthenticationService } from './services/authentication.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
-declare let gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -25,18 +24,18 @@ export class AppComponent {
     private storage: Storage,
   ) {
     this.initializeApp();
-    if (platform.is('desktop')) {
-      localStorage.removeItem('firebase:previous_websocket_failure');
-      this.router.events.subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          gtag('config', 'G-0F1C81YWSV',
-            {
-              'page_path': event.urlAfterRedirects
-            }
-          )
-        }
-      })
-    }
+    // if (platform.is('desktop')) {
+      // localStorage.removeItem('firebase:previous_websocket_failure');
+      // this.router.events.subscribe(event => {
+      //   if (event instanceof NavigationEnd) {
+      //     gtag('config', 'G-0F1C81YWSV',
+      //       {
+      //         'page_path': event.urlAfterRedirects
+      //       }
+      //     )
+      //   }
+      // })
+  // }
   }
 
   async initializeApp() {
