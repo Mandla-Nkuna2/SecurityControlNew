@@ -44,7 +44,7 @@ export type AnalyticsScreenClass =
 | 'AddSitePage'
 | 'AddUserPage';
 
-export type AnalyticsContentType = 'ContentAdded';
+export type AnalyticsContentType = 'ButtonClick';
 export interface AnalyticsScreenView {
   screen_name?: AnalyticsScreenName;
   screen_class?: AnalyticsScreenClass;

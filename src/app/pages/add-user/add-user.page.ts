@@ -211,6 +211,10 @@ export class AddUserPage implements OnInit {
             var key = site.key + '';
             this.afs.collection(`users/${this.user.key}/sites`).doc(key).set({ name: site.name, key: key });
           })
+          this.analyticsService.logAnalyticsEvent('select_content', {
+            content_type: 'ButtonClick',
+            item_id: 'addUser'
+          });
           this.router.navigate(['users']).then(() => {
             this.loading.dismiss();
           });

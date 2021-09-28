@@ -195,7 +195,7 @@ export class AddGuardPage implements OnInit {
         {
           text: 'Take photo',
           role: 'destructive',
-          icon: !this.platform.is('ios') ? 'ios-camera-outline' : null,
+          icon: !this.platform.is('ios') ? 'camera-outline' : null,
           handler: () => {
             this.captureImage1(false);
           }
@@ -268,7 +268,10 @@ export class AddGuardPage implements OnInit {
 
                   this.loading.present('Creating Please Wait...');
                   this.afs.collection('guards').doc(this.guard.Key).set(this.guard).then(() => {
-                    //this.analyticsService.trackEvent("Added New Guard", "Added Guard", "User Added A New Guard", 1)
+                    this.analyticsService.logAnalyticsEvent('select_content', {
+                      content_type: 'ButtonClick',
+                      item_id: 'addGuard'
+                    });
                     this.toast.show(`Guard ${this.guard.name} Successfully Added!`);
                     this.loading.dismiss();
                     this.navCtrl.pop();
@@ -333,8 +336,6 @@ export class AddGuardPage implements OnInit {
                   this.photoValid = true;
 
                   this.loading.present('Updating Please Wait...');
-                  console.log('guradr update', this.guard);
-
                   this.afs.collection('guards').doc(this.guard.Key).update(this.guard).then(() => {
                     this.toast.show(`Guard ${this.guard.name} Successfully Updated!`);
                     this.loading.dismiss();

@@ -25,7 +25,10 @@ export class LoginPage {
     this.loading.present('Authenticating Please Wait').then(() => {
       this.authService.login(this.email, this.password)
         .then(res => {
-          //this.analyticsService.trackEvent("User Logged In", "Logged_In", "Existing User Logged In", 1)
+          this.analyticsService.logAnalyticsEvent('select_content', {
+            content_type: 'ButtonClick',
+            item_id: 'loggedIn'
+          });
           this.loading.dismiss();
         }).catch(err => {
           this.loading.dismiss().then(() => {

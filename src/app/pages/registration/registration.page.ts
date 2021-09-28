@@ -105,6 +105,10 @@ export class RegistrationPage implements OnInit {
       this.check(user).then(() => {
         this.auth.register(this.user)
           .then((res) => {
+            this.analyticsService.logAnalyticsEvent('select_content', {
+              content_type: 'ButtonClick',
+              item_id: 'signedUp'
+            });
             this.router.navigate(['menu']).then(() => {
               this.loading.dismiss();
             })

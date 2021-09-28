@@ -143,6 +143,10 @@ export class AddSitePage implements OnInit {
     if (this.new === true) {
       this.loading.present('Saving Please Wait...').then(() => {
         this.afs.collection('sites').doc(this.site.key).set(this.site).then(() => {
+          this.analyticsService.logAnalyticsEvent('select_content', {
+            content_type: 'ButtonClick',
+            item_id: 'addSite'
+          });
           this.router.navigate(['all-sites']).then(() => {
             this.loading.dismiss();
           });
