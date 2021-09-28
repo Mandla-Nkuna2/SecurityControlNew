@@ -108,6 +108,45 @@ exports.initializePayment = functions.runWith(runtimeOpts).runWith(runtimeOpts).
     });
 });
 
+exports.createPlan = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.post(`${host}/plan`, {
+        name: "Standard Subscription",
+        amount: 50000,
+        interval: 'monthly',
+        description: 'Standard security control subscription',
+        send_invoices: true, //most probably will send by email
+        currency: 'ZAR'
+    }, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+        }
+    }).then(res => {
+        response.send(res.data);
+    }).catch(error => {
+        console.log(error);
+        response.send(error);
+    });
+});
+
+exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.get(`${host}/subscription`,{
+        customer: 'user@user.com', //or customer code
+        plan: 'asdasd', //plan codes
+        auhorization: 'ajhklasdf', //auth code, or most recent auth if not specified
+        start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
+    } ,{
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+        }
+    }).then(res => {
+        functions.logger.debug(res);
+        response.send(res.data);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.status(500).send(error);
+    });
+});
+
 exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
     let transactionRef = request.body.transactionRef;
     axios.get(`${host}/transaction/verify/${transactionRef}`, {
