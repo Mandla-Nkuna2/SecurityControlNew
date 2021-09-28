@@ -71,6 +71,20 @@ export class ChatServiceService {
     })
   }
 
+  getSalesCount(user) {
+    return new Observable((s) => {
+      this.afs.collection(`chats/${user.key}/sales-messages`).valueChanges().subscribe((messages) => {
+        let count = 0;
+        messages.forEach((message: any) => {
+          if (message.fromUser === false && message.read === false) {
+            count = count + 1;
+          }
+        });
+        s.next(count);
+        })
+    })
+  }
+  
   sendSupportChat(user, msg, attachment) {
     return new Promise<void>((resolve, reject) => {
       var newUser = {
@@ -109,6 +123,20 @@ export class ChatServiceService {
     })
   }
 
+  getSupportCount(user) {
+    return new Observable((s) => {
+      this.afs.collection(`chats/${user.key}/messages`).valueChanges().subscribe((messages) => {
+        let count = 0;
+        messages.forEach((message: any) => {
+          if (message.fromUser === false && message.read === false) {
+            count = count + 1;
+          }
+        });
+        s.next(count);
+      })
+    })
+  }
+  
   public readSupportChats(userId) {
     this.afs.collection(`chats/${userId}/messages`).ref.where('fromUser', '==', false).where('read', '==', false).get().then(msgs => {
       msgs.forEach((msg: any) => {

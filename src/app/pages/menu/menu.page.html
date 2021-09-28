@@ -23,6 +23,8 @@
                 [class.active-item]="selectedPath === p.url">
                 <ion-icon  [src]="p.icon" slot="start"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
+                <div *ngIf="p.title === 'SALES CHAT' && salesCount !== 0" style="color: red; border-radius: 40%; border: 1px solid red;">{{salesCount}}</div>
+                <div *ngIf="p.title === 'CHAT' && supportCount !== 0" style="color: red; border-radius: 40%; border: 1px solid red;">{{supportCount}}</div>
               </ion-item>
             </div>
             <div *ngIf="app">
