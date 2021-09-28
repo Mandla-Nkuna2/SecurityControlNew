@@ -132,7 +132,7 @@ exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((req
     axios.get(`${host}/subscription`,{
         customer: 'user@user.com', //or customer code
         plan: 'asdasd', //plan codes
-        auhorization: 'ajhklasdf', //auth code, or most recent auth if not specified
+        authorization: 'ajhklasdf', //auth code, or most recent auth if not specified
         start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
     } ,{
         headers: {
