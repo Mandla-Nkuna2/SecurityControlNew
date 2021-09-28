@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Storage } from '@ionic/storage';
-import { NavController, IonContent, ModalController, ActionSheetController, AlertController } from '@ionic/angular';
-import { Observable } from 'rxjs';
-import { UUID } from 'angular2-uuid';
+import { IonContent, ActionSheetController, Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import moment from 'moment';
+import { ChatServiceService } from 'src/app/services/chat-service.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-chat',
@@ -13,101 +13,58 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 })
 export class ChatPage implements OnInit {
 
-
-  chatsCollection: AngularFirestoreCollection<any>;
-  chats: Observable<any[]>;
-
-  chat = { key: '', userId: '', user: '', companyId: '', createdAt: 0, message: '', photo: '', attachment: '', status: 'unread', fromUser: true };
-  currentUser = '';
-  now;
-
-  user = { photo: '' };
-  app = true;
-
+  user;
+  chats = [];
+  app = false;
+  firstMsg = {
+    message: 'Hello! Welcome to Security Control! What can we help you with?',
+  };
+  newMsg = '';
+  attachment = '';
+  messagesSub: Subscription;
   fileName = '';
+  today = moment(new Date()).format('YYYY/MM/DD');
 
-  online = false;
-  statusType;
-  msg;
-  class;
+  @ViewChild(IonContent, { static: false }) ionContent: IonContent;
 
-  @ViewChild(IonContent) content: IonContent;
-
-  constructor(public alertCtrl: AlertController, private camera: Camera, public actionCtrl: ActionSheetController,
-    public modalController: ModalController, private afs: AngularFirestore, private storage: Storage, public navCtrl: NavController) { }
+  constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService) { }
 
   ngOnInit() {
-    this.now = new Date().getTime();
-    this.storage.get('user').then(user => {
-      this.afs.collection('chats').doc(user.key).set({ new: false, userId: user.key });
-      this.afs.collection(`chats/${user.key}/messages`).ref.get().then(messages => {
-        messages.forEach((message: any) => {
-          if (message.data().status === 'unread' && message.data().support === true) {
-            this.afs.collection(`chats/${user.key}/messages`).doc(message.data().key).update({ status: 'read' });
-          }
-        });
-      });
-      this.user.photo = user.photo;
-      this.chat.userId = user.key;
-      this.chat.user = user.name;
-      this.currentUser = user.name;
-      this.chat.companyId = user.companyId;
-      this.chatsCollection = this.afs.collection(`chats/${this.chat.userId}/messages`, ref => ref.orderBy('createdAt'));
-      this.chats = this.chatsCollection.valueChanges();
-      this.chats.subscribe(snapshot => {
-        if (snapshot.length > 0) {
-          setTimeout(() => {
-            this.content.scrollToBottom();
-          }, 1000);
-        }
-      });
-    });
-    this.afs.collection('status').doc('online-status').ref.get().then((status: any) => {
-      if (status.data().online === true) {
-        this.online = true;
-      } else {
-        this.online = false;
-      }
-    });
-    if (window.innerWidth >= 769) {
-      this.app = false;
-    } else {
+    if (this.platform.is('mobile')) {
       this.app = true;
-    }
-  }
-
-  status() {
-    if (this.online) {
-      this.statusType = 'Online';
-      this.class = 'great';
-      this.msg = 'Our Support Team are online. Send us a message...';
-      return this.statusAlert(this.statusType, this.msg);
     } else {
-      this.statusType = 'Offline';
-      this.class = 'alert';
-      this.msg = 'Our Support Team are currently offline. Send us a message and one of our support team will respond to you shortly.';
-      return this.statusAlert(this.statusType, this.msg);
+      this.app = false;
     }
+    this.chats = [];
+    this.chatService.getUser().then(user => {
+      this.user = user;
+      this.getChatSub(user);
+    })
   }
 
-  async statusAlert(status, msg) {
-    const prompt = await this.alertCtrl.create({
-      header: `${status} Status`,
-      message: msg,
-      cssClass: this.class,
-      buttons: [
-        {
-          text: 'OKAY',
-          handler: data => {
-          }
+  getChatSub(user) {
+    this.messagesSub = this.chatService.getSupportChat(this.user).subscribe((res: any[]) => {
+      if (res.length > 0) {
+        let newMessages = res.filter(x => this.chats.filter(s => s.key == x.key).length == 0);
+        this.chats.push(...newMessages);
+        this.chatService.readSupportChats(user.key);
+        let oldMessages = res.filter(x => this.chats.filter(s => s.key == x.key).length !== 0);
+        for (let i = 0; i < oldMessages.length; i++) {
+          var foundIndex = this.chats.findIndex(x => x.key == oldMessages[i].key);
+          this.chats[foundIndex] = oldMessages[i];
         }
-      ]
-    });
-    return await prompt.present();
+      }
+    })
   }
 
-  close() {
-    this.modalController.dismiss();
+  ionViewDidEnter() {
+    this.scrollPage();
+  }
+
+  scrollPage() {
+    setTimeout(() => {
+      this.ionContent.scrollToBottom(300);
+    }, 500);
   }
 
   fileChangeEvent(event: any): void {
@@ -126,11 +83,11 @@ export class ChatPage implements OnInit {
 
   _handleReaderLoaded(readerEvt) {
     const binaryString = readerEvt.target.result;
-    this.chat.attachment = 'data:image/png;base64,' + btoa(binaryString);
+    this.attachment = 'data:image/png;base64,' + btoa(binaryString);
   }
 
   remove() {
-    this.chat.attachment = '';
+    this.attachment = '';
   }
 
   async attach() {
@@ -172,20 +129,29 @@ export class ChatPage implements OnInit {
       ...useAlbum ? { sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM } : {}
     };
     return await this.camera.getPicture(options).then((imageData => {
-      this.chat.attachment = 'data:image/jpeg;base64,' + imageData;
+      this.attachment = 'data:image/jpeg;base64,' + imageData;
     })).catch((err => {
       alert('Error: ' + err);
     }));
   }
 
-  sendMessage() {
-    this.chat.key = UUID.UUID();
-    this.chat.createdAt = new Date().getTime();
-    this.afs.collection(`chats/${this.chat.userId}/messages`).doc(this.chat.key).set(this.chat).then(() => {
-      this.chat.message = '';
-      this.chat.attachment = '';
-      this.content.scrollToBottom();
-    });
+  sendMsg() {
+    if (this.newMsg !== '') {
+      this.chatService.sendSupportChat(this.user, this.newMsg, this.attachment).then(() => {
+        this.ionContent.scrollToBottom(300);
+        this.newMsg = '';
+        this.attachment = '';
+        this.toast.show('Message Send');
+      })
+    }
+  }
+
+  viewAttachment(attachment) {
+
+  }
+
+  ionViewWillLeave() {
+    this.messagesSub.unsubscribe();
   }
 
 }

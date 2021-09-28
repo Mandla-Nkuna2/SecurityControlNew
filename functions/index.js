@@ -8701,3 +8701,89 @@ exports.newSupportReply = functions.https.onRequest((req, res) => {
         return res.send(msg);
     })
 })
+
+exports.readSalesMsg = functions.firestore
+    .document(`/chats/{uid}/sales-messages/{uid2}`)
+    .onUpdate((snap) => {
+        const newMsg = snap.after.data();
+        const oldMsg = snap.before.data();
+        functions.logger.info(newMsg, oldMsg);
+        if (oldMsg.read === false && newMsg.read === true) {
+            console.log('Read Msg')
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSalesMsgRead',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.readSupportMsg = functions.firestore
+    .document(`/chats/{uid}/messages/{uid2}`)
+    .onUpdate((snap) => {
+        const newMsg = snap.after.data();
+        const oldMsg = snap.before.data();
+        functions.logger.info(newMsg, oldMsg);
+        if (oldMsg.read === false && newMsg.read === true) {
+            console.log('Read Msg')
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSupportMsgRead',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.SupportMsgRead = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/messages`).doc(newMsg.key).update({ read: true }).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.SalesMsgRead = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/sales-messages`).doc(newMsg.key).update({ read: true }).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})

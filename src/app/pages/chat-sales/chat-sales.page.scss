@@ -30,6 +30,31 @@ ion-header {
             }
         }
     }
+    .mbar
+    {
+        --background: #100F10;
+    
+    
+        ion-buttons
+        {
+    
+            ion-menu-button
+            {
+                --color: white !important;
+            }
+            
+            ion-button
+            {
+                --color: white !important;
+            }
+        }
+    
+    
+        ion-title
+        {
+            color: white !important;
+        }
+    }
 }
 .messageUnit {
     padding-left: 3%;
@@ -64,6 +89,17 @@ ion-toolbar {
         color: white;
         resize: none;
         font-size: larger;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      .message-input-app {
+        width: 100%;
+        border: 1px solid var(--ion-color-medium);
+        border-radius: 10px;
+        background: rgb(59, 59, 59);
+        color: white;
+        resize: none;
+        font-size: small;
         padding-left: 10px;
         padding-right: 10px;
       }

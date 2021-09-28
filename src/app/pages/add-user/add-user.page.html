@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary" mode="ios">
+  <ion-toolbar  mode="ios">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -64,17 +64,21 @@
                   </ion-input>
                 </ion-item>
 
+              
+      
+      
+
                 <div *ngIf="!view">
-                  <ion-row class="grid-header">
-                    <ion-col class="grid-header-row">Site Name</ion-col>
-                    <ion-col>Select</ion-col>
+                  <ion-row style="border-top-left-radius:25px; border-top-right-radius:25px;" class="grid-header">
+                    <ion-col size="8" class="grid-header-row"></ion-col>
+                    <ion-col  size="2"></ion-col>
                   </ion-row>
 
-                    <ion-row class="grid-row" *ngFor="let site of siteList | orderBy: order">
-                      <ion-col class="grid-row-item" size="8">
+                    <ion-row class="grid-row" style="background: radial-gradient(circle at center, #201f1f 0%, #171717 100%);" *ngFor="let site of siteList | orderBy: order">
+                      <ion-col style="padding-left: 2em" class="grid-row-item" size="8">
                         {{site.name}}
                       </ion-col>
-                      <ion-col class="last-col ion-text-center" size="4">
+                      <ion-col class="grid-row-item" size="2">
                         <ion-checkbox [(ngModel)]="site.selected" (click)="addToList(site)">
                         </ion-checkbox>
                       </ion-col>
@@ -84,9 +88,9 @@
                 </div>
 
                 <div *ngIf="view">
-                  <ion-row class="grid-header">
-                    <ion-col class="grid-header-row">Site Name</ion-col>
-                    <ion-col>Select</ion-col>
+                  <ion-row  style=" border-top-left-radius:25px; border-top-right-radius:25px" class="grid-header">
+                    <ion-col size="8" class="grid-header-row"></ion-col>
+                    <ion-col></ion-col>
                   </ion-row>
                   <ion-row *ngFor="let site of userSite | async">
                     <ion-col class="grid-row-item" size="8">
@@ -106,7 +110,7 @@
 
 
 <ion-footer>
-  <ion-toolbar color="primary" mode="ios">
+  <ion-toolbar  mode="ios">
     <ion-button expand="full" (click)="check()">
       <ion-icon name="checkmark"></ion-icon>Save User
     </ion-button>

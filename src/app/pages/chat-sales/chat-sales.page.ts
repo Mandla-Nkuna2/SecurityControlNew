@@ -25,7 +25,7 @@ export class ChatSalesPage implements OnInit {
   fileName = '';
   today = moment(new Date()).format('YYYY/MM/DD');
 
-  @ViewChild(IonContent) contentArea: IonContent;
+  @ViewChild(IonContent, { static: false }) ionContent: IonContent;
 
   constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService) { }
 
@@ -38,18 +38,33 @@ export class ChatSalesPage implements OnInit {
     this.chats = [];
     this.chatService.getUser().then(user => {
       this.user = user;
-      this.getChatSub();
+      this.getChatSub(user);
     })
   }
 
-  getChatSub() {
+  getChatSub(user) {
     this.messagesSub = this.chatService.getSalesChat(this.user).subscribe((res: any[]) => {
       if (res.length > 0) {
         let newMessages = res.filter(x => this.chats.filter(s => s.key == x.key).length == 0);
         this.chats.push(...newMessages);
-        this.contentArea.scrollToBottom();
+        let oldMessages = res.filter(x => this.chats.filter(s => s.key == x.key).length !== 0);
+        for (let i = 0; i < oldMessages.length; i++) {
+          var foundIndex = this.chats.findIndex(x => x.key == oldMessages[i].key);
+          this.chats[foundIndex] = oldMessages[i];
+        }
+        this.chatService.readSalesChats(user.key);
       }
     })
+  }
+
+  ionViewDidEnter() {
+    this.scrollPage();
+  }
+
+  scrollPage() {
+    setTimeout(() => {
+      this.ionContent.scrollToBottom(300);
+    }, 500);
   }
 
   fileChangeEvent(event: any): void {
@@ -121,12 +136,14 @@ export class ChatSalesPage implements OnInit {
   }
 
   sendMsg() {
-    this.chatService.sendSalesChat(this.user, this.newMsg, this.attachment).then(() => {
-      this.contentArea.scrollToBottom();
-      this.newMsg = '';
-      this.attachment = '';
-      this.toast.show('Message Send');
-    })
+    if (this.newMsg !== '') {
+      this.chatService.sendSalesChat(this.user, this.newMsg, this.attachment).then(() => {
+        this.ionContent.scrollToBottom(300);
+        this.newMsg = '';
+        this.attachment = '';
+        this.toast.show('Message Send');
+      })
+    }
   }
 
   viewAttachment(attachment) {
