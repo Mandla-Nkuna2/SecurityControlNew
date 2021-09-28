@@ -25,9 +25,7 @@ export class AnalyticsService {
     event: AnalyticsEvent,
     param: AnalyticsScreenView
   ) {
-    console.log('log event');
-    console.log(event);
-    console.log(param);
+    console.log("Logged ", event);
     await this.firebaseX.logEvent(event, param);
   }
 
@@ -38,24 +36,7 @@ export class AnalyticsService {
       page_path: param.screen_class,
       send_to: 'G-0F1C81YWSV'
     })
-  }
-
-  trackViewWeb(pageTitle, path) {
-    gtag('event', 'page_view', {
-      page_title: pageTitle,
-      page_location: path,
-      page_path: path,
-      send_to: 'G-0F1C81YWSV'
-    })
-  }
-
-  trackEventWeb(page: string, event: string, label?: string, value?: any) {
-    gtag('event', 'action_click', {
-      eventCategory: 'Web: ' + page,
-      eventLabel: label,
-      eventAction: event,
-      eventValue: value
-    })
     console.log('Web Event Fired')
   }
+
 }
