@@ -22,7 +22,7 @@ const FUNCTIONS_REDIRECT = 'https://us-central1-security-control-app.cloudfuncti
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const auth = new googleAuth();
 const functionsOauthClient = new auth.OAuth2(CONFIG_CLIENT_ID, CONFIG_CLIENT_SECRET, FUNCTIONS_REDIRECT);
-
+const PAYSTACK_BEARER_TOKEN = ''
 let oauthTokens = null;
 
 const gmailEmail = 'support@securitycontrol.co.za';
@@ -65,6 +65,63 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
     return admin.messaging().sendToDevice(token, payload);
 
 })
+
+exports.transactionWebhook = functions.https.onRequest((request, response) => {
+    let paymentEvent = request.body;
+    return admin.firestore().collection('paymentEvents').add(paymentEvent).then(() => {
+        functions.logger.info("event saved");
+        response.sendStatus(200);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.sendStatus(500);
+    })
+});
+
+exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.post(`${host}/transaction/charge_authorization`, chargeObject.body, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+        }
+    }).then(res => {
+        response.sendStatus(200);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.status(500).send(error);
+    });
+});
+
+exports.initializePayment = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.post(`${host}/transaction/initialize`, {
+        email: request.body.email,
+        amount: request.body.amount,
+        currency: request.body.currency,
+        split_code: request.body.split_code //split_code used for group splits, subaccount is used for a single split
+    }, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+        }
+    }).then(res => {
+        response.send(res.data);
+    }).catch(error => {
+        console.log(error);
+        response.send(error);
+    });
+});
+
+exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    let transactionRef = request.body.transactionRef;
+    axios.get(`${host}/transaction/verify/${transactionRef}`, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+        }
+    }).then(res => {
+        functions.logger.debug(res);
+        response.send(res.data);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.status(500).send(error);
+    });
+});
 
 exports.deleteGuards = functions.firestore
     .document('guards/{uid}')
