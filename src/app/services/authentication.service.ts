@@ -124,7 +124,7 @@ export class AuthenticationService {
   logout() {
     return new Promise((resolve, reject) => {
       if (this.afAuth.currentUser) {
-        this.storage.remove('user').then(() => {
+        this.storage.clear().then(() => {
           this.router.navigate(['login']).then(() => {
             this.afAuth.signOut().then(() => {
               this.authState.next(false);
