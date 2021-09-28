@@ -1,5 +1,4 @@
-
-  <!-- <ion-header class="ion-no-border desktop">
+<!-- <ion-header class="ion-no-border desktop">
     <ion-toolbar class="ion-padding-horizontal">
      <ion-buttons slot="start">
        <ion-button class="support-btn">
@@ -22,75 +21,77 @@
     </ion-item>
     </ion-toolbar>
   </ion-header> -->
-  
-  <ion-content class="welcome">
-      <div class="top-holder desktop flex al-center jc-between">
-        <div class="left">
-          <h1>Hi {{ user.name }}</h1>
-          <h5>Welcome to <span>&nbsp;Security Control</span> </h5>
-        </div>
-  
-        <div class="right path-holder">
-          <h4>Home/<span>&nbsp;Welcome</span> </h4>
-        </div>
-      </div>
-  
-      <ion-grid class="main-grid" fixed>
-        <ion-row>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="5" sizeXl="6">
-            <div class="holder left">
-              <div class="the-header">
-                <h2>Account Details</h2>
-              </div>
-  
-              <div class="the-content">
-                  <div class="logo-holder ion-text-center">
-                    <img *ngIf=logo [src]=logo style="max-width: 350px; max-height: 200px">
-                  </div>
-  
-                  <div class="form">
-        
-                    <div class="input-item flex al-center jc-between">
-                      <ion-label>Company Representative</ion-label>
-                      <ion-item lines="none">
-                        <ion-input type="text" readonly >{{user.name}}</ion-input>
-                      </ion-item>
-                    </div>
-        
-                    <div class="input-item flex al-center jc-between">
-                      <ion-label>Email</ion-label>
-                      <ion-item lines="none">
-                        <ion-input type="email" readonly>{{user.email}}</ion-input>
-                      </ion-item>
-                    </div>
-  
-                    <div class="input-item flex al-center jc-between">
-                      <ion-label>Contact</ion-label>
-                      <ion-item lines="none">
-                        <ion-input type="text" readonly>{{user.contact}}</ion-input>
-                      </ion-item>
-                    </div>
-  
-                    <div class="input-item flex al-center jc-between">
-                      <ion-label>Account Type</ion-label>
-                      <ion-item lines="none">
-                        <ion-input type="text" readonly>{{user.type}}</ion-input>
-                      </ion-item>
-                    </div>
-        
-        
-                    <div class="btn-holder ion-padding-top">
-                      <ion-button expand="block">
-                        Update Info
-                      </ion-button>
-                    </div>
-        
-        
-                  </div>
-              </div>
+
+<ion-content class="welcome">
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1>Hi {{ user.name }}</h1>
+      <h5>Welcome to <span>&nbsp;Security Control</span> </h5>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/<span>&nbsp;Welcome</span> </h4>
+    </div>
+  </div>
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row>
+      <ion-col size="12">
+        <div class="holder left">
+          <div class="the-header">
+            <h2>Account Details</h2>
+          </div>
+
+          <div class="the-content">
+            <div class="logo-holder ion-text-center">
+              <img *ngIf=logo [src]=logo style="max-width: 350px; max-height: 200px">
             </div>
-          </ion-col>
-          <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="7" sizeXl="6" class="flex">
+
+            <div class="form">
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Company Representative</ion-label>
+                <ion-item lines="none">
+                  <ion-input type="text" readonly>{{user.name}}</ion-input>
+                </ion-item>
+              </div>
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Email</ion-label>
+                <ion-item lines="none">
+                  <ion-input type="email" readonly>{{user.email}}</ion-input>
+                </ion-item>
+              </div>
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Contact</ion-label>
+                <ion-item lines="none">
+                  <ion-input type="text" readonly>{{user.contact}}</ion-input>
+                </ion-item>
+              </div>
+
+              <div class="input-item flex al-center jc-between">
+                <ion-label>Account Type</ion-label>
+                <ion-item lines="none">
+                  <ion-input type="text" readonly>{{user.type}}</ion-input>
+                </ion-item>
+              </div>
+
+
+              <div class="btn-holder ion-padding-top">
+                <ion-button expand="block">
+                  Update Info
+                </ion-button>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- commented out because its pulling outdated data -->
+      <!-- <ion-col sizeXs="12" sizeSm="12" sizeMd="6" sizeLg="7" sizeXl="6" class="flex">
             <div class="holder right">
               <div class="the-header">
                 <h2>News & Update</h2>
@@ -121,12 +122,11 @@
                 </div>
               </div>
             </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-  
-      <div class="footer desktop">
-        <p  class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
-      </div>
-  </ion-content>
-  
+          </ion-col> -->
+    </ion-row>
+  </ion-grid>
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
+</ion-content>
