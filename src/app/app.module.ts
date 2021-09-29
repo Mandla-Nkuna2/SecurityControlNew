@@ -35,6 +35,7 @@ import { CameraService } from './services/camera.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { ComponentsModule } from './components/components.module'
+import { pdfService2 } from './services/pdf-service2.service'
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -75,6 +76,7 @@ import { ComponentsModule } from './components/components.module'
     Geolocation,
     InAppBrowser,
     FirebaseX,
+    pdfService2,
   ],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]

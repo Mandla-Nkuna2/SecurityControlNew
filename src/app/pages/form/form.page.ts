@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DynamicInput } from '../../models/dynamic-input.model';
-import { FormServiceService } from '../../services/form-service.service'
+import { FormServiceService } from '../../services/form-service.service';
 @Component({
   selector: 'app-form',
   templateUrl: './form.page.html',
@@ -27,7 +27,7 @@ export class Form implements OnInit {
     private storage: Storage,
     private afs: AngularFirestore,
     public loading: LoadingService,
-    private formsService: FormServiceService
+    private formsService: FormServiceService,
   ) {
   }
 

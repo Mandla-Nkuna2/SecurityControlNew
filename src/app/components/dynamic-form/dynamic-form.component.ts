@@ -5,6 +5,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DynamicInput } from 'src/app/models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service'
+import { pdfService2 } from 'src/app/services/pdf-service2.service';
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
@@ -36,7 +37,9 @@ export class DynamicFormComponent implements OnInit {
     private uiService: UiService,
     private formService: FormServiceService,
     private storage: Storage,
-    private navController: NavController
+    private navController: NavController,
+    private pdfService: pdfService2
+
   ) {
     this.formObject = new EventEmitter();
   }
@@ -57,30 +60,30 @@ export class DynamicFormComponent implements OnInit {
       })
     })
     this.formAlias = this.convertTitleToAlias();
-    this.storage.get(this.formAlias).then((newFormObject)=>{
-      if(newFormObject){
+    this.storage.get(this.formAlias).then((newFormObject) => {
+      if (newFormObject) {
         this.newFormObj = newFormObject
       }
     })
   }
 
-  convertTitleToAlias(){
+  convertTitleToAlias() {
     let alias = this.formTitle;
     return alias.replace(/ +/g, "").replace(alias[0], alias[0].toLowerCase());
   }
 
-  onExit(){
-    this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave)=>{
-      if(shouldSave){
-        this.storage.set(this.formAlias, this.newFormObj).then(()=>{
+  onExit() {
+    this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave) => {
+      if (shouldSave) {
+        this.storage.set(this.formAlias, this.newFormObj).then(() => {
           this.navController.navigateRoot('welcome')
-        }).catch(error=>console.log(error))
-      }else{
+        }).catch(error => console.log(error))
+      } else {
         this.navController.navigateRoot('welcome')
       }
     })
   }
-  
+
   checkSlides() {
     return new Promise((resolve, reject) => {
       let newSlideIndicators = this.dynamicInputs.filter(x => x.onNewSlide);
@@ -144,7 +147,11 @@ export class DynamicFormComponent implements OnInit {
           this.imagesArray.push(image)
         }
       }
+      if (input.value && input.value != '') {
+        this.newFormObj[input.fieldName] = input.value;
+      }
     })
+
   }
 
   hasErrors(index) {
@@ -242,9 +249,9 @@ export class DynamicFormComponent implements OnInit {
         this.newFormObj = { ...this.newFormObj, ...{ [`${input.fieldName}`]: this.dynamicForm.value.inputs[index] } }
       }
     })
-    if(this.imagesArray.length>0){
-      this.imagesArray.forEach((image: any)=>{
-        this.newFormObj = {...this.newFormObj, ...image}
+    if (this.imagesArray.length > 0) {
+      this.imagesArray.forEach((image: any) => {
+        this.newFormObj = { ...this.newFormObj, ...image }
       })
     }
     this.formObject.emit(this.newFormObj);
@@ -269,6 +276,9 @@ export class DynamicFormComponent implements OnInit {
       }
     }
     return true;
+  }
+  downloadPdf() {
+    this.pdfService.downloadPdf(this.allInputs, this.newFormObj);
   }
 
 }

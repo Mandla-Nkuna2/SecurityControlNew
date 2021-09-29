@@ -221,7 +221,9 @@ export class FormServiceService {
       value: '',
       hidden: false
 
-    }, {
+    },
+
+    {
       label: 'Comments ',
       fieldName: 'com3',
       required: false,
@@ -230,8 +232,25 @@ export class FormServiceService {
       value: '',
       hidden: false,
       condition: "$jobDesc == 'Yes' "
+    },
 
-    }
+    {
+      label: 'Manger signiture ',
+      fieldName: 'managerSig',
+      controlType: "signaturePad",
+      required: true,
+      hidden: false,
+      value: '',
+    },
+    {
+      label: 'users signiture ',
+      fieldName: 'userSig',
+      controlType: "signaturePad",
+      required: true,
+      hidden: false,
+      value: '',
+    },
+
   ]
   constructor(
     private afs: AngularFirestore,
@@ -265,9 +284,7 @@ export class FormServiceService {
         else {
           resolve(link);
         }
-
       })
-
     })
 
 
@@ -346,7 +363,7 @@ export class FormServiceService {
   }
   storeForm() {
     return new Promise((resolve, reject) => {
-      
+
     })
   }
   async completeActionSheet(newFormObject: any) {
@@ -388,5 +405,18 @@ export class FormServiceService {
   }
   downloadPdf(newFormObj: any) {
     this.pdfService.download(newFormObj)
+  }
+  public getDocument(path: string, docId: string) {
+    return new Promise((resolve, reject) => {
+      this.completeLink(path).then((link: string) => {
+        this.completeLink(docId).then((doc: string) => {
+          this.afs.collection(link).doc(doc).ref.get().then((documentData) => {
+            resolve(documentData.data());
+          }).catch((error) => {
+            reject(error);
+          })
+        })
+      })
+    })
   }
 }
