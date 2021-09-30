@@ -75,11 +75,7 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('SAST').
                         return admin.firestore().collection('trials').doc(doc.id).update({
                             trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss") //document will be saved by company key, companies will listen to their documents on frontend.
                         }).then(()=>{
-                            return admin.firestore().collection('users').doc(doc.data().userKey).update({  
-                                trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
-                            }).then(()=>{
-                                functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
-                            }).catch((onError)=>functions.logger.error(onError))
+                            functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
                         }).catch((onError)=>functions.logger.error(onError))
                     }
                 }
