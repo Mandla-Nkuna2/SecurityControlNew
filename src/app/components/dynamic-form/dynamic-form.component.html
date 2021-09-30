@@ -3,7 +3,6 @@
     <ion-card-header>
       <ion-card-title style="text-align: center;">
         <h1>{{ formTitle }}</h1>
-        <ion-button (click)="downloadPdf()"> test download</ion-button>
 
         <ion-button (click)="onExit()" fill="clear">
           <ion-icon slot="icon-only" name="close-outline"></ion-icon>
@@ -19,6 +18,10 @@
           <ion-button *ngIf="noOfSlides>=1 && slideIndex< noOfSlides " color="success" (click)="nextSlide()">Next
           </ion-button>
         </div>
+        <ion-button (click)="downloadPdf()" fill="clear"
+          *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
 
       </div>
     </ion-card-header>

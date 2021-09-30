@@ -9,6 +9,7 @@ import { LoadingService } from './loading.service';
 import { DynamicInput } from '../models/dynamic-input.model';
 import { FormServiceService } from './form-service.service';
 import * as moment from 'moment'
+import { UiService } from './ui.service';
 
 @Injectable()
 export class pdfService2 {
@@ -18,7 +19,8 @@ export class pdfService2 {
     public fileopener: FileOpener,
     private storage: Storage,
     public loading: LoadingService,
-    private formService: FormServiceService
+    private formService: FormServiceService,
+    private uiService: UiService
   ) {
   }
   pdfObj = null;
@@ -33,7 +35,7 @@ export class pdfService2 {
           this.fileopener.open(this.file.dataDirectory + 'report.pdf', 'application/pdf');
 
         }).catch(err => {
-          alert('Error: ' + err);
+          this.uiService.showToaster('Error: ' + err, 'red');
         });
       });
     } else {
@@ -80,7 +82,6 @@ export class pdfService2 {
         }
         signitures.push(signitureDrawing);
         formTemplate.splice(formTemplate.indexOf(signpad), 1);
-        alert('added')
 
       })
       let blockNumber = 0;
@@ -122,7 +123,6 @@ export class pdfService2 {
         }
         extraBodies.push(table);
       }
-      console.log(mainBody)
 
       const prom = new Promise((resolve, reject) => {
         this.formService.getDocument('sites', newFormObj.site).then((site: any) => {
