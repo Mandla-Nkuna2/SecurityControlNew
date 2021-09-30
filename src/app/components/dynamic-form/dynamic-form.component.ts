@@ -272,7 +272,7 @@ export class DynamicFormComponent implements OnInit {
     return true;
   }
   downloadPdf() {
-    this.pdfService.downloadPdf(this.allInputs, this.newFormObj);
+    this.pdfService.downloadPdf(this.formTitle, this.allInputs, this.newFormObj);
   }
 
 }

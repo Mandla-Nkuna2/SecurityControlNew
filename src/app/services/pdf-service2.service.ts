@@ -44,7 +44,7 @@ export class pdfService2 {
     }
   }
 
-  public downloadPdf(formTemplate: DynamicInput[], newFormObj: any) {
+  public downloadPdf(name: string, formTemplate: DynamicInput[], newFormObj: any) {
     let mainBody = [];
     let extraBodies = [];
     let signitures = [];
@@ -132,11 +132,11 @@ export class pdfService2 {
         })
       })
       prom.then((data: any) => {
-        this.populatePdf(data, newFormObj, extraBodies, signitures)
+        this.populatePdf(name, data, newFormObj, extraBodies, signitures)
       })
     }
   }
-  populatePdf(data: any, newFormObj: any, extraBodies: any[], signitures: any[]) {
+  populatePdf(name: string, data: any, newFormObj: any, extraBodies: any[], signitures: any[]) {
     var docDefinition = {
       content: [
         {
@@ -144,7 +144,7 @@ export class pdfService2 {
           width: 200,
           alignment: 'center'
         },
-        { text: 'UNIFORM ORDER REPORT', style: 'header' },
+        { text: name.toUpperCase(), style: 'header' },
         {
           style: 'table',
           table: {
