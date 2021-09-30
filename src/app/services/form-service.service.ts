@@ -104,6 +104,39 @@ export class FormServiceService {
       hidden: false,
     },
     {
+      label: 'my pic2',
+      fieldName: 'pic22',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic3',
+      fieldName: 'pic33',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic4',
+      fieldName: 'pic44',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic5',
+      fieldName: 'pic55',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+
+    {
       label: 'my sig',
       fieldName: 'sig1',
       required: false,
@@ -221,7 +254,9 @@ export class FormServiceService {
       value: '',
       hidden: false
 
-    }, {
+    },
+
+    {
       label: 'Comments ',
       fieldName: 'com3',
       required: false,
@@ -230,8 +265,25 @@ export class FormServiceService {
       value: '',
       hidden: false,
       condition: "$jobDesc == 'Yes' "
+    },
 
-    }
+    {
+      label: 'Manger signiture ',
+      fieldName: 'managerSig',
+      controlType: "signaturePad",
+      required: true,
+      hidden: false,
+      value: '',
+    },
+    {
+      label: 'users signiture ',
+      fieldName: 'userSig',
+      controlType: "signaturePad",
+      required: true,
+      hidden: false,
+      value: '',
+    },
+
   ]
   constructor(
     private afs: AngularFirestore,
@@ -265,9 +317,7 @@ export class FormServiceService {
         else {
           resolve(link);
         }
-
       })
-
     })
 
 
@@ -346,7 +396,7 @@ export class FormServiceService {
   }
   storeForm() {
     return new Promise((resolve, reject) => {
-      
+
     })
   }
   async completeActionSheet(newFormObject: any) {
@@ -388,5 +438,18 @@ export class FormServiceService {
   }
   downloadPdf(newFormObj: any) {
     this.pdfService.download(newFormObj)
+  }
+  public getDocument(path: string, docId: string) {
+    return new Promise((resolve, reject) => {
+      this.completeLink(path).then((link: string) => {
+        this.completeLink(docId).then((doc: string) => {
+          this.afs.collection(link).doc(doc).ref.get().then((documentData) => {
+            resolve(documentData.data());
+          }).catch((error) => {
+            reject(error);
+          })
+        })
+      })
+    })
   }
 }
