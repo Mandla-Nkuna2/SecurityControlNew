@@ -110,7 +110,7 @@ export class DynamicFormComponent implements OnInit {
 
   createInputs() {
     this.allInputs.forEach((input) => {
-      if (input.controlType == 'select') {//&& input.items
+      if (input.controlType == 'select') {
         if (input.required) {
           this.formArray.push(this.formBuilder.control('', Validators.required))
         }
