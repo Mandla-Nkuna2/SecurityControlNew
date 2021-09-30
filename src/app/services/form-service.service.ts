@@ -10,7 +10,229 @@ import { PdfService } from './pdf.service';
 })
 export class FormServiceService {
   visit: DynamicInput[] = [
-    ]
+    {
+      label: 'Date Toady',
+      controlType: 'normal',
+      fieldName: 'date',
+      disabled: true,
+      value: '@date',
+      hidden: false,
+      required: false,
+
+    },
+    {
+      label: 'Reported at',
+      controlType: "normal",
+      fieldName: 'at',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+
+    {
+      label: 'Reported on: (date):',
+      controlType: "date",
+      fieldName: 'report2',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: '@date',
+    }, 
+    {
+      label: 'Reported by:',
+      controlType: "normal",
+      fieldName: 'by',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: '@date',
+    },
+  
+
+    {
+      label: 'From (area/section)',
+      controlType: "normal",
+      fieldName: 'from',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: '@time',
+    },
+    {
+      label: 'Cause of explosion known: :',
+      controlType: "normal",
+      fieldName: 'cause',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: '@date',
+    },
+   
+    {
+      label: 'SAP notified: time',
+      controlType: "time",
+      fieldName: 'saptime',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'SAP notified: details',
+      controlType: "normal",
+      fieldName: 'sap',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+
+    {
+      label: 'Fire Brigade notified: time',
+      controlType: "time",
+      fieldName: 'brigadetime',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'Fire Brigade notified: details',
+      controlType: "brigade",
+      fieldName: 'sap',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'Alerted Tenants in area: time',
+      controlType: "time",
+      fieldName: 'tenanttime',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'Alerted Tenants in area: details',
+      controlType: "normal",
+      fieldName: 'tenant',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+
+    {
+      label: 'Area Evacuated: time',
+      controlType: "time",
+      fieldName: 'areatime',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'Area Evacuated: details',
+      controlType: "normal",
+      fieldName: 'area',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+
+    {
+      label: 'Emergency shutdown instituted: time',
+      controlType: "time",
+      fieldName: 'shutdowntime',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'Emergency shutdown instituted: details',
+      controlType: "normal",
+      fieldName: 'shutdown',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+
+    {
+      label: 'Emergency shutdown completed: time',
+      controlType: "time",
+      fieldName: 'institutedtime',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+    {
+      label: 'Emergency shutdown completed: details',
+      controlType: "normal",
+      fieldName: 'instituted',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    },
+   
+{
+      label: 'Any other items (specify): time',
+      controlType: "time",
+      fieldName: 'othertime',
+      disabled: false,
+      hidden: false,
+      required: false,
+      inputType: 'text',
+    },
+    {
+      label: 'Any other items (specify): details',
+      controlType: "date",
+      fieldName: 'other',
+      disabled: false,
+      hidden: false,
+      required: false,
+      inputType: 'text',
+    },
+
+
+    {
+      label: 'Complied by',
+      controlType: 'normal',
+      fieldName: 'compile',
+      disabled: true,
+      value: '{name}',
+      hidden: false,
+      required: false,
+
+    },
+    {
+      label: 'Additional Information',
+      controlType: "normal",
+      fieldName: 'add',
+      disabled: false,
+      hidden: false,
+      required: false,
+      inputType: 'text',
+    },
+    {
+      label: 'Signature ',
+      controlType: "signaturePad",
+      fieldName: 'supsign',
+      disabled: false,
+      hidden: false,
+      required: true,
+      inputType: 'text',
+    }
+
+
+  ]
   constructor(
     private afs: AngularFirestore,
     private storage: Storage,
