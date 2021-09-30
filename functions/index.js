@@ -66,6 +66,30 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 
 })
 
+exports.monitorSubscriptions = functions.pubsub.schedule('5 0 * * *').timeZone('SAST').onRun((context)=>{
+    return admin.firestore().collection('trials').onSnapshot((snapshot)=>{
+        snapshot.docs.forEach((doc)=>{
+            if(doc.data().onTrial){
+                if(moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14){
+                    return admin.firestore().collection('trials').doc(doc.id).update({
+                        onTrial: false,
+                        trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss") //userKey, 
+                    }).then(()=>{
+                        return admin.firestore().collection('users').doc(doc.data().userKey).update({  
+                            trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+                            onTrial: false
+                        }).then(()=>{
+                            functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
+                        }).catch((onError)=>functions.logger.error(onError))
+                    }).catch((onError)=>functions.logger.error(onError))
+                }
+            }
+        })
+    }, (onError)=>{
+        functions.logger.info(onError);
+    })
+})
+
 exports.transactionWebhook = functions.https.onRequest((request, response) => {
     let paymentEvent = request.body;
     return admin.firestore().collection('paymentEvents').add(paymentEvent).then(() => {
