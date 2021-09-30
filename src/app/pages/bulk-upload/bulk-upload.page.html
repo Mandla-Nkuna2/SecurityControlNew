@@ -125,6 +125,9 @@
           </ion-button>
           <ion-row class="headers">
             <ion-col>
+              <h4>Exists</h4>
+            </ion-col>
+            <ion-col>
               <h4>Name</h4>
             </ion-col>
             <ion-col>
@@ -147,6 +150,12 @@
             </ion-col>
           </ion-row>
           <ion-row class="values" style="width: 100% !important;" *ngFor="let item of guards">
+            <ion-col class="dates" *ngIf="item.exists === true">
+              <ion-input readonly="true">Exists</ion-input>
+            </ion-col>
+            <ion-col class="dates" *ngIf="item.exists !== true">
+              <ion-input readonly="true">New</ion-input>
+            </ion-col>
             <ion-col class="dates">
               <ion-input [ngStyle]="{'border':item.name === '' ? '1px solid red' : '' }" [(ngModel)]="item.name"></ion-input>
             </ion-col>

@@ -79,13 +79,16 @@ export class BulkUploadPage implements OnInit {
         if (this.selected === 'Sites') {
           this.sites = list;
         } else {
-          if (this.guardOption === 'No Site') {
-            this.guards = list;
-          } else {
-            this.BUService.setGuardSite(list, this.guardSite).then(newList => {
+          this.BUService.checkGuards(list).then(newList => {
+            console.log(newList);
+            if (this.guardOption === 'No Site') {
               this.guards = newList;
-            })
-          }
+            } else {
+              this.BUService.setGuardSite(newList, this.guardSite).then(newestList => {
+                this.guards = newestList;
+              })
+            }
+          })
         }
       })
     }).catch(() => {
@@ -120,6 +123,7 @@ export class BulkUploadPage implements OnInit {
     item.siteId = event.value.key;
   }
 
+
   save() {
     this.loading.present(`Saving ${this.selected}...`).then(() => {
       if (this.selected === 'Sites') {
@@ -128,7 +132,11 @@ export class BulkUploadPage implements OnInit {
         })
       } else {
         this.guards.forEach(guard => {
-          this.afs.collection('guards').doc(guard.key).set(guard);
+          if (guard.exists === true) {
+            this.afs.collection('guards').doc(guard.Key).update(guard);
+          } else {
+            this.afs.collection('guards').doc(guard.Key).set(guard);
+          }
         })
       }
       this.loading.dismiss();

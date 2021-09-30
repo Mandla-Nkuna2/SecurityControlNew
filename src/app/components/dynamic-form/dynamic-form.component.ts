@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DynamicInput } from 'src/app/models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service'
+import { pdfService2 } from 'src/app/services/pdf-service2.service';
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
@@ -38,7 +39,9 @@ export class DynamicFormComponent implements OnInit {
     private formService: FormServiceService,
     private storage: Storage,
     private navController: NavController,
-    private errorHandlingService: DynamicFormErrorHandlerService
+    private errorHandlingService: DynamicFormErrorHandlerService,
+    private pdfService: pdfService2
+
   ) {
     this.formObject = new EventEmitter();
   }
@@ -60,30 +63,30 @@ export class DynamicFormComponent implements OnInit {
       })
     })
     this.formAlias = this.convertTitleToAlias();
-    this.storage.get(this.formAlias).then((newFormObject)=>{
-      if(newFormObject){
+    this.storage.get(this.formAlias).then((newFormObject) => {
+      if (newFormObject) {
         this.newFormObj = newFormObject
       }
     })
   }
 
-  convertTitleToAlias(){
+  convertTitleToAlias() {
     let alias = this.formTitle;
     return alias.replace(/ +/g, "").replace(alias[0], alias[0].toLowerCase());
   }
 
-  onExit(){
-    this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave)=>{
-      if(shouldSave){
-        this.storage.set(this.formAlias, this.newFormObj).then(()=>{
+  onExit() {
+    this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave) => {
+      if (shouldSave) {
+        this.storage.set(this.formAlias, this.newFormObj).then(() => {
           this.navController.navigateRoot('welcome')
-        }).catch(error=>console.log(error))
-      }else{
+        }).catch(error => console.log(error))
+      } else {
         this.navController.navigateRoot('welcome')
       }
     })
   }
-  
+
   checkSlides() {
     return new Promise((resolve, reject) => {
       let newSlideIndicators = this.dynamicInputs.filter(x => x.onNewSlide);
@@ -147,7 +150,11 @@ export class DynamicFormComponent implements OnInit {
           this.imagesArray.push(image)
         }
       }
+      if (input.value && input.value != '') {
+        this.newFormObj[input.fieldName] = input.value;
+      }
     })
+
   }
 
   hasErrors(index) {
@@ -219,15 +226,11 @@ export class DynamicFormComponent implements OnInit {
   }
 
   nextSlide() {
-    console.log(this.lastIndex)
-    console.log(this.dynamicInputs.length)
     this.lastIndex = this.lastIndex + (this.dynamicInputs.length)
     this.slideIndex = this.slideIndex + 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
-
   }
   prevSlide() {
-
     this.slideIndex = this.slideIndex - 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
@@ -239,15 +242,14 @@ export class DynamicFormComponent implements OnInit {
     if (!this.isValid()) {
       return;
     }
-    console.log(this.newFormObj)
     this.dynamicInputs.forEach((input, index) => {
       if (input.controlType !== "camera" && input.controlType !== "signaturePad") {
         this.newFormObj = { ...this.newFormObj, ...{ [`${input.fieldName}`]: this.dynamicForm.value.inputs[index] } }
       }
     })
-    if(this.imagesArray.length>0){
-      this.imagesArray.forEach((image: any)=>{
-        this.newFormObj = {...this.newFormObj, ...image}
+    if (this.imagesArray.length > 0) {
+      this.imagesArray.forEach((image: any) => {
+        this.newFormObj = { ...this.newFormObj, ...image }
       })
     }
     this.formObject.emit(this.newFormObj);
@@ -255,7 +257,6 @@ export class DynamicFormComponent implements OnInit {
   isValid(): boolean {
     if (this.dynamicForm.invalid) {
 
-      console.log(this.dynamicForm.errors)
       this.uiService.showToaster("Fill in all fields!", "danger", 2000, "bottom")
       return false;
     }
@@ -272,6 +273,9 @@ export class DynamicFormComponent implements OnInit {
       }
     }
     return true;
+  }
+  downloadPdf() {
+    this.pdfService.downloadPdf(this.formTitle, this.allInputs, this.newFormObj);
   }
 
 }

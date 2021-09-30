@@ -14,8 +14,182 @@ export class FormServiceService {
       label: "car",
       fieldName: "car",
       required: true,
-      controlType: 'normal',
-      hidden: false
+      controlType: "normal",
+      items: [],
+      value: '',
+      hidden: false,
+      link: '',
+      itemsDisplayVal: '',
+      itemsSaveVal: '',
+      itemIsObject: false,
+    }, {
+      label: 'Number of Officers on Duty',
+      fieldName: 'duty',
+      required: true,
+      controlType: "normal",
+      items: [],
+      value: '',
+      hidden: false,
+
+    },
+    {
+      label: 'Registration',
+      fieldName: 'registration',
+      required: true,
+      controlType: "select",
+      link: 'fleet',
+      linkFilterName: 'companyId',
+      linkFilterValue: '{companyId}',
+      itemIsObject: true,
+      itemsDisplayVal: 'registration',
+      itemsSaveVal: 'key',
+      items: [],
+      value: '',
+      hidden: false,
+
+    },
+    {
+      label: 'Site Name',
+      fieldName: 'site',
+      required: true,
+      controlType: "select",
+      items: [],
+      value: '',
+      hidden: false,
+      link: 'users/{key}/sites',
+      itemsDisplayVal: 'name',
+      itemsSaveVal: 'key',
+      itemIsObject: true,
+      populateQuestionItems: {
+        questionKeyName: 'fieldName',
+        questionKeyValue: 'staffMmeber',
+        collectionPath: 'guards',
+        collectionFilterName: 'siteId',
+        collectionFilterValue: '$site'
+      }
+    },
+    {
+      label: 'Date',
+      fieldName: 'date',
+      required: true,
+      controlType: "normal",
+      value: '@date',
+      hidden: false,
+      disabled: true
+    },
+    {
+      label: 'Manager',
+      fieldName: 'managerName',
+      required: true,
+      controlType: "normal",
+      value: '{name}',
+      hidden: false,
+      disabled: true
+    },
+    {
+      label: 'OB Number',
+      fieldName: 'ob',
+      required: true,
+      controlType: "normal",
+      value: '',
+      inputType: 'number',
+      hidden: false,
+    },
+    {
+      label: 'my pic',
+      fieldName: 'pic1',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic2',
+      fieldName: 'pic22',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic3',
+      fieldName: 'pic33',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic4',
+      fieldName: 'pic44',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'my pic5',
+      fieldName: 'pic55',
+      required: true,
+      controlType: "camera",
+      value: '',
+      hidden: false,
+    },
+
+    {
+      label: 'my sig',
+      fieldName: 'sig1',
+      required: false,
+      controlType: "signaturePad",
+      hidden: false,
+    },
+    {
+      label: 'managers sig',
+      fieldName: 'mansig',
+      required: true,
+      controlType: "signaturePad",
+      hidden: false,
+    },
+    {
+      label: 'date seen',
+      fieldName: 'date',
+      required: true,
+      controlType: "date",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'time checked',
+      fieldName: 'time',
+      required: true,
+      controlType: "time",
+      value: '',
+      hidden: false,
+    },
+    {
+      label: 'Staff Member on Duty',
+      fieldName: 'staffMmeber',
+      required: true,
+      controlType: "select",
+      items: [],
+      value: '',
+      hidden: false,
+      itemsDisplayVal: 'name',
+      itemsSaveVal: 'name',
+      itemIsObject: true,
+    },
+    {
+      label: 'Any Incidents Reported Since Last Visit?',
+      fieldName: 'incidents',
+      required: true,
+      controlType: "normal",
+      items: ["yes", "no"],
+      value: '',
+      hidden: false,
+      link: '',
+      itemsDisplayVal: '',
+      itemsSaveVal: '',
+      itemIsObject: false,
     },
     {
       label: "color",
@@ -30,7 +204,55 @@ export class FormServiceService {
       required: true,
       controlType: 'normal',
       hidden: false
-    }
+    }, {
+      label: 'Comments ',
+      fieldName: 'com2',
+      required: false,
+      controlType: "normal",
+      items: ["Yes", "No", "Not Applicable"],
+      value: '',
+      hidden: false,
+      condition: "$dutyRost == 'Yes' "
+
+    }, {
+      label: 'Job Description on Site?',
+      fieldName: 'jobDesc',
+      required: true,
+      controlType: "select",
+      items: ["Yes", "No", "Not Applicable"],
+      value: '',
+      hidden: false
+
+    },
+
+    {
+      label: 'Comments ',
+      fieldName: 'com3',
+      required: false,
+      controlType: "normal",
+      items: ["Yes", "No", "Not Applicable"],
+      value: '',
+      hidden: false,
+      condition: "$jobDesc == 'Yes' "
+    },
+
+    {
+      label: 'Manger signiture ',
+      fieldName: 'managerSig',
+      controlType: "signaturePad",
+      required: true,
+      hidden: false,
+      value: '',
+    },
+    {
+      label: 'users signiture ',
+      fieldName: 'userSig',
+      controlType: "signaturePad",
+      required: true,
+      hidden: false,
+      value: '',
+    },
+
   ]
   constructor(
     private afs: AngularFirestore,
@@ -64,9 +286,7 @@ export class FormServiceService {
         else {
           resolve(link);
         }
-
       })
-
     })
 
 
@@ -145,7 +365,7 @@ export class FormServiceService {
   }
   storeForm() {
     return new Promise((resolve, reject) => {
-      
+
     })
   }
   async completeActionSheet(newFormObject: any) {
@@ -187,5 +407,18 @@ export class FormServiceService {
   }
   downloadPdf(newFormObj: any) {
     this.pdfService.download(newFormObj)
+  }
+  public getDocument(path: string, docId: string) {
+    return new Promise((resolve, reject) => {
+      this.completeLink(path).then((link: string) => {
+        this.completeLink(docId).then((doc: string) => {
+          this.afs.collection(link).doc(doc).ref.get().then((documentData) => {
+            resolve(documentData.data());
+          }).catch((error) => {
+            reject(error);
+          })
+        })
+      })
+    })
   }
 }
