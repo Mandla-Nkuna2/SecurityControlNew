@@ -59,10 +59,11 @@ export class MembershipsPage implements OnInit {
         console.log('New Object: ', newObj);
         this.afs.collection('transactions').doc(newObj.key).set(Object.assign({}, newObj));
         this.afs.collection('companies').doc(user.companyId).update({
-          subscriptionDate: moment(new Date()).format('YYYY/MM/DD HH:mm'),
+          subscriptionDate: moment(new Date()).format('YYYY/MM/DD'),
           subscriptionType: transaction.id,
           subscriptionUser: user,
           subscription: transaction,
+          subscribed: true
         })
         .then(() => {
           newUser.premium = true;

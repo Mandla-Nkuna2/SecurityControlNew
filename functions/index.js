@@ -129,12 +129,12 @@ exports.createPlan = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.o
 });
 
 exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
-    axios.get(`${host}/subscription`,{
+    axios.get(`${host}/subscription`, {
         customer: 'user@user.com', //or customer code
         plan: 'asdasd', //plan codes
         authorization: 'ajhklasdf', //auth code, or most recent auth if not specified
         start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
-    } ,{
+    }, {
         headers: {
             'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
         }
@@ -6257,7 +6257,7 @@ exports.appealForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().appeal != undefined){ report.userEmail = report.userEmail + ';' + doc.data().appeal }
+            if (doc.data().appeal != undefined) { report.userEmail = report.userEmail + ';' + doc.data().appeal }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return appealForm(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6462,7 +6462,7 @@ exports.temperatureList = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().temperature != undefined){ report.userEmail = report.userEmail + ';' + doc.data().temperature }
+            if (doc.data().temperature != undefined) { report.userEmail = report.userEmail + ';' + doc.data().temperature }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return tempList(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6590,7 +6590,7 @@ exports.performanceAppraisal = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().performance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().performance }
+            if (doc.data().performance != undefined) { report.userEmail = report.userEmail + ';' + doc.data().performance }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return perform(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6826,7 +6826,7 @@ exports.fenceInspection = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().fence != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fence }
+            if (doc.data().fence != undefined) { report.userEmail = report.userEmail + ';' + doc.data().fence }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fenceIN(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7018,8 +7018,8 @@ exports.grieve = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().grievance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().grievance }
- return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().grievance != undefined) { report.userEmail = report.userEmail + ';' + doc.data().grievance }
+            return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return grieve(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Grieve - report / ${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -7201,7 +7201,7 @@ exports.poly = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().polygraph != undefined){ report.userEmail = report.userEmail + ';' + doc.data().polygraph }
+            if (doc.data().polygraph != undefined) { report.userEmail = report.userEmail + ';' + doc.data().polygraph }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return polyG(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7383,7 +7383,7 @@ exports.pay = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-          if (doc.data().payquery !== undefined){ report.userEmail = report.userEmail + ';' + doc.data().payquery }
+            if (doc.data().payquery !== undefined) { report.userEmail = report.userEmail + ';' + doc.data().payquery }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return payQ(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7595,7 +7595,7 @@ exports.injury = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().injury != undefined){ report.userEmail = report.userEmail + ';' + doc.data().injury }
+            if (doc.data().injury != undefined) { report.userEmail = report.userEmail + ';' + doc.data().injury }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return injuryR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7777,8 +7777,8 @@ exports.firerereport = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            
-            if (doc.data().fire != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fire }
+
+            if (doc.data().fire != undefined) { report.userEmail = report.userEmail + ';' + doc.data().fire }
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fireR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fire - report / ${report.key}.pdf`; // CHANGE name here
@@ -7964,7 +7964,7 @@ exports.explosion = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().gas != undefined){ report.userEmail = report.userEmail + ';' + doc.data().gas }
+            if (doc.data().gas != undefined) { report.userEmail = report.userEmail + ';' + doc.data().gas }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return explosionR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -8147,7 +8147,7 @@ exports.resignation = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().resignate != undefined){ report.userEmail = report.userEmail + ';' + doc.data().resignate }
+            if (doc.data().resignate != undefined) { report.userEmail = report.userEmail + ';' + doc.data().resignate }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return resignationF(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -8327,7 +8327,7 @@ exports.extinguisher = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().extinguisher != undefined){ report.userEmail = report.userEmail + ';' + doc.data().extinguisher }
+            if (doc.data().extinguisher != undefined) { report.userEmail = report.userEmail + ';' + doc.data().extinguisher }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return extinguisherR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -8489,8 +8489,8 @@ exports.theftForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().theft != undefined){ report.userEmail = report.userEmail + ';' + doc.data().theft }
- return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().theft != undefined) { report.userEmail = report.userEmail + ';' + doc.data().theft }
+            return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return theft(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Theft-form/${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -8913,3 +8913,58 @@ exports.validatePurchase = functions.https.onRequest((req, res) => {
             return res.send(msg);
         });
 })
+
+exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 05 * * *').timeZone('Africa/Johannesburg').onRun(() => {
+    return admin.firestore().collection('companies').where('subscribed', '==', true).get().then(comps => {
+        return comps.forEach(company => {
+            var nextDate = moment(company.data().subscriptionDate, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
+            var today = moment(new Date()).format('YYYY/MM/DD');
+            if (today === nextDate) {
+                console.log('Do check')
+                checkVerify(company.data()).then((msg) => {
+                    if (msg === 'Verified') {
+                        console.log('Still fine')
+                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: true, subscriptionDate: today })
+                    } else {
+                        console.log('Removed premium')
+                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: false, subscriptionDate: '', period: '' })
+                    }
+                })
+            } else {
+                console.log('No check needed')
+            }
+        })
+    })
+})
+
+function checkVerify(company) {
+    return new Promise((resolve, reject) => {
+        var transaction = company.transaction;
+        if (transaction) {
+            functions.logger.info(transaction);
+
+            var data = transaction;
+            var config = {
+                method: 'post',
+                url: 'https://validator.fovea.cc/v1/validate?appName=com.innovativethinking.adminforms&apiKey=561f8169-eec5-4a83-9f6a-556058eb3215',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+            axios(config)
+                .then(function (response) {
+                    if (response.data.ok === true) {
+                        msg = 'Verified';
+                    } else {
+                        console.log('Invalid')
+                        msg = 'Invalid';
+                    }
+                    resolve(msg);
+                })
+                .catch(function (error) {
+                    reject(error)
+                });
+        }
+    })
+}
