@@ -36,6 +36,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { ComponentsModule } from './components/components.module'
 import { pdfService2 } from './services/pdf-service2.service'
+import { NavParams } from '@ionic/angular';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -77,6 +79,7 @@ import { pdfService2 } from './services/pdf-service2.service'
     InAppBrowser,
     FirebaseX,
     pdfService2,
+    NavParams
   ],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]

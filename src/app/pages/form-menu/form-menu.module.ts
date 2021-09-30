@@ -7,23 +7,28 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { Form } from './form.page';
+import { FormMenuPage } from './form-menu.page';
+
 const routes: Routes = [
   {
     path: '',
-    component: Form
-  }
+    component: FormMenuPage
+  },
+  {
+    path: 'form',
+    loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule)
+  },
 ];
 
 @NgModule({
-  entryComponents: [PopoverComponent, Form],
+  entryComponents: [PopoverComponent, FormMenuPage],
   imports: [
     ComponentsModule,
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes)
   ],
-  declarations: [Form],
+  declarations: [FormMenuPage]
 })
-export class FormsPageModule { }
+export class FormMenuPageModule { }
