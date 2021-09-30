@@ -31,6 +31,11 @@ export class Form implements OnInit {
   ) {
   }
 
+  inn(event) {
+    console.log(event);
+
+  }
+
   ngOnInit() {
     this.storage.get('user').then((user) => {
       this.companyId = user.companyId;
@@ -70,9 +75,7 @@ export class Form implements OnInit {
         })
       }
     })
-    setTimeout(() => {
-      this.showForm = true;
-    }, 5000);
+    this.showForm = true;
   }
 
   download() {

@@ -14,7 +14,7 @@
         <div style="width: 60%;flex-direction: row;">
         </div>
         <div class="slide-btn">
-          <ion-button *ngIf="noOfSlides>=1 && slideIndex< noOfSlides " color="success" (click)="nextSlide()">Next
+          <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides " color="success" (click)="nextSlide()">Next
           </ion-button>
         </div>
 
@@ -49,7 +49,7 @@
             <p>Input required</p>
           </ion-text>
         </ion-item>
-        <ion-item *ngIf="input.controlType == 'camera'">
+        <ion-item *ngIf="input.controlType == 'camera'  && determineCondition(input.condition)" >
 
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <app-camera (imageString)="onImageEvent($event, input.fieldName)" *ngIf="!newFormObj[input.fieldName]">
@@ -58,7 +58,7 @@
             <img [src]="newFormObj[input.fieldName]">
           </ion-thumbnail>
         </ion-item>
-        <ion-item *ngIf="input.controlType == 'signaturePad'">
+        <ion-item *ngIf="input.controlType == 'signaturePad' && determineCondition(input.condition)">
 
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-button (click)="onSign(input.fieldName)" expand="block" fill="clear" shape="round"
@@ -69,7 +69,7 @@
             <img [src]="newFormObj[input.fieldName]">
           </ion-thumbnail>
         </ion-item>
-        <ion-item *ngIf="input.controlType == 'date'">
+        <ion-item *ngIf="input.controlType == 'date' && determineCondition(input.condition)">
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-datetime [readonly]="view" displayFormat="YYYY/MM/DD" [(ngModel)]="newFormObj[input.fieldName]"
             [formControlName]="lastIndex+ i"></ion-datetime>
@@ -78,7 +78,7 @@
           </ion-text>
         </ion-item>
 
-        <ion-item *ngIf="input.controlType == 'time'">
+        <ion-item *ngIf="input.controlType == 'time' && determineCondition(input.condition)">
 
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-datetime [readonly]="view" [formControlName]="lastIndex + i" displayFormat="HH:mm"
