@@ -34,7 +34,11 @@ import { ViewOrderPageModule } from './pages/view-order/view-order.module';
 import { CameraService } from './services/camera.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
-import { ComponentsModule } from './components/components.module'
+import { ComponentsModule } from './components/components.module';
+import { InAppPurchase2 } from '@ionic-native/in-app-purchase-2/ngx';
+import { PurchasesService } from './services/purchases.service';
+import { HTTP } from '@ionic-native/http/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -75,6 +79,9 @@ import { ComponentsModule } from './components/components.module'
     Geolocation,
     InAppBrowser,
     FirebaseX,
+    InAppPurchase2,
+    PurchasesService,
+    HTTP,
   ],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]

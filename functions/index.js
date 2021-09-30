@@ -8883,3 +8883,33 @@ exports.SalesMsgRead = functions.https.onRequest((req, res) => {
         return res.send(msg);
     })
 })
+
+exports.validatePurchase = functions.https.onRequest((req, res) => {
+    functions.logger.info('1: ', req.body);
+    var info = JSON.parse(req.body);
+    functions.logger.info('2: ', info);
+    var data = JSON.parse(req.body);
+    var config = {
+        method: 'post',
+        url: 'https://validator.fovea.cc/v1/validate?appName=com.innovativethinking.adminforms&apiKey=561f8169-eec5-4a83-9f6a-556058eb3215',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: data
+    };
+    axios(config)
+        .then(function (response) {
+            functions.logger.info('Resp: ', response);
+            if (response.data.ok === true) {
+                msg = JSON.stringify('Verified');
+            } else {
+                msg = JSON.stringify('Invalid');
+            }
+            return res.send(msg);
+        })
+        .catch(function (error) {
+            functions.logger.info('Error: ', error);
+            msg = JSON.stringify('error');
+            return res.send(msg);
+        });
+})

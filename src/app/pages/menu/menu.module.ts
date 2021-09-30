@@ -165,6 +165,10 @@ const routes: Routes = [
         path: 'chat-sales',
         loadChildren: () => import('../chat-sales/chat-sales.module').then( m => m.ChatSalesPageModule)
       },
+      {
+        path: 'memberships',
+        loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
+      },
     
     
     ]
