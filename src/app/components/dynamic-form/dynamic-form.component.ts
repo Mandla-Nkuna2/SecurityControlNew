@@ -223,15 +223,11 @@ export class DynamicFormComponent implements OnInit {
   }
 
   nextSlide() {
-    console.log(this.lastIndex)
-    console.log(this.dynamicInputs.length)
     this.lastIndex = this.lastIndex + (this.dynamicInputs.length)
     this.slideIndex = this.slideIndex + 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
-
   }
   prevSlide() {
-
     this.slideIndex = this.slideIndex - 1;
     this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
@@ -243,7 +239,6 @@ export class DynamicFormComponent implements OnInit {
     if (!this.isValid()) {
       return;
     }
-    console.log(this.newFormObj)
     this.dynamicInputs.forEach((input, index) => {
       if (input.controlType !== "camera" && input.controlType !== "signaturePad") {
         this.newFormObj = { ...this.newFormObj, ...{ [`${input.fieldName}`]: this.dynamicForm.value.inputs[index] } }
@@ -259,7 +254,6 @@ export class DynamicFormComponent implements OnInit {
   isValid(): boolean {
     if (this.dynamicForm.invalid) {
 
-      console.log(this.dynamicForm.errors)
       this.uiService.showToaster("Fill in all fields!", "danger", 2000, "bottom")
       return false;
     }
@@ -278,7 +272,7 @@ export class DynamicFormComponent implements OnInit {
     return true;
   }
   downloadPdf() {
-    this.pdfService.downloadPdf(this.allInputs, this.newFormObj);
+    this.pdfService.downloadPdf(this.formTitle, this.allInputs, this.newFormObj);
   }
 
 }

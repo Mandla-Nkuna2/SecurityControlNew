@@ -36,8 +36,6 @@ export class Form implements OnInit {
       this.companyId = user.companyId;
       this.user = user;
       this.userKey = user.key
-
-
       this.afs.collection(`users/${user.key}/sites`).ref.get().then((sites) => {
         sites.forEach((site: any) => {
           if (site.data().name && site.data().name !== '') {
@@ -70,9 +68,8 @@ export class Form implements OnInit {
         })
       }
     })
-    setTimeout(() => {
-      this.showForm = true;
-    }, 5000);
+    this.showForm = true;
+
   }
 
   download() {

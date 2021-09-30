@@ -3,7 +3,6 @@
     <ion-card-header>
       <ion-card-title style="text-align: center;">
         <h1>{{ formTitle }}</h1>
-        <ion-button (click)="downloadPdf()"> test download</ion-button>
 
         <ion-button (click)="onExit()" fill="clear">
           <ion-icon slot="icon-only" name="close-outline"></ion-icon>
@@ -19,6 +18,10 @@
           <ion-button *ngIf="noOfSlides>=1 && slideIndex< noOfSlides " color="success" (click)="nextSlide()">Next
           </ion-button>
         </div>
+        <ion-button (click)="downloadPdf()" fill="clear"
+          *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
 
       </div>
     </ion-card-header>
@@ -56,9 +59,21 @@
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <app-camera (imageString)="onImageEvent($event, input.fieldName)" *ngIf="!newFormObj[input.fieldName]">
           </app-camera>
-          <ion-thumbnail *ngIf="newFormObj[input.fieldName]">
-            <img [src]="newFormObj[input.fieldName]">
-          </ion-thumbnail>
+          <ion-row *ngIf="newFormObj[input.fieldName]">
+            <ion-col>
+              <ion-thumbnail>
+                <img [src]="newFormObj[input.fieldName]">
+              </ion-thumbnail>
+            </ion-col>
+            <ion-col>
+              <ion-button (click)="newFormObj[input.fieldName] = undefined" fill="clear">
+                <ion-icon name="trash-bin-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+
+
         </ion-item>
         <ion-item *ngIf="input.controlType == 'signaturePad'">
 
