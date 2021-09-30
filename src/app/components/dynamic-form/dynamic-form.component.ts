@@ -1,3 +1,4 @@
+import { DynamicFormErrorHandlerService } from './../../services/dynamic-form-error-handler.service';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UiService } from './../../services/ui.service';
@@ -38,6 +39,7 @@ export class DynamicFormComponent implements OnInit {
     private formService: FormServiceService,
     private storage: Storage,
     private navController: NavController,
+    private errorHandlingService: DynamicFormErrorHandlerService,
     private pdfService: pdfService2
 
   ) {
@@ -45,6 +47,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.errorHandlingService.validateInputs(this.dynamicInputs);
     this.formArray = this.formBuilder.array([]);
     this.dynamicForm = new FormGroup({
       inputs: this.formArray
@@ -107,7 +110,7 @@ export class DynamicFormComponent implements OnInit {
 
   createInputs() {
     this.allInputs.forEach((input) => {
-      if (input.controlType == 'select' && input.items) {
+      if (input.controlType == 'select') {
         if (input.required) {
           this.formArray.push(this.formBuilder.control('', Validators.required))
         }

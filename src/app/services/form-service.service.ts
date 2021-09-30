@@ -11,8 +11,8 @@ import { PdfService } from './pdf.service';
 export class FormServiceService {
   visit: DynamicInput[] = [
     {
-      label: 'manager',
-      fieldName: 'manager',
+      label: "car",
+      fieldName: "car",
       required: true,
       controlType: "normal",
       items: [],
@@ -192,48 +192,17 @@ export class FormServiceService {
       itemIsObject: false,
     },
     {
-      label: 'Risk Detected During Site Visit?',
-      fieldName: 'risk',
+      label: "color",
+      fieldName: "color",
       required: true,
-      controlType: "normal",
-      items: ["Yes", "No"],
-      value: '',
-      hidden: false,
-      link: '',
-      itemsDisplayVal: '',
-      itemsSaveVal: '',
-      itemIsObject: false,
+      controlType: 'select',
+      hidden: false
     },
     {
-      label: 'Are all parking lights working? ',
-      fieldName: 'parking',
+      label: "car type",
+      fieldName: "type",
       required: true,
-      controlType: "select",
-      items: ["Yes", "No", "Not Applicable"],
-      value: '',
-      hidden: false,
-      link: '',
-      itemsDisplayVal: '',
-      itemsSaveVal: '',
-      itemIsObject: false,
-      onNewSlide: true
-    }, {
-      label: 'Comments ',
-      fieldName: 'com1',
-      required: false,
-      controlType: "normal",
-      items: ["Yes", "No", "Not Applicable"],
-      value: '',
-      hidden: false,
-      condition: "$parking == 'Yes' "
-
-    }, {
-      label: 'Duty Roster on Site?',
-      fieldName: 'dutyRost',
-      required: true,
-      controlType: "select",
-      items: ["Yes", "No", "Not Applicable"],
-      value: '',
+      controlType: 'normal',
       hidden: false
     }, {
       label: 'Comments ',
