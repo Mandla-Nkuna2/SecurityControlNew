@@ -84,6 +84,19 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('SAST').
     }).catch((onError)=>functions.logger.error(onError))
 })
 
+exports.startTrial = functions.https.onRequest((request, response)=>{
+    let body = JSON.parse(request.body);
+    return admin.firestore().collection('trials').doc(body.key).set({ 
+        companyKey : body.key, 
+        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss")
+    }).then((value)=>{
+        response.status(200).send(value);
+    }).catch((onError)=>{
+        functions.logger.error(onError)
+        response.sendStatus(500)
+    })
+})
+
 exports.transactionWebhook = functions.https.onRequest((request, response) => {
     let paymentEvent = request.body;
     return admin.firestore().collection('paymentEvents').add(paymentEvent).then(() => {
