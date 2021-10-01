@@ -88,7 +88,8 @@ exports.startTrial = functions.https.onRequest((request, response)=>{
     let body = JSON.parse(request.body);
     return admin.firestore().collection('trials').doc(body.key).set({ 
         companyKey : body.key, 
-        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss")
+        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+        chosenTier: body.tier
     }).then((value)=>{
         response.status(200).send(value);
     }).catch((onError)=>{
