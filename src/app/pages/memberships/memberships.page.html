@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Memberships</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-row *ngIf="products !== []">
+    <ion-col *ngFor="let prod of products">
+      <div class="products">
+        <h3>{{prod.title}}</h3>
+        <h6>{{prod.description}}</h6>
+        <h6>{{prod.price}}</h6>
+        <ion-button (click)="buy(prod)" class='buy-button'>
+          Buy Now
+        </ion-button>
+        <ion-button (click)="verify(prod)" class='buy-button'>
+          Verify
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>
