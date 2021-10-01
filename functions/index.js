@@ -22,7 +22,7 @@ const FUNCTIONS_REDIRECT = 'https://us-central1-security-control-app.cloudfuncti
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const auth = new googleAuth();
 const functionsOauthClient = new auth.OAuth2(CONFIG_CLIENT_ID, CONFIG_CLIENT_SECRET, FUNCTIONS_REDIRECT);
-const PAYSTACK_BEARER_TOKEN = ''
+const PAYSTACK_SECRET_KEY = functions.config().paystack.secret;
 let oauthTokens = null;
 
 const gmailEmail = 'support@securitycontrol.co.za';
@@ -66,7 +66,7 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 
 })
 
-exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('SAST').onRun((context)=>{
+exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context)=>{
     return admin.firestore().collection('trials').get().then((onFulfilled)=>{
         if(!onFulfilled.empty){
             onFulfilled.docs.forEach((doc)=>{
@@ -88,7 +88,8 @@ exports.startTrial = functions.https.onRequest((request, response)=>{
     let body = JSON.parse(request.body);
     return admin.firestore().collection('trials').doc(body.key).set({ 
         companyKey : body.key, 
-        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss")
+        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+        chosenTier: body.tier
     }).then((value)=>{
         response.status(200).send(value);
     }).catch((onError)=>{
@@ -111,7 +112,7 @@ exports.transactionWebhook = functions.https.onRequest((request, response) => {
 exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
     axios.post(`${host}/transaction/charge_authorization`, chargeObject.body, {
         headers: {
-            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
         }
     }).then(res => {
         response.sendStatus(200);
@@ -129,7 +130,7 @@ exports.initializePayment = functions.runWith(runtimeOpts).runWith(runtimeOpts).
         split_code: request.body.split_code //split_code used for group splits, subaccount is used for a single split
     }, {
         headers: {
-            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
         }
     }).then(res => {
         response.send(res.data);
@@ -149,7 +150,7 @@ exports.createPlan = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.o
         currency: 'ZAR'
     }, {
         headers: {
-            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
         }
     }).then(res => {
         response.send(res.data);
@@ -167,7 +168,7 @@ exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((req
         start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
     } ,{
         headers: {
-            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
         }
     }).then(res => {
         functions.logger.debug(res);
@@ -182,7 +183,7 @@ exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((requ
     let transactionRef = request.body.transactionRef;
     axios.get(`${host}/transaction/verify/${transactionRef}`, {
         headers: {
-            'Authorization': `Bearer ${PAYSTACK_BEARER_TOKEN}`
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
         }
     }).then(res => {
         functions.logger.debug(res);
