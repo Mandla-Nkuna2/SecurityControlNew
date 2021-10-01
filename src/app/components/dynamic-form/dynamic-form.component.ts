@@ -1,3 +1,4 @@
+import { DynamicFormErrorHandlerService } from './../../services/dynamic-form-error-handler.service';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UiService } from './../../services/ui.service';
@@ -6,6 +7,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { DynamicInput } from 'src/app/models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service'
 import { pdfService2 } from 'src/app/services/pdf-service2.service';
+
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
@@ -38,6 +40,7 @@ export class DynamicFormComponent implements OnInit {
     private formService: FormServiceService,
     private storage: Storage,
     private navController: NavController,
+    private errorHandlingService: DynamicFormErrorHandlerService,
     private pdfService: pdfService2
 
   ) {
@@ -45,6 +48,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.errorHandlingService.validateInputs(this.dynamicInputs);
     this.formArray = this.formBuilder.array([]);
     this.dynamicForm = new FormGroup({
       inputs: this.formArray
@@ -107,7 +111,7 @@ export class DynamicFormComponent implements OnInit {
 
   createInputs() {
     this.allInputs.forEach((input) => {
-      if (input.controlType == 'select' && input.items) {
+      if (input.controlType == 'select') {
         if (input.required) {
           this.formArray.push(this.formBuilder.control('', Validators.required))
         }
@@ -233,7 +237,7 @@ export class DynamicFormComponent implements OnInit {
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
 
 
-  }
+   }
 
   onSubmit() {
     if (!this.isValid()) {

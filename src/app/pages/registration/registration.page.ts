@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 
 export class RegistrationPage implements OnInit {
 
-  user = { key: '', name: '', companyId: '', email: '', password: '', passwordConfirm: '' };
+  user = { key: '', name: '', companyId: '', email: '', password: '', passwordConfirm: '', companyName: '' };
   nameValue: boolean = true;
   orgValue: boolean = true;
   emailValue: boolean = true;
