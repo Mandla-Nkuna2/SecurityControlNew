@@ -158,73 +158,73 @@ export class DynamicFormComponent implements OnInit {
 
   }
 
-  // hasErrors(index) {
-  //   return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(`${index}`).touched;
-  // }
+  hasErrors(index) {
+    return this.dynamicForm.controls.inputs.get(`${index}`).errors && this.dynamicForm.controls.inputs.get(`${index}`).touched;
+  }
 
-  // determineCondition(condition: string) {
-  //   if (!condition) {
-  //     return true;
-  //   }
-  //   else {
-  //     if (condition.indexOf('$') > -1) {
-  //       condition = condition.replace('$', 'this.newFormObj.');
-  //     }
-  //     return eval(condition);
-  //   }
-  // }
+  determineCondition(condition: string) {
+    if (!condition) {
+      return true;
+    }
+    else {
+      if (condition.indexOf('$') > -1) {
+        condition = condition.replace('$', 'this.newFormObj.');
+      }
+      return eval(condition);
+    }
+  }
 
-  // async populateQuestionItems(params: any) {
-  //   if (!params) {
-  //     return
-  //   }
-  //   if (params.collectionFilterName && params.collectionFilterValue) {
-  //     let searchValue: string = params.collectionFilterValue;
-  //     if (params.collectionFilterValue.indexOf('$') >= 0) {
-  //       searchValue = this.newFormObj[params.collectionFilterValue.replace('$', '')];
-  //     }
-  //     this.formService.getCollectionByFilter(params.collectionPath, params.collectionFilterName, searchValue).then((items: any[]) => {
-  //       let value: string = params.questionKeyValue;
-  //       if (params.questionKeyValue.indexOf('$') >= 0) {
-  //         value = this.newFormObj[params.questionKeyValue.replace('$', '')];
-  //       }
-  //       this.dynamicInputs.filter(x => x[params.questionKeyName] == value)[0].items = items;
-  //     })
-  //   }
-  //   else {
-  //     this.formService.getCollection(params.collectionPath).then((items: any[]) => {
-  //       let value: string = params.questionKeyValue;
-  //       if (params.questionKeyValue.indexOf('$') >= 0) {
-  //         value = this.newFormObj[params.questionKeyValue.replace('$', '')];
-  //       }
-  //       this.dynamicInputs.filter(x => x[params.questionKeyName] == value)[0].items = items;
-  //     })
-  //   }
-  // }
+  async populateQuestionItems(params: any) {
+    if (!params) {
+      return
+    }
+    if (params.collectionFilterName && params.collectionFilterValue) {
+      let searchValue: string = params.collectionFilterValue;
+      if (params.collectionFilterValue.indexOf('$') >= 0) {
+        searchValue = this.newFormObj[params.collectionFilterValue.replace('$', '')];
+      }
+      this.formService.getCollectionByFilter(params.collectionPath, params.collectionFilterName, searchValue).then((items: any[]) => {
+        let value: string = params.questionKeyValue;
+        if (params.questionKeyValue.indexOf('$') >= 0) {
+          value = this.newFormObj[params.questionKeyValue.replace('$', '')];
+        }
+        this.dynamicInputs.filter(x => x[params.questionKeyName] == value)[0].items = items;
+      })
+    }
+    else {
+      this.formService.getCollection(params.collectionPath).then((items: any[]) => {
+        let value: string = params.questionKeyValue;
+        if (params.questionKeyValue.indexOf('$') >= 0) {
+          value = this.newFormObj[params.questionKeyValue.replace('$', '')];
+        }
+        this.dynamicInputs.filter(x => x[params.questionKeyName] == value)[0].items = items;
+      })
+    }
+  }
 
-  // async onSign(fieldName: string) {
-  //   this.uiService.openSignaturePopover(fieldName).then(() => {
-  //     this.uiService.getPopoverDismissal().then((items: any) => {
-  //       this.signature = items.data;
-  //       this.newFormObj = { ...this.newFormObj, ... this.signature }
-  //       if (this.signitureArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0).length > 0) {
-  //         this.signitureArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0)[0][fieldName] = 'added';
-  //       }
-  //     })
-  //   })
-  // }
+  async onSign(fieldName: string) {
+    this.uiService.openSignaturePopover(fieldName).then(() => {
+      this.uiService.getPopoverDismissal().then((items: any) => {
+        this.signature = items.data;
+        this.newFormObj = { ...this.newFormObj, ... this.signature }
+        if (this.signitureArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0).length > 0) {
+          this.signitureArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0)[0][fieldName] = 'added';
+        }
+      })
+    })
+  }
 
-  // onImageEvent(event, fieldName) {
-  //   let exists = false;
+  onImageEvent(event, fieldName) {
+    let exists = false;
 
-  //   if (!exists) {
-  //     this.newFormObj[fieldName] = event
-  //     if (this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0).length > 0) {
-  //       this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0)[0][fieldName] = 'added';
+    if (!exists) {
+      this.newFormObj[fieldName] = event
+      if (this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0).length > 0) {
+        this.imagesArray.filter(x => Object.keys(x).indexOf(fieldName) >= 0)[0][fieldName] = 'added';
 
-  //     }
-  //   }
-  // }
+      }
+    }
+  }
 
   nextSlide() {
     this.lastIndex = this.lastIndex + (this.dynamicInputs.length)
