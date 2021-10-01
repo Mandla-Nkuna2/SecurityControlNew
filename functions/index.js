@@ -66,6 +66,37 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 
 })
 
+exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('SAST').onRun((context)=>{
+    return admin.firestore().collection('trials').get().then((onFulfilled)=>{
+        if(!onFulfilled.empty){
+            onFulfilled.docs.forEach((doc)=>{
+                if(doc.data().trialStartDate){
+                    if(moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14){
+                        return admin.firestore().collection('trials').doc(doc.id).update({
+                            trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss") //document will be saved by company key, companies will listen to their documents on frontend.
+                        }).then(()=>{
+                            functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
+                        }).catch((onError)=>functions.logger.error(onError))
+                    }
+                }
+            })
+        }
+    }).catch((onError)=>functions.logger.error(onError))
+})
+
+exports.startTrial = functions.https.onRequest((request, response)=>{
+    let body = JSON.parse(request.body);
+    return admin.firestore().collection('trials').doc(body.key).set({ 
+        companyKey : body.key, 
+        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss")
+    }).then((value)=>{
+        response.status(200).send(value);
+    }).catch((onError)=>{
+        functions.logger.error(onError)
+        response.sendStatus(500)
+    })
+})
+
 exports.transactionWebhook = functions.https.onRequest((request, response) => {
     let paymentEvent = request.body;
     return admin.firestore().collection('paymentEvents').add(paymentEvent).then(() => {

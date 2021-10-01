@@ -1,5 +1,5 @@
 import { CameraComponent } from './camera/camera.component';
-import {NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { PopoverComponent } from './popover/popover.component';
@@ -17,7 +17,6 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     CommonModule,
     SignaturePadModule,
     ReactiveFormsModule,
-    SignaturePadModule,
     ImageCropperModule,
   ],
   entryComponents: [PopoverComponent]

@@ -28,7 +28,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -101,7 +101,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -140,7 +140,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -203,7 +203,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
