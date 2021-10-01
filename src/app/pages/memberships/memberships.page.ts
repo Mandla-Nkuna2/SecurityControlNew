@@ -51,6 +51,7 @@ export class MembershipsPage implements OnInit {
       this.storage.get('user').then(user => {
         var newUser = user;
         var newObj: any = {};
+        
         newObj = transaction;
         newObj.deferred = 'undefined';
         newObj.transaction.developerPayload = 'undefined'
@@ -79,6 +80,7 @@ export class MembershipsPage implements OnInit {
 
   verify(prod) {
     this.purchaseService.verify(prod);
+
   }
 
 }

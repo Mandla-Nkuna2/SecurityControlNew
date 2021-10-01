@@ -3,6 +3,7 @@ import { InAppPurchase2, IAPProduct } from '@ionic-native/in-app-purchase-2/ngx'
 import { AlertController, Platform } from '@ionic/angular';
 import { HTTP } from '@ionic-native/http/ngx';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class PurchasesService {
   trans;
 
   constructor(private store: InAppPurchase2, private platform: Platform, private alertCtrl: AlertController,
-    private http: HTTP, private afs: AngularFirestore) {
+    private http: HTTP, private afs: AngularFirestore, private functions: AngularFireFunctions) {
     this.transaction = new EventEmitter()
   }
 
@@ -58,7 +59,8 @@ export class PurchasesService {
     this.store.when(productId)
       .approved((p: IAPProduct) => {
         this.verify(p).then((data) => {
-          if (data === 'Done') {
+          console.log('Data: ', data)
+          if (data === 'complete') {
             p.finish();
             this.transaction.emit(p);
           }
@@ -86,8 +88,55 @@ export class PurchasesService {
 
   verify(p) {
     return new Promise<any>((resolve, reject) => {
+      console.log(p)
 
-      // var newObj: any = {};
+      const callable = this.functions.httpsCallable('validatePurchase');
+      const obs = callable(p);
+      obs.subscribe(async res => {
+        console.log('Resp: ' , res);
+        if (res.verified == true) {
+          resolve('complete')
+        }
+        else {
+          reject(res.error);
+        }
+      });
+
+      // this.http.post('https://us-central1-security-control-app.cloudfunctions.net/validatePurchase', {}, {}).then((res) => {
+      //   if (res.status == 200) {
+      //     resolve('complete')
+      //   }
+      //   else {
+      //     reject(res.error);
+      //   }
+      // }).catch((error) => {
+      //   reject(error);
+      // })
+    })
+  }
+
+  async alertMsg(item) {
+    const alert = await this.alertCtrl.create({
+      header: `${item}`,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel',
+          handler: () => {
+          }
+        }
+      ],
+    })
+    return alert.present();
+  }
+
+  async buy(prod) {
+    let product = this.store.get(prod.id);
+    let order = await this.store.order(prod.id);
+  }
+}
+
+// var newObj: any = {};
       // console.log('Trans: ', p)
       // newObj = p;
       // newObj.deferred = 'undefined';
@@ -137,47 +186,3 @@ export class PurchasesService {
       //   type: "paid subscription",
       //   valid: true
       // };
-
-      var trans = {
-        name: 'test'
-      }
-
-      this.http.sendRequest('https://us-central1-security-control-app.cloudfunctions.net/validatePurchase', {
-        method: 'post',
-        data: trans,
-        headers: { Authorization: 'none' },
-        timeout: 5000
-      }
-      ).then((res) => {
-        if (res.status == 200) {
-          resolve('complete')
-        }
-        else {
-          reject(res.error);
-        }
-      }).catch((error) => {
-        reject(error);
-      })
-    })
-  }
-
-  async alertMsg(item) {
-    const alert = await this.alertCtrl.create({
-      header: `${item}`,
-      buttons: [
-        {
-          text: 'OK',
-          role: 'cancel',
-          handler: () => {
-          }
-        }
-      ],
-    })
-    return alert.present();
-  }
-
-  async buy(prod) {
-    let product = this.store.get(prod.id);
-    let order = await this.store.order(prod.id);
-  }
-}
