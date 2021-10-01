@@ -4,7 +4,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DynamicInput } from '../../models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service';
-import { NavController, NavParams } from '@ionic/angular';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 @Component({
   selector: 'app-form',
@@ -33,7 +32,6 @@ export class Form implements OnInit {
     private formsService: FormServiceService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private navParams: NavParams
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -89,6 +87,9 @@ export class Form implements OnInit {
         this.loading.dismiss();
       });
     });
+  }
+  saveForm() {
+
   }
 
   async open(doc) {

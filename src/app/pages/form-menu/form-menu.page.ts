@@ -55,7 +55,6 @@ export class FormMenuPage implements OnInit {
     { name: ' TRANSPARENCY REPORT', icon: 'home' },
     { name: ' WORK ORDER ACKNOWLEDGEMENT', icon: 'clipboard' },
     { name: ' ACKNOWLEDGEMENT OF DEBT', icon: 'card' }
-
   ]
 
   constructor(
