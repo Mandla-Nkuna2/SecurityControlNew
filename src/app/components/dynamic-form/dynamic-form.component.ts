@@ -7,6 +7,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { DynamicInput } from 'src/app/models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service'
 import { pdfService2 } from 'src/app/services/pdf-service2.service';
+
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
@@ -236,7 +237,7 @@ export class DynamicFormComponent implements OnInit {
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
 
 
-  }
+   }
 
   onSubmit() {
     if (!this.isValid()) {

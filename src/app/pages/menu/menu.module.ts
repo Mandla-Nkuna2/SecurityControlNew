@@ -173,7 +173,10 @@ const routes: Routes = [
         path: 'form-upload',
         loadChildren: () => import('../form-upload/form-upload.module').then( m => m.FormUploadPageModule)
       },
-
+      {
+        path: 'memberships',
+        loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
+      },
     ]
   },
   {

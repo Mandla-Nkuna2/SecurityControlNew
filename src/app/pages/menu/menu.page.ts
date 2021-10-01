@@ -241,6 +241,11 @@ export class MenuPage implements OnInit {
       url: '/chat-sales',
       icon: 'pie-chart'
     },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships',
+      icon: 'pie-chart'
+    },
   ];
 
   selectedPath = '';
