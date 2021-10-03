@@ -8925,6 +8925,23 @@ exports.SalesMsgRead = functions.https.onRequest((req, res) => {
     })
 })
 
+exports.newFormNotification = functions.firestore
+    .document(`/newForms/{uid}`)
+    .onCreate((snap) => {
+        const form = snap.data();
+        const mailOptions = {
+            from: '"Security Control" <system@securitycontrol.co.za>',
+            to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
+            subject: 'SC: New Form Uploaded',
+            text: `Good Day,\n\nAn Enterprise client has uploaded a new form.\n\nKindly,\nSecurity Control Team`,
+        };
+        return mailTransport.sendMail(mailOptions)
+            .then(() => console.log(`Sent`))
+            .catch(function (error) {
+                return console.error("Failed!" + error);
+            })
+    });
+
 exports.validatePurchase = functions.https.onCall((data, context) => {
     var config = {
         method: 'post',

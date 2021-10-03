@@ -170,6 +170,10 @@ const routes: Routes = [
         loadChildren: () => import('../chat-sales/chat-sales.module').then(m => m.ChatSalesPageModule)
       },
       {
+        path: 'form-upload',
+        loadChildren: () => import('../form-upload/form-upload.module').then( m => m.FormUploadPageModule)
+      },
+      {
         path: 'memberships',
         loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
       },

@@ -184,6 +184,11 @@ export class MenuPage implements OnInit {
       icon: 'pie-chart'
     },
     {
+      title: 'FORM UPLOAD',
+      url: '/form-upload',
+      icon: 'pie-chart'
+    },
+    {
       title: 'SUPPORT CHAT',
       url: '/chat',
       icon: 'pie-chart'
