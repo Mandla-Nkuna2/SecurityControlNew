@@ -1,3 +1,4 @@
+import { MembershipService } from './../../services/membership.service';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -33,7 +34,8 @@ export class Form implements OnInit {
     private formsService: FormServiceService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private membershipService: MembershipService
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -81,6 +83,13 @@ export class Form implements OnInit {
     })
     this.showForm = true;
 
+  }
+
+  onChooseMembership(){
+    console.log("FIREDs")
+    this.membershipService.getMainCardAuth(this.userKey).then((response)=>{
+      console.log(response)
+    })
   }
 
   download() {

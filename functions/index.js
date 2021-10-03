@@ -14,6 +14,7 @@ admin.initializeApp();
 var moment = require('moment');
 const db = admin.database();
 const axios = require('axios');
+const cors = require('cors')({origin: true});
 
 const CONFIG_CLIENT_ID = '748137076693-2kb6mbas64tjv6vpogsk6t6tiuoo598b.apps.googleusercontent.com';
 const CONFIG_CLIENT_SECRET = '27Hx3xP5cQWkiyIuMT54Rp0V';
@@ -85,16 +86,40 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
 })
 
 exports.startTrial = functions.https.onRequest((request, response)=>{
-    let body = JSON.parse(request.body);
-    return admin.firestore().collection('trials').doc(body.key).set({ 
-        companyKey : body.key, 
-        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-        chosenTier: body.tier
-    }).then((value)=>{
-        response.status(200).send(value);
-    }).catch((onError)=>{
-        functions.logger.error(onError)
-        response.sendStatus(500)
+    return cors(request, response, ()=>{
+        let body = JSON.parse(request.body);
+        return admin.firestore().collection('trials').doc(body.key).set({
+            companyKey: body.key,
+            trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+            chosenTier: body.tier
+        }).then((value) => {
+            response.status(200).send(value);
+        }).catch((onError) => {
+            functions.logger.error(onError)
+            response.sendStatus(500)
+        })
+    })
+    
+})
+
+exports.startSubscription = functions.https.onRequest((request, response) => {
+
+})
+
+exports.getMainCardAuth = functions.https.onRequest((request, response)=>{
+    return cors(request, response, ()=>{
+        let body = JSON.parse(request.body);
+        return admin.firestore().collection('users').doc(body.key).collection('cardAuths').where("isMain", '==', true).get().then((onFulfilled)=>{
+            if(onFulfilled.empty){
+                response.status(200).send(null)
+            }
+            else{
+                response.status(200).send(onFulfilled.docs[0])
+            }
+        }).catch(onError=>{
+            functions.logger.error(onError)
+            response.sendStatus(500)
+        })
     })
 })
 
@@ -108,6 +133,8 @@ exports.transactionWebhook = functions.https.onRequest((request, response) => {
         response.sendStatus(500);
     })
 });
+
+
 
 exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
     axios.post(`${host}/transaction/charge_authorization`, chargeObject.body, {
@@ -140,32 +167,14 @@ exports.initializePayment = functions.runWith(runtimeOpts).runWith(runtimeOpts).
     });
 });
 
-exports.createPlan = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.onRequest((request, response) => {
-    axios.post(`${host}/plan`, {
-        name: "Standard Subscription",
-        amount: 50000,
-        interval: 'monthly',
-        description: 'Standard security control subscription',
-        send_invoices: true, //most probably will send by email
-        currency: 'ZAR'
-    }, {
-        headers: {
-            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-        }
-    }).then(res => {
-        response.send(res.data);
-    }).catch(error => {
-        console.log(error);
-        response.send(error);
-    });
-});
 
-exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+exports.startSubscription = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    let body = JSON.parse(request.body);
     axios.get(`${host}/subscription`, {
-        customer: 'user@user.com', //or customer code
-        plan: 'asdasd', //plan codes
-        authorization: 'ajhklasdf', //auth code, or most recent auth if not specified
-        start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
+        customer: body.customerCode, //or customer code
+        plan: body.planCode, //plan codes
+        authorization: body.authCode, //auth code, or most recent auth if not specified
+        start_date: body.startDate //NB in this format ISO 8601
     }, {
         headers: {
             'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`

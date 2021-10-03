@@ -13,8 +13,36 @@
 </ion-header>
 
 <ion-content>
-  <app-dynamic-form *ngIf="showForm" [dynamicInputs]="inputs" [formTitle]="formName" [staticFields]="staticFields">
-  </app-dynamic-form>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Standard</ion-label>
+          <ion-button (click)="onClick()" size="medium" fill="clear" shape="round">
+            Standard
+          </ion-button>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Pro</ion-label>
+          <ion-button (click)="onClick()" size="medium" fill="clear" shape="round">
+            Pro
+          </ion-button>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label>Enterprise</ion-label>
+          <ion-button (click)="onChooseMembership()" size="medium" fill="clear" shape="round">
+            Enterprise
+          </ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <app-dynamic-form *ngIf="showForm" [dynamicInputs]="inputs" [formTitle]="formName" [staticFields]="staticFields">
+  </app-dynamic-form> -->
 </ion-content>
 <!--
   *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'"
