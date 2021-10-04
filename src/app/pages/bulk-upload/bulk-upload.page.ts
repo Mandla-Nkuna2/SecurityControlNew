@@ -1,10 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { AlertController, Platform } from '@ionic/angular';
 import { retry } from 'rxjs/operators';
-import { AlertController } from '@ionic/angular';
-import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
@@ -12,6 +9,7 @@ import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { BulkUploadService } from 'src/app/services/bulk-upload.service';
 
 @Component({
   selector: 'app-bulk-upload',
@@ -32,7 +30,7 @@ export class BulkUploadPage implements OnInit {
   guardSite;
   access = false;
 
-  constructor(private BUService: BulkUploadService, private alertCtrl: AlertController, private storage: Storage,
+  constructor(private BUService: BulkUploadService, private alertCtrl: AlertController, private storage: Storage, private router: Router,
     private afs: AngularFirestore, private loading: LoadingService, private toast: ToastService, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {

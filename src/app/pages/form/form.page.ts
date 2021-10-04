@@ -5,6 +5,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { DynamicInput } from '../../models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 @Component({
   selector: 'app-form',
   templateUrl: './form.page.html',
@@ -32,6 +33,7 @@ export class Form implements OnInit {
     private formsService: FormServiceService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private analyticsService: AnalyticsService
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -89,14 +91,22 @@ export class Form implements OnInit {
       });
     });
   }
+
   saveForm(event) {
     this.loading.present('SAVING FORMS').then(() => {
       let form = event;
       this.formsService.saveForm(this.formName, this.user.key, this.user.companyId, form).then(() => {
+        this.addAnalytics();
         this.loading.dismiss();
       })
     })
+  }
 
+  addAnalytics() {
+    this.analyticsService.logAnalyticsEvent('select_content', {
+      content_type: 'ButtonClick',
+      item_id: `Completed ${this.formName}`,
+    });
   }
 
   async open(doc) {
