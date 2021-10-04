@@ -18,7 +18,12 @@ export class Form implements OnInit {
   userKey;
   user: any = {};
   doc;
+
+
   inputs: DynamicInput[] = [];
+
+
+
   rawInputes
   showForm = false;
   staticFields: any = {
@@ -56,8 +61,6 @@ export class Form implements OnInit {
           }
         });
         this.storage.set('sites', this.sites);
-        console.log('sites', this.sites);
-
       });
     });
     this.inputs.forEach((input: DynamicInput) => {
@@ -81,7 +84,6 @@ export class Form implements OnInit {
       }
     })
     this.showForm = true;
-
   }
 
   download() {
@@ -110,7 +112,7 @@ export class Form implements OnInit {
   }
 
   async open(doc) {
-    await window.open('https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/DISCIPLINARY%20CODE%20OF%20OFFENCES.docx?alt=media&token=5c722397-1e50-4212-bf0c-35bf0e7f4913')
+    await window.open('https:firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/DISCIPLINARY%20CODE%20OF%20OFFENCES.docx?alt=media&token=5c722397-1e50-4212-bf0c-35bf0e7f4913')
   }
 
 }
