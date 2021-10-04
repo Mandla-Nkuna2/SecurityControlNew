@@ -1,30 +1,22 @@
+<ion-header>
+  <ion-toolbar  mode="ios">
+    <ion-buttons slot="start">
+      <ion-button  *ngIf="noOfSlides>=1 && slideIndex>0" (click)="prevSlide()">Prev <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="exitButton" (click)="exit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ formTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides " (click)="nextSlide()">Next <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <ion-card>
-    <ion-card-header>
-      <ion-card-title style="text-align: center;">
-        <h1>{{ formTitle }}</h1>
-
-        <ion-button (click)="onExit()" fill="clear">
-          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-        </ion-button>
-      </ion-card-title>
-      <div style="width: 100%; display: flex;">
-        <div class="slide-btn">
-          <ion-button *ngIf="noOfSlides>=1 && slideIndex>0" color="danger" (click)="prevSlide()">Previous</ion-button>
-        </div>
-        <div style="width: 60%;flex-direction: row;">
-        </div>
-        <div class="slide-btn">
-          <ion-button *ngIf="noOfSlides>=1 && slideIndex< noOfSlides " color="success" (click)="nextSlide()">Next
-          </ion-button>
-        </div>
-        <ion-button (click)="downloadPdf()" fill="clear"
-          *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
-          <ion-icon name="download-outline"></ion-icon>
-        </ion-button>
-
-      </div>
-    </ion-card-header>
     <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" *ngIf="show">
       <div formArrayName="inputs" *ngFor="let input of dynamicInputs; let i =index">
         <ion-item *ngIf="input.controlType =='select' && determineCondition(input.condition)">
@@ -49,14 +41,12 @@
 
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-input [type]="input.inputType" [formControlName]="lastIndex+ i" [placeholder]="input.value"
-            [disabled]="input.disabled" [inputmode]="input.inputType" [(ngModel)]="newFormObj[input.fieldName]">
-          </ion-input>
+            [readonly]="input.disabled" [inputmode]="input.inputType" [(ngModel)]="newFormObj[input.fieldName]"></ion-input>
           <ion-text *ngIf="hasErrors(i)" color="danger">
             <p>Input required</p>
           </ion-text>
         </ion-item>
-        <ion-item *ngIf="input.controlType == 'camera' && determineCondition(input.condition)">
-
+        <ion-item *ngIf="input.controlType == 'camera'  && determineCondition(input.condition)" >
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <app-camera (imageString)="onImageEvent($event, input.fieldName)" *ngIf="!newFormObj[input.fieldName]">
           </app-camera>
@@ -92,10 +82,8 @@
             <p>Input required</p>
           </ion-text>
         </ion-item>
-
-        <ion-item *ngIf="input.controlType == 'time && determineCondition(input.condition)'">
-
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+       <ion-item *ngIf="input.controlType == 'time && determineCondition(input.condition)'">
+ <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-datetime [readonly]="input.disabled" [formControlName]="lastIndex + i" displayFormat="HH:mm"
             [(ngModel)]="newFormObj[input.fieldName]">
           </ion-datetime>
@@ -104,10 +92,17 @@
           </ion-text>
         </ion-item>
       </div>
-      <ion-button type="submit" expand="block" fill="clear" shape="round"
-        *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
-        Submit
-      </ion-button>
     </form>
   </ion-card>
 </ion-content>
+
+<ion-footer>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button type="submit" style="--background: green;" *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
+      Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
+
