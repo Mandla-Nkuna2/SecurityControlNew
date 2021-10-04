@@ -1,6 +1,22 @@
 <ion-content>
-  <h2>You no longer have access to this platform.
-    <br>
-    Please inform your administrator
-  </h2>
+  <div class="holder ion-text-center" *ngIf="owner">
+    <img src="assets/imgs/sick.svg" alt="">
+    <h1>You no longer have access to this platform.
+      <br>
+      Please inform your administrator</h1>
+  </div>
+
+  <div class="holder ion-text-center" *ngIf="!owner">
+    <img src="assets/imgs/sick.svg" alt="">
+    <h1>You no longer have access to this platform.
+      <br>
+      Please upgrade your subscription or delete your account</h1>
+
+      <ion-button (click)="delete()" style="width: 250px;">
+        Delete My Account
+      </ion-button>
+      <ion-button (click)="upgrade()" style="width: 250px;">
+       Upgrade My Subscription
+      </ion-button>
+  </div>
 </ion-content>

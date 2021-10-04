@@ -170,13 +170,14 @@ export class BulkUploadPage implements OnInit {
 
   async noAccessAlert() {
     var alert = await this.alertCtrl.create({
+      header: 'Invalid Request',
       message: 'You do not have access to this functionality. Please upgrade if you wish to access it. Or you can contact our sales team',
       buttons: [
         {
           text: 'CANCEL',
           handler: () => {
           }
-        },  
+        },
         {
           text: 'Talk To Sales',
           handler: () => {

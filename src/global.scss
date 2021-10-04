@@ -258,6 +258,10 @@ ion-footer {
 {
     background: #000000;
 
+    .alert-sub-title.sc-ion-alert-md {
+        color: white;
+    }
+
     .alert-radio-label.sc-ion-alert-md
     {
         color: #919191 !important;

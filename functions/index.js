@@ -66,33 +66,33 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 
 })
 
-exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context)=>{
-    return admin.firestore().collection('trials').get().then((onFulfilled)=>{
-        if(!onFulfilled.empty){
-            onFulfilled.docs.forEach((doc)=>{
-                if(doc.data().trialStartDate){
-                    if(moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14){
+exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context) => {
+    return admin.firestore().collection('trials').get().then((onFulfilled) => {
+        if (!onFulfilled.empty) {
+            onFulfilled.docs.forEach((doc) => {
+                if (doc.data().trialStartDate) {
+                    if (moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14) {
                         return admin.firestore().collection('trials').doc(doc.id).update({
                             trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss") //document will be saved by company key, companies will listen to their documents on frontend.
-                        }).then(()=>{
+                        }).then(() => {
                             functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
-                        }).catch((onError)=>functions.logger.error(onError))
+                        }).catch((onError) => functions.logger.error(onError))
                     }
                 }
             })
         }
-    }).catch((onError)=>functions.logger.error(onError))
+    }).catch((onError) => functions.logger.error(onError))
 })
 
-exports.startTrial = functions.https.onRequest((request, response)=>{
+exports.startTrial = functions.https.onRequest((request, response) => {
     let body = JSON.parse(request.body);
-    return admin.firestore().collection('trials').doc(body.key).set({ 
-        companyKey : body.key, 
+    return admin.firestore().collection('trials').doc(body.key).set({
+        companyKey: body.key,
         trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
         chosenTier: body.tier
-    }).then((value)=>{
+    }).then((value) => {
         response.status(200).send(value);
-    }).catch((onError)=>{
+    }).catch((onError) => {
         functions.logger.error(onError)
         response.sendStatus(500)
     })
@@ -8925,6 +8925,23 @@ exports.newFormNotification = functions.firestore
             to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
             subject: 'SC: New Form Uploaded',
             text: `Good Day,\n\nAn Enterprise client has uploaded a new form.\n\nKindly,\nSecurity Control Team`,
+        };
+        return mailTransport.sendMail(mailOptions)
+            .then(() => console.log(`Sent`))
+            .catch(function (error) {
+                return console.error("Failed!" + error);
+            })
+    });
+
+exports.deleteAccountNotification = functions.firestore
+    .document(`/deleteRequests/{uid}`)
+    .onCreate((snap) => {
+        const form = snap.data();
+        const mailOptions = {
+            from: '"Security Control" <system@securitycontrol.co.za>',
+            to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
+            subject: 'SC: Delete Account Request',
+            text: `Good Day,\n\nA user has submitted a request to delete their account\n\nUser Key: ${form.user.key}\nUser Name: ${form.user.name}\nCompany Key: ${form.user.companyId}\nCompany Name: ${form.user.company}\n\nKindly,\nSecurity Control Team`,
         };
         return mailTransport.sendMail(mailOptions)
             .then(() => console.log(`Sent`))
