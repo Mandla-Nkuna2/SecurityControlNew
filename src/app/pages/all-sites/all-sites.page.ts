@@ -6,6 +6,7 @@ import { ToastService } from '../../services/toast.service';
 import { Storage } from '@ionic/storage';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-all-sites',
@@ -38,7 +39,7 @@ export class AllSitesPage implements OnInit {
 
   constructor(private platform: Platform, public loadingCtrl: LoadingController, public toast: ToastService,
     public alertCtrl: AlertController, private afs: AngularFirestore, public modalCtrl: ModalController, public navCtrl: NavController,
-    private storage: Storage, public loading: LoadingService, public router: Router) {
+    private storage: Storage, public loading: LoadingService, public router: Router, private analyticsService: AnalyticsService) {
   }
 
   ngOnInit() {
@@ -100,6 +101,16 @@ export class AllSitesPage implements OnInit {
       });
     });
   }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'All Sites',
+        screen_class: 'AllSitesPage'
+      });
+    })
+  }
+
 
 }
 

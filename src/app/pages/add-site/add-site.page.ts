@@ -9,6 +9,7 @@ import { UUID } from 'angular2-uuid';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-add-site',
@@ -46,7 +47,8 @@ export class AddSitePage implements OnInit {
 
   constructor(private actionCtrl: ActionSheetController, public platform: Platform, public alertCtrl: AlertController,
     private afs: AngularFirestore, public toast: ToastService, public loadingCtrl: LoadingController, public router: Router,
-    public navCtrl: NavController, public loading: LoadingService, private storage: Storage, public activatedRoute: ActivatedRoute) {
+    public navCtrl: NavController, public loading: LoadingService, private storage: Storage, public activatedRoute: ActivatedRoute,
+    private analyticsService: AnalyticsService) {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
@@ -141,6 +143,10 @@ export class AddSitePage implements OnInit {
     if (this.new === true) {
       this.loading.present('Saving Please Wait...').then(() => {
         this.afs.collection('sites').doc(this.site.key).set(this.site).then(() => {
+          this.analyticsService.logAnalyticsEvent('select_content', {
+            content_type: 'ButtonClick',
+            item_id: 'addSite'
+          });
           this.router.navigate(['all-sites']).then(() => {
             this.loading.dismiss();
           });
@@ -156,6 +162,15 @@ export class AddSitePage implements OnInit {
         });
       });
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Add a site',
+        screen_class: 'AddSitePage'
+      });
+    })
   }
 
 }

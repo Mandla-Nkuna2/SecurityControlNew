@@ -4,6 +4,7 @@ import { Platform, AlertController, NavController } from '@ionic/angular';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-registration',
@@ -24,7 +25,7 @@ export class RegistrationPage implements OnInit {
   confirmPasswordValue: boolean = true;
   passwordMatch: boolean = true;
 
-  constructor(public router: Router, public navCtrl: NavController, public alertCtrl: AlertController, public platform: Platform, private auth: AuthenticationService, public loading: LoadingService) { }
+  constructor(public router: Router, public navCtrl: NavController, public alertCtrl: AlertController, public platform: Platform, private auth: AuthenticationService, public loading: LoadingService, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -104,6 +105,10 @@ export class RegistrationPage implements OnInit {
       this.check(user).then(() => {
         this.auth.register(this.user)
           .then((res) => {
+            this.analyticsService.logAnalyticsEvent('select_content', {
+              content_type: 'ButtonClick',
+              item_id: 'signedUp'
+            });
             this.router.navigate(['menu']).then(() => {
               this.loading.dismiss();
             })
@@ -124,6 +129,15 @@ export class RegistrationPage implements OnInit {
       buttons: ['OK']
     });
     return await alert.present();
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Register',
+        screen_class: 'RegisterPage'
+      });
+    })
   }
 
 }

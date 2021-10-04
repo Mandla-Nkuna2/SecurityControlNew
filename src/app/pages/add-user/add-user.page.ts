@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 import { UUID } from 'angular2-uuid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-add-user',
@@ -48,7 +49,7 @@ export class AddUserPage implements OnInit {
   order: string = 'name';
   thompsons = false;
 
-  constructor(public platform: Platform, public alertCtrl: AlertController,
+  constructor(public platform: Platform, public alertCtrl: AlertController, private analyticsService: AnalyticsService,
     private afs: AngularFirestore, public toast: ToastService, public loadingCtrl: LoadingController, public activatedRoute: ActivatedRoute,
     public navCtrl: NavController, public loading: LoadingService, private storage: Storage, public modalCtrl: ModalController,
     public router: Router) {
@@ -210,6 +211,10 @@ export class AddUserPage implements OnInit {
             var key = site.key + '';
             this.afs.collection(`users/${this.user.key}/sites`).doc(key).set({ name: site.name, key: key });
           })
+          this.analyticsService.logAnalyticsEvent('select_content', {
+            content_type: 'ButtonClick',
+            item_id: 'addUser'
+          });
           this.router.navigate(['users']).then(() => {
             this.loading.dismiss();
           });
@@ -232,6 +237,15 @@ export class AddUserPage implements OnInit {
         });
       });
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Add a user',
+        screen_class: 'AddUserPage'
+      });
+    })
   }
 
 }

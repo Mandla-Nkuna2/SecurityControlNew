@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController, ActionSheetController, AlertController } from '@ionic/angular';
+import { ModalController, NavController, ActionSheetController, AlertController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -10,6 +10,7 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import * as XLSX from 'xlsx';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-my-account',
@@ -41,7 +42,7 @@ export class MyAccountPage implements OnInit {
   tipStatus: boolean;
   tipsChanged: boolean = false;
 
-  constructor(private geolocation: Geolocation, public alertCtrl: AlertController, private camera: Camera, public actionCtrl: ActionSheetController, public loading: LoadingService, public navCtrl: NavController, private afs: AngularFirestore, private toast: ToastService, private auth: AuthenticationService, private storage: Storage, public modalCtrl: ModalController) { }
+  constructor(private geolocation: Geolocation, public alertCtrl: AlertController, private camera: Camera, public actionCtrl: ActionSheetController, public loading: LoadingService, public navCtrl: NavController, private afs: AngularFirestore, private toast: ToastService, private auth: AuthenticationService, private storage: Storage, public modalCtrl: ModalController, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.storage.get('user').then((user) => {
@@ -359,6 +360,15 @@ export class MyAccountPage implements OnInit {
 
     /* save to file */
     XLSX.writeFile(wb, `Analytics.xlsx`);
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Account',
+        screen_class: 'AccountPage'
+      });
+    })
   }
 
 }
