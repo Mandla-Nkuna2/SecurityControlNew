@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { LoadingService } from 'src/app/services/loading.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular';
 import { PdfService } from 'src/app/services/pdf.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Router, NavigationExtras } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-reports',
@@ -34,7 +35,7 @@ export class ReportsPage implements OnInit {
   data;
 
   constructor(public pdfservice: PdfService, public router: Router, private pdfService: PdfService, public loading: LoadingService, private storage: Storage,
-    private afs: AngularFirestore, public toast: ToastService, public alertCtrl: AlertController) { }
+    private afs: AngularFirestore, public toast: ToastService, public alertCtrl: AlertController, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.storage.get('user').then((user) => {
@@ -233,6 +234,15 @@ export class ReportsPage implements OnInit {
         }
       });
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Reports',
+        screen_class: 'ReportsPage'
+      });
+    })
   }
 
 }

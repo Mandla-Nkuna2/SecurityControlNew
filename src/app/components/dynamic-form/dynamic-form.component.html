@@ -47,7 +47,6 @@
           </ion-text>
         </ion-item>
         <ion-item *ngIf="input.controlType == 'camera'  && determineCondition(input.condition)" >
-
           <ion-label position="stacked">{{ input.label }}</ion-label>
           <app-camera (imageString)="onImageEvent($event, input.fieldName)" *ngIf="!newFormObj[input.fieldName]">
           </app-camera>
@@ -63,9 +62,6 @@
               </ion-button>
             </ion-col>
           </ion-row>
-
-
-
         </ion-item>
         <ion-item *ngIf="input.controlType == 'signaturePad' && determineCondition(input.condition)">
 
@@ -86,10 +82,8 @@
             <p>Input required</p>
           </ion-text>
         </ion-item>
-
-        <ion-item *ngIf="input.controlType == 'time' && determineCondition(input.condition)">
-
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+       <ion-item *ngIf="input.controlType == 'time && determineCondition(input.condition)'">
+ <ion-label position="stacked">{{ input.label }}</ion-label>
           <ion-datetime [readonly]="input.disabled" [formControlName]="lastIndex + i" displayFormat="HH:mm"
             [(ngModel)]="newFormObj[input.fieldName]">
           </ion-datetime>
@@ -111,5 +105,4 @@
     </ion-col>
   </ion-row>
 </ion-footer>
-
 

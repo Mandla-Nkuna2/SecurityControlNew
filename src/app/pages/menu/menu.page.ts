@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PushNotificationsService } from 'src/app/services/push-notifications.service';
 import { ChatServiceService } from 'src/app/services/chat-service.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-menu',
@@ -248,6 +249,14 @@ export class MenuPage implements OnInit {
     },
   ];
 
+  noAccess = [
+    {
+      title: 'No Access',
+      url: '/no-access',
+      icon: 'clipboard'
+    },
+  ];
+
   selectedPath = '';
   screen;
   app = true;
@@ -266,11 +275,26 @@ export class MenuPage implements OnInit {
   supportCount = 0;
   supportCountSub: Subscription
 
+  access = true;
+
   constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService,
-    private pushService: PushNotificationsService, private chatService: ChatServiceService) {
+    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
+  }
+
+  ionViewWillEnter() {
+    this.storage.get('user').then((user) => {
+      this.authService.checkCompanyAccess(user).then(access => {
+        if (access === true) {
+          this.access = true;
+        } else {
+          this.access = false;
+          this.router.navigate(['no-access'])
+        }
+      })
+    })
   }
 
   ngOnInit() {

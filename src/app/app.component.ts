@@ -24,7 +24,18 @@ export class AppComponent {
     private storage: Storage,
   ) {
     this.initializeApp();
-    localStorage.removeItem('firebase:previous_websocket_failure');
+    // if (platform.is('desktop')) {
+      // localStorage.removeItem('firebase:previous_websocket_failure');
+      // this.router.events.subscribe(event => {
+      //   if (event instanceof NavigationEnd) {
+      //     gtag('config', 'G-0F1C81YWSV',
+      //       {
+      //         'page_path': event.urlAfterRedirects
+      //       }
+      //     )
+      //   }
+      // })
+  // }
   }
 
   async initializeApp() {
