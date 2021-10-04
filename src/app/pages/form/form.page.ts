@@ -4,7 +4,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DynamicInput } from '../../models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service';
-import { NavController, NavParams } from '@ionic/angular';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 @Component({
   selector: 'app-form',
@@ -33,11 +32,12 @@ export class Form implements OnInit {
     private formsService: FormServiceService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private navParams: NavParams
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.formName = this.router.getCurrentNavigation().extras.state.formName;
+        this.inputs = this.router.getCurrentNavigation().extras.state.form;
+
       }
     });
   }
@@ -58,7 +58,6 @@ export class Form implements OnInit {
 
       });
     });
-    this.inputs = this.formsService.visit.filter(x => x.hidden == false);
     this.inputs.forEach((input: DynamicInput) => {
       if (input.link && !input.linkFilterName) {
         this.formsService.getCollection(input.link).then((items: any[]) => {
@@ -89,6 +88,15 @@ export class Form implements OnInit {
         this.loading.dismiss();
       });
     });
+  }
+  saveForm(event) {
+    this.loading.present('SAVING FORMS').then(() => {
+      let form = event;
+      this.formsService.saveForm(this.formName, this.user.key, this.user.companyId, form).then(() => {
+        this.loading.dismiss();
+      })
+    })
+
   }
 
   async open(doc) {

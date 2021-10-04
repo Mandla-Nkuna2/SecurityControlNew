@@ -24,7 +24,7 @@
                 <ion-grid>
                   <ion-row>
                     <ion-col class="ion-text-center" *ngFor="let form of forms" size="6">
-                      <ion-button fill="clear" (click)="openForm(form.name)" routerDirection="forward"
+                      <ion-button fill="clear" (click)="openForm(form.name, form.form)" routerDirection="forward"
                         class="home-button">
                         <div>
                           <div style="width: 100%; text-align: center;">
