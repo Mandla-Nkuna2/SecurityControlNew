@@ -31,11 +31,6 @@ export class Form implements OnInit {
   ) {
   }
 
-  inn(event) {
-    console.log(event);
-
-  }
-
   ngOnInit() {
     this.storage.get('user').then((user) => {
       this.companyId = user.companyId;
