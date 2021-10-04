@@ -1,12 +1,12 @@
 <ion-content>
-  <div class="holder ion-text-center" *ngIf="owner">
+  <div class="holder ion-text-center" *ngIf="owner && !firstLogin">
     <img src="assets/imgs/sick.svg" alt="">
     <h1>You no longer have access to this platform.
       <br>
       Please inform your administrator</h1>
   </div>
 
-  <div class="holder ion-text-center" *ngIf="!owner">
+  <div class="holder ion-text-center" *ngIf="!owner && !firstLogin">
     <img src="assets/imgs/sick.svg" alt="">
     <h1>You no longer have access to this platform.
       <br>
@@ -17,6 +17,18 @@
       </ion-button>
       <ion-button (click)="upgrade()" style="width: 250px;">
        Upgrade My Subscription
+      </ion-button>
+  </div>
+
+  <div class="holder ion-text-center" *ngIf="firstLogin">
+    <h1>Welcome to Security Control!
+      <br>
+      We hope you find this platform useful and efficient!
+      <br>
+      Please select a subscription tier in order to get full access to the platform
+    </h1>
+      <ion-button (click)="upgrade()" style="width: 250px;">
+       Setup My Subscription
       </ion-button>
   </div>
 </ion-content>

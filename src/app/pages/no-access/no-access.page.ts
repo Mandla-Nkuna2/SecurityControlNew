@@ -16,18 +16,25 @@ export class NoAccessPage implements OnInit {
 
   user;
   owner = false;
+  firstLogin = true;
 
   constructor(private afs: AngularFirestore, private storage: Storage, private toast: ToastService, private router: Router) { }
 
   ngOnInit() {
     this.storage.get('user').then(user => {
       this.user = user;
-      console.log(this.user)
       if (this.user.type === 'Account Admin') {
         this.owner = true;
       } else {
         this.owner = false;
       }
+      this.storage.get('subscriptionType').then(subscriptionType => {
+        if (subscriptionType) {
+          this.firstLogin = false;
+        } else {
+          this.firstLogin = true;
+        }
+      })
     })
   }
 
