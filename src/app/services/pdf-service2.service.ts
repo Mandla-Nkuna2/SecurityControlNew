@@ -125,18 +125,36 @@ export class pdfService2 {
       }
 
       const prom = new Promise((resolve, reject) => {
-        this.formService.getDocument('sites', newFormObj.site).then((site: any) => {
-          this.storage.get('user').then((user: any) => {
-            resolve({ site, user });
-          })
+        this.storage.get('user').then((user: any) => {
+          if (!newFormObj.site) {
+            resolve([
+              [{ text: ':', style: 'headLabel' }, { text: '', alignment: 'center' },
+              { text: 'USER:', style: 'headLabel' }, { text: user.name, alignment: 'center' }],
+              [{ text: 'DATE:', style: 'headLabel' }, { text: this.formatDate(newFormObj.date), alignment: 'center' },
+              { text: 'TIME:', style: 'headLabel' }, { text: this.formatTime(newFormObj.time), alignment: 'center' }],
+            ]);
+          }
+          else {
+            this.formService.getDocument('sites', newFormObj.site).then((site: any) => {
+              resolve(
+                [
+                  [{ text: 'SITE:', style: 'headLabel' }, { text: site.name, alignment: 'center' },
+                  { text: 'USER:', style: 'headLabel' }, { text: user.name, alignment: 'center' }],
+                  [{ text: 'DATE:', style: 'headLabel' }, { text: this.formatDate(newFormObj.date), alignment: 'center' },
+                  { text: 'TIME:', style: 'headLabel' }, { text: this.formatTime(newFormObj.time), alignment: 'center' }],
+                ]
+              );
+            })
+          }
         })
+
       })
       prom.then((data: any) => {
         this.populatePdf(name, data, newFormObj, extraBodies, signitures)
       })
     }
   }
-  populatePdf(name: string, data: any, newFormObj: any, extraBodies: any[], signitures: any[]) {
+  populatePdf(name: string, header: any, newFormObj: any, extraBodies: any[], signitures: any[]) {
     var docDefinition = {
       content: [
         {
@@ -149,12 +167,7 @@ export class pdfService2 {
           style: 'table',
           table: {
             widths: ['25%', '25%', '25%', '25%'],
-            body: [
-              [{ text: 'SITE:', style: 'headLabel' }, { text: data.site.name, alignment: 'center' },
-              { text: 'USER:', style: 'headLabel' }, { text: data.user.name, alignment: 'center' }],
-              [{ text: 'DATE:', style: 'headLabel' }, { text: this.formatDate(newFormObj.date), alignment: 'center' },
-              { text: 'TIME:', style: 'headLabel' }, { text: this.formatTime(newFormObj.time), alignment: 'center' }],
-            ]
+            body: header
           },
         },
 

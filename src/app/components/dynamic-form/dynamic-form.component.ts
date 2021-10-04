@@ -237,7 +237,7 @@ export class DynamicFormComponent implements OnInit {
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
 
 
-   }
+  }
 
   onSubmit() {
     if (!this.isValid()) {
