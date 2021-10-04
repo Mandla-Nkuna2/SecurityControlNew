@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ComponentsModule } from '../../components/components.module';
-import {PopoverComponent} from '../../components/popover/popover.component';
+import { PopoverComponent } from '../../components/popover/popover.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
@@ -89,79 +89,94 @@ const routes: Routes = [
       { path: 'equipment-inventory/:id', loadChildren: () => import('../equipment-inventory/equipment-inventory.module').then(m => m.EquipmentInventoryPageModule) },
       { path: 'incident-report/:id', loadChildren: () => import('../incident-report/incident-report.module').then(m => m.IncidentReportPageModule) },
       {
-        path: 'appeal/:id',  
-        loadChildren: () => import('../appeal/appeal.module').then( m => m.AppealPageModule)
+        path: 'appeal/:id',
+        loadChildren: () => import('../appeal/appeal.module').then(m => m.AppealPageModule)
       },
       {
-        path: 'site-temperature/:id',  
-        loadChildren: () => import('../site-temperature/site-temperature.module').then( m => m.SiteTemperaturePageModule)
+        path: 'site-temperature/:id',
+        loadChildren: () => import('../site-temperature/site-temperature.module').then(m => m.SiteTemperaturePageModule)
       },
       {
-        path: 'performance-appraisal/:id', 
-        loadChildren: () => import('../performance-appraisal/performance-appraisal.module').then( m => m.PerformanceAppraisalPageModule)
+        path: 'performance-appraisal/:id',
+        loadChildren: () => import('../performance-appraisal/performance-appraisal.module').then(m => m.PerformanceAppraisalPageModule)
       },
       {
-        path: 'fence-inspection/:id',  
-                loadChildren: () => import('../fence-inspection/fence-inspection.module').then( m => m.FenceInspectionPageModule)
+        path: 'fence-inspection/:id',
+        loadChildren: () => import('../fence-inspection/fence-inspection.module').then(m => m.FenceInspectionPageModule)
       },
       {
-        path: 'grievance/:id',  
-        loadChildren: () => import('../grievance/grievance.module').then( m => m.GrievancePageModule)
+        path: 'grievance/:id',
+        loadChildren: () => import('../grievance/grievance.module').then(m => m.GrievancePageModule)
       },
       {
-        path: 'polygraph/:id', 
-        loadChildren: () => import('../polygraph/polygraph.module').then( m => m.PolygraphPageModule)
+        path: 'polygraph/:id',
+        loadChildren: () => import('../polygraph/polygraph.module').then(m => m.PolygraphPageModule)
       },
       {
-        path: 'pay-query/:id',  
-        loadChildren: () => import('../pay-query/pay-query.module').then( m => m.PayQueryPageModule)
+        path: 'pay-query/:id',
+        loadChildren: () => import('../pay-query/pay-query.module').then(m => m.PayQueryPageModule)
       },
       {
-        path: 'resignation/:id', 
-        loadChildren: () => import('../resignation/resignation.module').then( m => m.ResignationPageModule)
+        path: 'resignation/:id',
+        loadChildren: () => import('../resignation/resignation.module').then(m => m.ResignationPageModule)
       },
       {
-        path: 'injury/:id', 
-        loadChildren: () => import('../injury/injury.module').then( m => m.InjuryPageModule)
+        path: 'injury/:id',
+        loadChildren: () => import('../injury/injury.module').then(m => m.InjuryPageModule)
       },
       {
-        path: 'fire/:id',  
-        loadChildren: () => import('../fire/fire.module').then( m => m.FirePageModule)
+        path: 'fire/:id',
+        loadChildren: () => import('../fire/fire.module').then(m => m.FirePageModule)
       },
       {
-        path: 'gas-explosion/:id',  
-        loadChildren: () => import('../gas-explosion/gas-explosion.module').then( m => m.GasExplosionPageModule)
+        path: 'gas-explosion/:id',
+        loadChildren: () => import('../gas-explosion/gas-explosion.module').then(m => m.GasExplosionPageModule)
       },
       {
-        path: 'extinguisher-checklist/:id',  
-        loadChildren: () => import('../extinguisher-checklist/extinguisher-checklist.module').then( m => m.ExtinguisherChecklistPageModule)
+        path: 'extinguisher-checklist/:id',
+        loadChildren: () => import('../extinguisher-checklist/extinguisher-checklist.module').then(m => m.ExtinguisherChecklistPageModule)
       },
       {
-        path: 'theft/:id',  
-        loadChildren: () => import('../theft/theft.module').then( m => m.TheftPageModule)
+        path: 'theft/:id',
+        loadChildren: () => import('../theft/theft.module').then(m => m.TheftPageModule)
       },
       {
         path: 'cost',
-        loadChildren: () => import('../cost/cost.module').then( m => m.CostPageModule)
+        loadChildren: () => import('../cost/cost.module').then(m => m.CostPageModule)
       },
       {
         path: 'pay-subscription',
-        loadChildren: () => import('../pay-subscription/pay-subscription.module').then( m => m.PaySubscriptionPageModule)
+        loadChildren: () => import('../pay-subscription/pay-subscription.module').then(m => m.PaySubscriptionPageModule)
       },
       {
         path: 'payfast',
-        loadChildren: () => import('../payfast/payfast.module').then( m => m.PayfastPageModule)
+        loadChildren: () => import('../payfast/payfast.module').then(m => m.PayfastPageModule)
       },
       {
         path: 'bulk-upload',
-        loadChildren: () => import('../bulk-upload/bulk-upload.module').then( m => m.BulkUploadPageModule)
+        loadChildren: () => import('../bulk-upload/bulk-upload.module').then(m => m.BulkUploadPageModule)
       },
       {
-        path: 'chat-sales',
-        loadChildren: () => import('../chat-sales/chat-sales.module').then( m => m.ChatSalesPageModule)
+        path: 'form',
+        loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule)
       },
-    
-    
+      {
+        path: 'form-menu',
+        loadChildren: () => import('../form-menu/form-menu.module').then(m => m.FormMenuPageModule)
+      },
+      {
+
+        path: 'chat-sales',
+        loadChildren: () => import('../chat-sales/chat-sales.module').then(m => m.ChatSalesPageModule)
+      },
+      {
+        path: 'form-upload',
+        loadChildren: () => import('../form-upload/form-upload.module').then( m => m.FormUploadPageModule)
+      },
+      {
+        path: 'memberships',
+        loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
+      },
     ]
   },
   {

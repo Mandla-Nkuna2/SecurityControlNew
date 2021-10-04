@@ -8,7 +8,14 @@
       <h4>Home/<span>&nbsp;Sales</span> </h4>
     </div>
   </div>
+  <ion-toolbar class="mobile mbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Chat To Sales</ion-title>
+  </ion-toolbar>
 </ion-header>
+
 <ion-content>
 
   <ion-row class="messageUnit">
@@ -19,7 +26,7 @@
 
   <div *ngFor="let chat of chats" class="messageUnit" >
 
-    <div *ngIf="chat.userId !== user.key">
+    <div *ngIf="!chat.fromUser">
 
       <ion-row>
         <ion-col size="8" class="other-message">
@@ -37,7 +44,7 @@
 
     </div>
 
-    <div *ngIf="chat.userId === user.key">
+    <div *ngIf="chat.fromUser">
 
       <ion-row>
         <ion-col></ion-col>
@@ -65,7 +72,7 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar *ngIf="!app">
     <ion-row *ngIf="attachment !== ''">
       <ion-col style="color: #666666; text-align: center;">
         <img [src]="attachment" style="max-width: 40px;">
@@ -81,8 +88,8 @@
     </ion-row>
     <ion-row>
       <ion-col size="10">
-        <textarea spellcheck="true" autocomplete="true" autocorrect="true" placeholder="Your message..." autosize maxRows="3" [(ngModel)]="newMsg"
-          class="message-input"></textarea>
+        <textarea spellcheck=true placeholder="Your message..." autosize maxRows="3" [(ngModel)]="newMsg"
+          class="message-input" (keyup.enter)="sendMsg()"></textarea>
       </ion-col>
       <ion-col>
         <ion-button fill="clear" color="success" [disabled]="newMsg === '' && attachment === ''" (click)="sendMsg()">
@@ -90,17 +97,41 @@
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button *ngIf="!app" (click)="picture.click()" fill="clear">
+        <ion-button (click)="picture.click()" fill="clear">
           <ion-icon name="attach" slot="icon-only"></ion-icon>
         </ion-button>
-
-        <ion-button *ngIf="app" (click)="attach()" fill="clear">
-          <ion-icon name="attach" slot="icon-only"></ion-icon>
-        </ion-button>
-
         <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
           capture="camera">
       </ion-col>
     </ion-row>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="app">
+    <ion-row *ngIf="attachment !== ''">
+      <ion-col style="color: #666666; text-align: center;">
+        <img [src]="attachment" style="max-width: 40px;">
+      </ion-col>
+      <ion-col style="color: #666666; text-align: center;">
+        Image attached...
+      </ion-col>
+      <ion-col style="color: red; text-align: center;">
+        <ion-icon (click)="remove()" name="close"></ion-icon>
+      </ion-col>
+      <ion-col size="1"></ion-col>
+      <ion-col size="1"></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="9">
+        <textarea spellcheck=true placeholder="Your message..." autosize maxRows="3" [(ngModel)]="newMsg"
+          class="message-input-app" (keyup.enter)="sendMsg()"></textarea>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="send" size="small" (click)="sendMsg()" style="color: green;margin-top: 40%;"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon name="attach" size="small" (click)="attach()" style="color: red; margin-top: 40%;"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
+    capture="camera">
   </ion-toolbar>
 </ion-footer>

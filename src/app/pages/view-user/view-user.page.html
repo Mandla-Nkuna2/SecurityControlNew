@@ -148,16 +148,16 @@
          
           <div *ngIf="formValue && normal">
             <ion-row class="headers">
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+              <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2"  class="dates">
                 <h4>Date</h4>
               </ion-col>
   
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+              <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" sizeXl="1"  class="dates">
                 <h4>Time</h4>
               </ion-col>
   
               <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
-                <h4>Manager/Supervisor</h4>
+                <h4>Supervisor</h4>
               </ion-col>
   
               <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
@@ -172,11 +172,11 @@
   
 
           <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
-            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+            <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2"   class="dates">
               <h5>{{report.date}}</h5>
             </ion-col>
 
-            <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+            <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" sizeXl="1"   class="dates">
               <h5>{{report.time}}</h5>
             </ion-col>
 
@@ -207,16 +207,16 @@
           <div *ngIf="report === 'DISCIPLINARY REPORTS' || report === 'TRAINING FORMS' || report === 'UNIFORM ORDERS'">
 
             <ion-row class="headers">
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+              <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2"  class="dates">
                 <h4>Date</h4>
               </ion-col>
   
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+              <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" sizeXl="1"  class="dates">
                 <h4>Time</h4>
               </ion-col>
   
               <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
-                <h4>Manager/Supervisor</h4>
+                <h4>Supervisor</h4>
               </ion-col>
   
               <ion-col sizeXs="2.5" sizeSm="2.5" sizeMd="2.5" sizeLg="2.5" sizeXl="2.5"  class="dates">
@@ -230,11 +230,11 @@
             </ion-row>
   
             <ion-row *ngFor="let report of reports | async" class="values" style="width: 100% !important;">
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+              <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2"   class="dates">
                 <h5>{{report.date}}</h5>
               </ion-col>
   
-              <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"   class="dates">
+              <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" sizeXl="1"   class="dates">
                 <h5>{{report.time}}</h5>
               </ion-col>
   
@@ -327,11 +327,11 @@
 
 
                 <ion-row class="headers">
-                  <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                  <ion-col sizeXs="2" sizeSm="2" sizeMd="2" sizeLg="2" sizeXl="2"  class="dates">
                     <h4>Date from</h4>
                   </ion-col>
       
-                  <ion-col sizeXs="1.5" sizeSm="1.5" sizeMd="1.5" sizeLg="1.5" sizeXl="1.5"  class="dates">
+                  <ion-col sizeXs="1" sizeSm="1" sizeMd="1" sizeLg="1" sizeXl="1"  class="dates">
                     <h4>Date to</h4>
                   </ion-col>
       

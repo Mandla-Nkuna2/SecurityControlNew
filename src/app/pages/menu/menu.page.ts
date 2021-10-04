@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PushNotificationsService } from 'src/app/services/push-notifications.service';
+import { ChatServiceService } from 'src/app/services/chat-service.service';
 
 @Component({
   selector: 'app-menu',
@@ -23,6 +24,11 @@ export class MenuPage implements OnInit {
     {
       title: 'FORMS',
       url: '/forms',
+      icon: 'clipboard'
+    },
+    {
+      title: 'Form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -94,6 +100,11 @@ export class MenuPage implements OnInit {
       icon: 'clipboard'
     },
     {
+      title: 'Form',
+      url: '/form-menu',
+      icon: 'clipboard'
+    },
+    {
       title: 'SITES',
       url: '/sites',
       icon: 'globe'
@@ -125,6 +136,11 @@ export class MenuPage implements OnInit {
     {
       title: 'FORMS',
       url: '/forms',
+      icon: 'clipboard'
+    },
+    {
+      title: 'Form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -168,6 +184,16 @@ export class MenuPage implements OnInit {
       icon: 'pie-chart'
     },
     {
+      title: 'FORM UPLOAD',
+      url: '/form-upload',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'SUPPORT CHAT',
+      url: '/chat',
+      icon: 'pie-chart'
+    },
+    {
       title: 'SALES CHAT',
       url: '/chat-sales',
       icon: 'pie-chart'
@@ -178,6 +204,11 @@ export class MenuPage implements OnInit {
     {
       title: 'FORMS',
       url: '/forms',
+      icon: 'clipboard'
+    },
+    {
+      title: 'Form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -200,6 +231,21 @@ export class MenuPage implements OnInit {
       url: '/saved-forms',
       icon: 'save'
     },
+    {
+      title: 'SUPPORT CHAT',
+      url: '/chat',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'SALES CHAT',
+      url: '/chat-sales',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships',
+      icon: 'pie-chart'
+    },
   ];
 
   selectedPath = '';
@@ -215,8 +261,13 @@ export class MenuPage implements OnInit {
 
   thompsons = false;
 
+  salesCount = 0;
+  salesCountSub: Subscription;
+  supportCount = 0;
+  supportCountSub: Subscription
+
   constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService,
-    private pushService: PushNotificationsService) {
+    private pushService: PushNotificationsService, private chatService: ChatServiceService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
@@ -231,6 +282,8 @@ export class MenuPage implements OnInit {
       this.getToken();
     }
     this.storage.get('user').then((user) => {
+      this.getSalesCount(user);
+      this.getSupportCount(user);
       this.user.photo = user.photo;
       this.user.type = user.type;
       this.thompsonCheck().then(() => {
@@ -248,7 +301,7 @@ export class MenuPage implements OnInit {
         }
         this.companysCollection = this.afs.collection('companys', ref => ref.where('key', '==', user.companyId));
         this.companys = this.companysCollection.snapshotChanges().pipe(map(changes => {
-          return changes.map     ((a: any) => { 
+          return changes.map((a: any) => {
             const info = a.payload.doc.data() as any;
             const key = a.payload.doc.id;
             return { key, ...info };
@@ -265,6 +318,18 @@ export class MenuPage implements OnInit {
         });
       });
     });
+  }
+
+  getSalesCount(user) {
+    this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {
+      this.salesCount = res;
+    })
+  }
+
+  getSupportCount(user) {
+    this.supportCountSub = this.chatService.getSupportCount(user).subscribe((res: any) => {
+      this.supportCount = res;
+    })
   }
 
   getToken() {

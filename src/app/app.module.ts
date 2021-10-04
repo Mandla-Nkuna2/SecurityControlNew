@@ -1,5 +1,5 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -35,6 +35,12 @@ import { CameraService } from './services/camera.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AnalyticsService } from './services/analytics.service';
+import { InAppPurchase2 } from '@ionic-native/in-app-purchase-2/ngx';
+import { PurchasesService } from './services/purchases.service';
+import { HTTP } from '@ionic-native/http/ngx';
+import { ComponentsModule } from './components/components.module'
+import { pdfService2 } from './services/pdf-service2.service'
+import { NavParams } from '@ionic/angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -58,7 +64,8 @@ import { AnalyticsService } from './services/analytics.service';
     WorkOrderPageModule,
     ViewOrderPageModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ComponentsModule
   ],
   providers: [
     StatusBar,
@@ -76,8 +83,14 @@ import { AnalyticsService } from './services/analytics.service';
     InAppBrowser,
     FirebaseX,
     AnalyticsService
+    InAppPurchase2,
+    PurchasesService,
+    HTTP,
+    pdfService2,
+    NavParams
+
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [NO_ERRORS_SCHEMA]
 })
-export class AppModule {}
- 
+export class AppModule { }

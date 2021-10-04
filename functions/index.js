@@ -22,7 +22,7 @@ const FUNCTIONS_REDIRECT = 'https://us-central1-security-control-app.cloudfuncti
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const auth = new googleAuth();
 const functionsOauthClient = new auth.OAuth2(CONFIG_CLIENT_ID, CONFIG_CLIENT_SECRET, FUNCTIONS_REDIRECT);
-
+const PAYSTACK_SECRET_KEY = functions.config().paystack.secret;
 let oauthTokens = null;
 
 const gmailEmail = 'support@securitycontrol.co.za';
@@ -65,6 +65,134 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
     return admin.messaging().sendToDevice(token, payload);
 
 })
+
+exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context)=>{
+    return admin.firestore().collection('trials').get().then((onFulfilled)=>{
+        if(!onFulfilled.empty){
+            onFulfilled.docs.forEach((doc)=>{
+                if(doc.data().trialStartDate){
+                    if(moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14){
+                        return admin.firestore().collection('trials').doc(doc.id).update({
+                            trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss") //document will be saved by company key, companies will listen to their documents on frontend.
+                        }).then(()=>{
+                            functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
+                        }).catch((onError)=>functions.logger.error(onError))
+                    }
+                }
+            })
+        }
+    }).catch((onError)=>functions.logger.error(onError))
+})
+
+exports.startTrial = functions.https.onRequest((request, response)=>{
+    let body = JSON.parse(request.body);
+    return admin.firestore().collection('trials').doc(body.key).set({ 
+        companyKey : body.key, 
+        trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+        chosenTier: body.tier
+    }).then((value)=>{
+        response.status(200).send(value);
+    }).catch((onError)=>{
+        functions.logger.error(onError)
+        response.sendStatus(500)
+    })
+})
+
+exports.transactionWebhook = functions.https.onRequest((request, response) => {
+    let paymentEvent = request.body;
+    return admin.firestore().collection('paymentEvents').add(paymentEvent).then(() => {
+        functions.logger.info("event saved");
+        response.sendStatus(200);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.sendStatus(500);
+    })
+});
+
+exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.post(`${host}/transaction/charge_authorization`, chargeObject.body, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+        }
+    }).then(res => {
+        response.sendStatus(200);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.status(500).send(error);
+    });
+});
+
+exports.initializePayment = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.post(`${host}/transaction/initialize`, {
+        email: request.body.email,
+        amount: request.body.amount,
+        currency: request.body.currency,
+        split_code: request.body.split_code //split_code used for group splits, subaccount is used for a single split
+    }, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+        }
+    }).then(res => {
+        response.send(res.data);
+    }).catch(error => {
+        console.log(error);
+        response.send(error);
+    });
+});
+
+exports.createPlan = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.post(`${host}/plan`, {
+        name: "Standard Subscription",
+        amount: 50000,
+        interval: 'monthly',
+        description: 'Standard security control subscription',
+        send_invoices: true, //most probably will send by email
+        currency: 'ZAR'
+    }, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+        }
+    }).then(res => {
+        response.send(res.data);
+    }).catch(error => {
+        console.log(error);
+        response.send(error);
+    });
+});
+
+exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    axios.get(`${host}/subscription`, {
+        customer: 'user@user.com', //or customer code
+        plan: 'asdasd', //plan codes
+        authorization: 'ajhklasdf', //auth code, or most recent auth if not specified
+        start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
+    }, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+        }
+    }).then(res => {
+        functions.logger.debug(res);
+        response.send(res.data);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.status(500).send(error);
+    });
+});
+
+exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
+    let transactionRef = request.body.transactionRef;
+    axios.get(`${host}/transaction/verify/${transactionRef}`, {
+        headers: {
+            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+        }
+    }).then(res => {
+        functions.logger.debug(res);
+        response.send(res.data);
+    }).catch(error => {
+        functions.logger.error(error);
+        response.status(500).send(error);
+    });
+});
 
 exports.deleteGuards = functions.firestore
     .document('guards/{uid}')
@@ -3764,13 +3892,13 @@ function getSiteVisit(report) {
 
                 body.push([{ text: 'Staff Member on Duty', style: 'headLabel' }, { text: element.guardName }]);
 
-                if (element.guardPhoto !== '' && element.guardPhoto !== undefined) {
+                if (element.guardPhoto !== '' || element.guardPhoto !== undefined) {
                     body.push([{ text: 'Photo of Staff Member', style: 'headLabel', alignment: 'center' }, { image: element.guardPhoto, width: 100, alignment: 'center' }]);
                 }
-                if (element.guardSig !== '' && element.guardSig !== undefined) {
+                if (element.guardSig !== '' || element.guardSig !== undefined) {
                     body.push([{ text: 'Guard Signature', style: 'headLabel' },
                     { image: element.guardSig, width: 100, alignment: 'center' }]);
-                }site
+                }
 
             });
 
@@ -6161,7 +6289,7 @@ exports.appealForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().appeal != undefined){ report.userEmail = report.userEmail + ';' + doc.data().appeal }
+            if (doc.data().appeal != undefined) { report.userEmail = report.userEmail + ';' + doc.data().appeal }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return appealForm(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6366,7 +6494,7 @@ exports.temperatureList = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().temperature != undefined){ report.userEmail = report.userEmail + ';' + doc.data().temperature }
+            if (doc.data().temperature != undefined) { report.userEmail = report.userEmail + ';' + doc.data().temperature }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return tempList(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6494,7 +6622,7 @@ exports.performanceAppraisal = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().performance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().performance }
+            if (doc.data().performance != undefined) { report.userEmail = report.userEmail + ';' + doc.data().performance }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return perform(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6730,7 +6858,7 @@ exports.fenceInspection = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().fence != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fence }
+            if (doc.data().fence != undefined) { report.userEmail = report.userEmail + ';' + doc.data().fence }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fenceIN(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -6922,8 +7050,8 @@ exports.grieve = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().grievance != undefined){ report.userEmail = report.userEmail + ';' + doc.data().grievance }
- return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().grievance != undefined) { report.userEmail = report.userEmail + ';' + doc.data().grievance }
+            return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return grieve(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Grieve - report / ${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -7105,7 +7233,7 @@ exports.poly = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().polygraph != undefined){ report.userEmail = report.userEmail + ';' + doc.data().polygraph }
+            if (doc.data().polygraph != undefined) { report.userEmail = report.userEmail + ';' + doc.data().polygraph }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return polyG(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7287,7 +7415,7 @@ exports.pay = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-          if (doc.data().payquery !== undefined){ report.userEmail = report.userEmail + ';' + doc.data().payquery }
+            if (doc.data().payquery !== undefined) { report.userEmail = report.userEmail + ';' + doc.data().payquery }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return payQ(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7499,7 +7627,7 @@ exports.injury = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().injury != undefined){ report.userEmail = report.userEmail + ';' + doc.data().injury }
+            if (doc.data().injury != undefined) { report.userEmail = report.userEmail + ';' + doc.data().injury }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return injuryR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -7681,8 +7809,8 @@ exports.firerereport = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            
-            if (doc.data().fire != undefined){ report.userEmail = report.userEmail + ';' + doc.data().fire }
+
+            if (doc.data().fire != undefined) { report.userEmail = report.userEmail + ';' + doc.data().fire }
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return fireR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Fire - report / ${report.key}.pdf`; // CHANGE name here
@@ -7868,7 +7996,7 @@ exports.explosion = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().gas != undefined){ report.userEmail = report.userEmail + ';' + doc.data().gas }
+            if (doc.data().gas != undefined) { report.userEmail = report.userEmail + ';' + doc.data().gas }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return explosionR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -8051,7 +8179,7 @@ exports.resignation = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().resignate != undefined){ report.userEmail = report.userEmail + ';' + doc.data().resignate }
+            if (doc.data().resignate != undefined) { report.userEmail = report.userEmail + ';' + doc.data().resignate }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return resignationF(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -8231,7 +8359,7 @@ exports.extinguisher = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().extinguisher != undefined){ report.userEmail = report.userEmail + ';' + doc.data().extinguisher }
+            if (doc.data().extinguisher != undefined) { report.userEmail = report.userEmail + ';' + doc.data().extinguisher }
 
             return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return extinguisherR(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
@@ -8393,8 +8521,8 @@ exports.theftForm = functions.firestore
         return admin.firestore().collection('companies').doc(report.companyId).get().then(doc => {  // make sure there is companyid
             const companyLogo = doc.data().base64;
             const color = doc.data().color;
-            if (doc.data().theft != undefined){ report.userEmail = report.userEmail + ';' + doc.data().theft }
- return checkSig(report).then(function () { // ADD THE SIGNITURES
+            if (doc.data().theft != undefined) { report.userEmail = report.userEmail + ';' + doc.data().theft }
+            return checkSig(report).then(function () { // ADD THE SIGNITURES
                 return theft(report, companyLogo, color).then(function (docDefinition) { // THE SPECIFIC FUNVTION
                     const file_name = `Theft-form/${report.key}.pdf`; // CHANGE name here
                     return createPDF(docDefinition, file_name).then(function (file_name) {
@@ -8701,3 +8829,185 @@ exports.newSupportReply = functions.https.onRequest((req, res) => {
         return res.send(msg);
     })
 })
+
+exports.readSalesMsg = functions.firestore
+    .document(`/chats/{uid}/sales-messages/{uid2}`)
+    .onUpdate((snap) => {
+        const newMsg = snap.after.data();
+        const oldMsg = snap.before.data();
+        functions.logger.info(newMsg, oldMsg);
+        if (oldMsg.read === false && newMsg.read === true) {
+            console.log('Read Msg')
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSalesMsgRead',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.readSupportMsg = functions.firestore
+    .document(`/chats/{uid}/messages/{uid2}`)
+    .onUpdate((snap) => {
+        const newMsg = snap.after.data();
+        const oldMsg = snap.before.data();
+        functions.logger.info(newMsg, oldMsg);
+        if (oldMsg.read === false && newMsg.read === true) {
+            console.log('Read Msg')
+            var data = newMsg;
+
+            var config = {
+                method: 'post',
+                url: 'https://us-central1-innovative-thinking-support.cloudfunctions.net/SCSupportMsgRead',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            return axios(config)
+                .then(function (response) {
+                    return functions.logger.info(response);
+                })
+                .catch(function (error) {
+                    return functions.logger.info('Error: ', error);
+                });
+        } else {
+            return
+        }
+    });
+
+exports.SupportMsgRead = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/messages`).doc(newMsg.key).update({ read: true }).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.SalesMsgRead = functions.https.onRequest((req, res) => {
+    var newMsg = req.body;
+    var msg;
+    return admin.firestore().collection(`chats/${req.body.userId}/sales-messages`).doc(newMsg.key).update({ read: true }).then(() => {
+        msg = JSON.stringify('Done');
+        return res.send(msg);
+    }).catch((error) => {
+        msg = JSON.stringify('Error');
+        return res.send(msg);
+    })
+})
+
+exports.newFormNotification = functions.firestore
+    .document(`/newForms/{uid}`)
+    .onCreate((snap) => {
+        const form = snap.data();
+        const mailOptions = {
+            from: '"Security Control" <system@securitycontrol.co.za>',
+            to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
+            subject: 'SC: New Form Uploaded',
+            text: `Good Day,\n\nAn Enterprise client has uploaded a new form.\n\nKindly,\nSecurity Control Team`,
+        };
+        return mailTransport.sendMail(mailOptions)
+            .then(() => console.log(`Sent`))
+            .catch(function (error) {
+                return console.error("Failed!" + error);
+            })
+    });
+
+exports.validatePurchase = functions.https.onCall((data, context) => {
+    var config = {
+        method: 'post',
+        url: 'https://validator.fovea.cc/v1/validate?appName=com.innovativethinking.adminforms&apiKey=561f8169-eec5-4a83-9f6a-556058eb3215',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: data
+    };
+    axios(config)
+        .then(function (response) {
+            console.log('Resp: ', response.data.ok);
+            var msg = {
+                verified: response.data.ok
+            }
+            return msg;
+        })
+        .catch(function (error) {
+            functions.logger.info('Error: ', error);
+            msg = JSON.stringify('error');
+            return res.send(msg);
+        });
+})
+
+exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 05 * * *').timeZone('Africa/Johannesburg').onRun(() => {
+    return admin.firestore().collection('companies').where('subscribed', '==', true).get().then(comps => {
+        return comps.forEach(company => {
+            var nextDate = moment(company.data().subscriptionDate, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
+            var today = moment(new Date()).format('YYYY/MM/DD');
+            if (today === nextDate) {
+                console.log('Do check')
+                checkVerify(company.data()).then((msg) => {
+                    if (msg === 'Verified') {
+                        console.log('Still fine')
+                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: true, subscriptionDate: today })
+                    } else {
+                        console.log('Removed premium')
+                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: false, subscriptionDate: '', period: '' })
+                    }
+                })
+            } else {
+                console.log('No check needed')
+            }
+        })
+    })
+})
+
+function checkVerify(company) {
+    return new Promise((resolve, reject) => {
+        var transaction = company.transaction;
+        if (transaction) {
+            functions.logger.info(transaction);
+
+            var data = transaction;
+            var config = {
+                method: 'post',
+                url: 'https://validator.fovea.cc/v1/validate?appName=com.innovativethinking.adminforms&apiKey=561f8169-eec5-4a83-9f6a-556058eb3215',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+            axios(config)
+                .then(function (response) {
+                    if (response.data.ok === true) {
+                        msg = 'Verified';
+                    } else {
+                        console.log('Invalid')
+                        msg = 'Invalid';
+                    }
+                    resolve(msg);
+                })
+                .catch(function (error) {
+                    reject(error)
+                });
+        }
+    })
+}

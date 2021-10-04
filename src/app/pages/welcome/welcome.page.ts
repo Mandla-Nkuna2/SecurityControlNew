@@ -168,7 +168,7 @@ export class WelcomePage implements OnInit {
                     this.loading.present('Updating...');
                     this.afs.collection('users').doc(this.user.key).update(this.versionUpdate).then(() => {
                       this.loading.dismiss();
-                      location.reload(true);
+                      location.reload();
                     });
                   }
                 }

@@ -113,7 +113,7 @@ export class ReportsPage implements OnInit {
 
     if (selectURL != '') {
       this.loading.present('Opening Please Wait...').then(() => {
-        this.router.navigate([`${reportUrl}/view`], navigationExtras).then(() => {
+        this.router.navigate([`${selectURL}/view`], navigationExtras).then(() => {
           this.loading.dismiss();
         });
       });

@@ -97,7 +97,7 @@ export class BulkUploadService {
                 Key: UUID.UUID(),
                 grade: newItem.Grade,
                 photo: '',
-                id: newItem.ID_Number,
+                id: newItem.ID_Number.toString(),
                 AssNo: newItem.PSIRA_Number,
                 companyId: user.companyId,
                 name: newItem.Full_Name,
@@ -207,6 +207,22 @@ export class BulkUploadService {
         })
         resolve(allsites);
       })
+    })
+  }
+
+  checkGuards(list) {
+    return new Promise<any>((resolve, reject) => {
+      list.forEach(guard => {
+        this.afs.collection('guards').ref.where('id', '==', guard.id).get().then(guards => {
+          guards.forEach((one: any) => {
+            if (one.data().id === guard.id) {
+              guard.Key = one.data().Key;
+              guard.exists = true;
+            }
+          })
+        })
+      })
+      resolve(list)
     })
   }
 
