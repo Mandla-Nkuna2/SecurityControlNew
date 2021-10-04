@@ -1,12 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonContent, ActionSheetController, Platform, AlertController } from '@ionic/angular';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Storage } from '@ionic/storage';
-import { NavController, IonContent, ModalController, ActionSheetController, AlertController, Platform } from '@ionic/angular';
-import { Observable } from 'rxjs';
-import { UUID } from 'angular2-uuid';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { AnalyticsService } from 'src/app/services/analytics.service';
 import { Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import moment from 'moment';
@@ -14,6 +7,7 @@ import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-chat',
@@ -37,7 +31,7 @@ export class ChatPage implements OnInit {
   access = false;
   @ViewChild(IonContent, { static: false }) ionContent: IonContent;
 
-  constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private storage: Storage, private alertCtrl: AlertController, private router: Router) { }
+  constructor(private analyticsService: AnalyticsService, private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private storage: Storage, private alertCtrl: AlertController, private router: Router) { }
 
   ngOnInit() {
     this.storage.get('subscriptionType').then(subscriptionType => {
