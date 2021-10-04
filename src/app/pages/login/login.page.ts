@@ -57,4 +57,8 @@ export class LoginPage {
     return await alert.present();
   }
 
+  goToRegister() {
+    this.router.navigate(['registration'])
+  }
+
 }
