@@ -231,8 +231,6 @@ export class FormServiceService {
           })
         })
       }).catch((error) => {
-        console.log('error in retireve forms')
-        console.log(error);
         resolve('some error , moving on')
       })
     })
