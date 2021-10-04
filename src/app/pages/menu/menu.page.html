@@ -1,4 +1,4 @@
-<ion-split-pane contentId="content" >
+<ion-split-pane contentId="content">
 
   <ion-menu contentId="content" type="overlay" class="custom">
 
@@ -16,37 +16,39 @@
         </div>
 
         <ion-menu-toggle auto-hide="false">
-          <div *ngIf="permission && !technician">
+          <div *ngIf="permission && !technician && access">
             <div *ngIf="!app">
-              
+
               <ion-item *ngFor="let p of pages1" [routerLink]="p.url" routerDirection="root"
                 [class.active-item]="selectedPath === p.url">
-                <ion-icon  [src]="p.icon" slot="start"></ion-icon>
+                <ion-icon [src]="p.icon" slot="start"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
-                <div *ngIf="p.title === 'SALES CHAT' && salesCount !== 0" style="color: red; border-radius: 40%; border: 1px solid red;">{{salesCount}}</div>
-                <div *ngIf="p.title === 'CHAT' && supportCount !== 0" style="color: red; border-radius: 40%; border: 1px solid red;">{{supportCount}}</div>
+                <div *ngIf="p.title === 'SALES CHAT' && salesCount !== 0"
+                  style="color: red; border-radius: 40%; border: 1px solid red;">{{salesCount}}</div>
+                <div *ngIf="p.title === 'CHAT' && supportCount !== 0"
+                  style="color: red; border-radius: 40%; border: 1px solid red;">{{supportCount}}</div>
               </ion-item>
             </div>
             <div *ngIf="app">
               <ion-item *ngFor="let p of pages2" [routerLink]="p.url" routerDirection="root"
                 [class.active-item]="selectedPath === p.url">
-                <ion-icon  [src]="p.icon" slot="start"></ion-icon>
+                <ion-icon [src]="p.icon" slot="start"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </div>
           </div>
-          <div *ngIf="!permission && !technician">
+          <div *ngIf="!permission && !technician && access">
             <div *ngIf="!app">
               <ion-item *ngFor="let p of pages3" [routerLink]="p.url" routerDirection="root"
                 [class.active-item]="selectedPath === p.url">
-                <ion-icon  [src]="p.icon" slot="start"></ion-icon>
+                <ion-icon [src]="p.icon" slot="start"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </div>
             <div *ngIf="app">
               <ion-item *ngFor="let p of pages4" [routerLink]="p.url" routerDirection="root"
                 [class.active-item]="selectedPath === p.url">
-                <ion-icon  [src]="p.icon" slot="start"></ion-icon>
+                <ion-icon [src]="p.icon" slot="start"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </div>
@@ -56,6 +58,13 @@
               class.active-item="selectedPath === '/work-orders'">
               <ion-icon name="clipboard" slot="start"></ion-icon>
               <ion-label color="primary">TECHNICAL JOB CARDS</ion-label>
+            </ion-item>
+          </div>
+          <div *ngIf="!access">
+            <ion-item *ngFor="let p of NoAccess" [routerLink]="p.url" routerDirection="root"
+              [class.active-item]="selectedPath === p.url">
+              <ion-icon [src]="p.icon" slot="start"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </div>
 
@@ -75,7 +84,8 @@
             <img *ngIf=user.photo [src]="user.photo">
             <img *ngIf=!user.photo src="assets/imgs/user.jpg">
           </ion-avatar> -->
-          <ion-label style="text-align: center;" style='color:grey; text-align: center;' color="color: #757575 !important;">MY ACCOUNT</ion-label>
+          <ion-label style="text-align: center;" style='color:grey; text-align: center;'
+            color="color: #757575 !important;">MY ACCOUNT</ion-label>
         </ion-item>
       </ion-menu-toggle>
     </ion-footer>

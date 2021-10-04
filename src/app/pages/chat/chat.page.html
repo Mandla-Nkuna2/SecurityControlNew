@@ -96,11 +96,10 @@
           <ion-icon name="send" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="access">
         <ion-button (click)="picture.click()" fill="clear">
           <ion-icon name="attach" slot="icon-only"></ion-icon>
         </ion-button>
-
         <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
           capture="camera">
       </ion-col>
@@ -128,7 +127,7 @@
       <ion-col>
         <ion-icon name="send" size="small" (click)="sendMsg()" style="color: green;margin-top: 40%;"></ion-icon>
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="access">
         <ion-icon name="attach" size="small" (click)="attach()" style="color: red; margin-top: 40%;"></ion-icon>
       </ion-col>
     </ion-row>

@@ -6,6 +6,8 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
+import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bulk-upload',
@@ -24,11 +26,19 @@ export class BulkUploadPage implements OnInit {
   userSites = []
   guardsAvailable = true;
   guardSite;
+  access = false;
 
-  constructor(private BUService: BulkUploadService, private alertCtrl: AlertController,
-    private afs: AngularFirestore, private loading: LoadingService, private toast: ToastService) { }
+  constructor(private BUService: BulkUploadService, private alertCtrl: AlertController, private storage: Storage,
+    private afs: AngularFirestore, private loading: LoadingService, private toast: ToastService, private router: Router) { }
 
   ngOnInit() {
+    this.storage.get('subscriptionType').then(subscriptionType => {
+      if (subscriptionType !== 'basic' && subscriptionType !== undefined && subscriptionType !== null) {
+        this.access = true;
+      } else {
+        this.access = false;
+      }
+    })
   }
 
   changeTab(type) {
@@ -39,16 +49,20 @@ export class BulkUploadPage implements OnInit {
   }
 
   getSites(guardOption) {
-    if (guardOption === 'No Site') {
-      this.guardsAvailable = false;
-    } else {
-      this.guardsAvailable = true;
-    }
-    this.BUService.getUser().then((user) => {
-      this.BUService.getUserSites(user).then(sites => {
-        this.userSites = sites;
+    if (this.access) {
+      if (guardOption === 'No Site') {
+        this.guardsAvailable = false;
+      } else {
+        this.guardsAvailable = true;
+      }
+      this.BUService.getUser().then((user) => {
+        this.BUService.getUserSites(user).then(sites => {
+          this.userSites = sites;
+        })
       })
-    })
+    } else {
+      this.noAccessAlert();
+    }
   }
 
   selectedSite(event) {
@@ -58,17 +72,25 @@ export class BulkUploadPage implements OnInit {
   }
 
   downloadTemplate() {
-    var url;
-    if (this.selected === 'Sites') {
-      url = 'https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/SitesTemplate.xlsx?alt=media&token=e21cc352-219b-4e45-b253-16739c9eb6ec';
+    if (this.access) {
+      var url;
+      if (this.selected === 'Sites') {
+        url = 'https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/SitesTemplate.xlsx?alt=media&token=e21cc352-219b-4e45-b253-16739c9eb6ec';
+      } else {
+        url = 'https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/GuardsTemplate.xlsx?alt=media&token=e920a9e7-0c9c-4ece-8f21-1f81b002064c';
+      }
+      window.open(url);
     } else {
-      url = 'https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/GuardsTemplate.xlsx?alt=media&token=e920a9e7-0c9c-4ece-8f21-1f81b002064c';
+      this.noAccessAlert();
     }
-    window.open(url);
   }
 
   attach() {
-    this.filePickerRef.nativeElement.click();
+    if (this.access) {
+      this.filePickerRef.nativeElement.click();
+    } else {
+      this.noAccessAlert();
+    }
   }
 
   uploadTemplate(event: Event) {
@@ -142,6 +164,27 @@ export class BulkUploadPage implements OnInit {
       this.guards = [];
       this.toast.show('Saved Successfully');
     })
+  }
+
+  async noAccessAlert() {
+    var alert = await this.alertCtrl.create({
+      header: 'Invalid Request',
+      message: 'You do not have access to this functionality. Please upgrade if you wish to access it. Or you can contact our sales team',
+      buttons: [
+        {
+          text: 'CANCEL',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Talk To Sales',
+          handler: () => {
+            this.router.navigate(['chat-sales'])
+          }
+        },
+      ]
+    })
+    return alert.present()
   }
 
 }
