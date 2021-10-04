@@ -161,12 +161,22 @@ const routes: Routes = [
         loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule)
       },
       {
+        path: 'form-menu',
+        loadChildren: () => import('../form-menu/form-menu.module').then(m => m.FormMenuPageModule)
+      },
+      {
 
         path: 'chat-sales',
-        loadChildren: () => import('../chat-sales/chat-sales.module').then( m => m.ChatSalesPageModule)
+        loadChildren: () => import('../chat-sales/chat-sales.module').then(m => m.ChatSalesPageModule)
       },
-    
-    
+      {
+        path: 'form-upload',
+        loadChildren: () => import('../form-upload/form-upload.module').then( m => m.FormUploadPageModule)
+      },
+      {
+        path: 'memberships',
+        loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
+      },
     ]
   },
   {

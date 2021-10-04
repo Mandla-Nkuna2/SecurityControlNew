@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>971275793089-urat0sb0mdgqekuennk3dq12n7dd99n8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.971275793089-urat0sb0mdgqekuennk3dq12n7dd99n8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCaWkEClsbRKJ7VGEDE-gBv1ZJNSmdLYPU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>971275793089</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.innovativethinking.adminforms</string>
+	<key>PROJECT_ID</key>
+	<string>security-control-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>security-control-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:971275793089:ios:2f415430009ed34f2b5a40</string>
+	<key>DATABASE_URL</key>
+	<string>https://security-control-app.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,0 +1,29 @@
+<ion-content>
+  <div class="top-holder flex al-center jc-between">
+    <div class="left">
+      <h1>Form Uploads</h1>
+    </div>
+
+    <div class="right path-holder">
+      <h4>Home/Form Uploads</h4>
+    </div>
+  </div>
+
+  <h4 style="color: white; text-align: center;" *ngIf="sent">Thank you for submitting a new form on Security Control.
+    <br>
+    We will inform you when it has been added.</h4>
+
+  <ion-button class="button" (click)="file.click()" *ngIf="attachment === ''">
+    <ion-icon name="attach"></ion-icon>
+    Choose A File
+  </ion-button>
+  <input #file style="display:none;" type="file" accept=".pdf, .docx" (change)="choosefile($event)">
+
+  <ion-button class="button" (click)="upload()" *ngIf="attachment !== ''">
+    <ion-icon name="cloud-upload"></ion-icon>
+      Upload Form
+  </ion-button>
+
+  <ngx-doc-viewer [url]="attachment" [viewer]="viewer" style="width:80%;height:80vh; margin-left: 10%;"></ngx-doc-viewer>
+
+</ion-content>

@@ -16,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  entryComponents: [PopoverComponent],
+  entryComponents: [PopoverComponent, Form],
   imports: [
     ComponentsModule,
     CommonModule,

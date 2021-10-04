@@ -28,7 +28,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -101,7 +101,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -140,7 +140,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -184,6 +184,11 @@ export class MenuPage implements OnInit {
       icon: 'pie-chart'
     },
     {
+      title: 'FORM UPLOAD',
+      url: '/form-upload',
+      icon: 'pie-chart'
+    },
+    {
       title: 'SUPPORT CHAT',
       url: '/chat',
       icon: 'pie-chart'
@@ -203,7 +208,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'Form',
-      url: '/form',
+      url: '/form-menu',
       icon: 'clipboard'
     },
     {
@@ -234,6 +239,11 @@ export class MenuPage implements OnInit {
     {
       title: 'SALES CHAT',
       url: '/chat-sales',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships',
       icon: 'pie-chart'
     },
   ];

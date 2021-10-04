@@ -9,7 +9,9 @@ import { PdfService } from './pdf.service';
   providedIn: 'root'
 })
 export class FormServiceService {
+
   visit: DynamicInput[] = []
+
   constructor(
     private afs: AngularFirestore,
     private storage: Storage,
@@ -43,9 +45,7 @@ export class FormServiceService {
         else {
           resolve(link);
         }
-
       })
-
     })
 
 
@@ -166,5 +166,18 @@ export class FormServiceService {
   }
   downloadPdf(newFormObj: any) {
     this.pdfService.download(newFormObj)
+  }
+  public getDocument(path: string, docId: string) {
+    return new Promise((resolve, reject) => {
+      this.completeLink(path).then((link: string) => {
+        this.completeLink(docId).then((doc: string) => {
+          this.afs.collection(link).doc(doc).ref.get().then((documentData) => {
+            resolve(documentData.data());
+          }).catch((error) => {
+            reject(error);
+          })
+        })
+      })
+    })
   }
 }
