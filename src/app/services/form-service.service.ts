@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, fromRef } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { DynamicInput } from '../models/dynamic-input.model'
 import * as moment from 'moment';
@@ -427,6 +427,42 @@ export class FormServiceService {
             reject(error);
           })
         })
+      })
+    })
+  }
+  public retrieveForms(companyId: string) {
+    return new Promise((resolve, reject) => {
+      this.afs.collection('companies').doc(companyId).collection('forms').ref.get().then((formsRef) => {
+        if (formsRef.docs.length < 1) {
+          resolve('no forms')
+        }
+        let loop = new Promise((resolveLoop) => {
+          let forms: any = [];
+          let i = fromRef.length;
+          formsRef.docs.forEach((form) => {
+            forms.push(form.data());
+            i = i - 1;
+            if (i == 0) {
+              resolveLoop(forms);
+            }
+          })
+        })
+        loop.then((forms: any[]) => {
+          this.storage.set('forms', forms).then(() => {
+            resolve('complete');
+          })
+        })
+      }).catch((error) => {
+        console.log('error in retireve forms')
+        console.log(error);
+        resolve('some error , moving on')
+      })
+    })
+  }
+  public getForms() {
+    return new Promise((resolve, reject) => {
+      this.storage.get('forms').then((forms: any[]) => {
+        resolve(forms);
       })
     })
   }
