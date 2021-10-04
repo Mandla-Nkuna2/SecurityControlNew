@@ -5,6 +5,7 @@ import { DynamicInput } from '../models/dynamic-input.model'
 import * as moment from 'moment';
 import { ActionSheetController } from '@ionic/angular';
 import { PdfService } from './pdf.service';
+import { UUID } from 'angular2-uuid';
 @Injectable({
   providedIn: 'root'
 })
@@ -301,12 +302,7 @@ export class FormServiceService {
     return promise;
   }
 
-  retryInBackground(formName: string, uid: string, form: any) {
-    setInterval(() => {
-      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
-      });
-    }, 1000)
-  }
+
 
   public getCollectionByFilter(link: string, option: string, value: string) {
     return new Promise((resolve, reject) => {
@@ -354,12 +350,25 @@ export class FormServiceService {
     })
   }
 
-  public saveForm(formName: string, uid: string, form: any) {
+  async retryInBackground(formName: string, uid: string, companyId: string, form: any) {
+    setInterval(() => {
+      let id = UUID.UUID();
+      form['userId'] = uid;
+      form['companyId'] = companyId;
+      this.afs.collection(formName).doc(id).ref.set(form).then(() => {
+      });
+    }, 1000)
+  }
+  public saveForm(formName: string, uid: string, companyId: string, form: any) {
     return new Promise((resolve, reject) => {
-      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
+      let id = UUID.UUID();
+      form['userId'] = uid;
+      form['companyId'] = companyId;
+      this.afs.collection(formName).doc(id).ref.set(form).then(() => {
         resolve('compelte')
       }).catch((error) => {
-        reject(error);
+        this.retryInBackground(formName, uid, companyId, form);
+
       })
     })
   }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { map, take } from 'rxjs/operators';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class SummariesPage implements OnInit {
   usersCollection: AngularFirestoreCollection<any>;
   users: Observable<any[]>;
 
-  constructor(private afs: AngularFirestore, public navCtrl: NavController, public router: Router, private storage: Storage) { }
+  constructor(private afs: AngularFirestore, public navCtrl: NavController, public router: Router, private storage: Storage, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.storage.get('user').then((user) => {
@@ -68,6 +69,15 @@ export class SummariesPage implements OnInit {
 
   incident() {
 
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Summaries',
+        screen_class: 'SummariesPage'
+      });
+    })
   }
 
 

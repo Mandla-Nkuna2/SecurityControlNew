@@ -1,5 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonContent, ActionSheetController, Platform, AlertController } from '@ionic/angular';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { Storage } from '@ionic/storage';
+import { NavController, IonContent, ModalController, ActionSheetController, AlertController, Platform } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { UUID } from 'angular2-uuid';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 import { Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import moment from 'moment';
@@ -187,6 +194,15 @@ export class ChatPage implements OnInit {
 
   ionViewWillLeave() {
     this.messagesSub.unsubscribe();
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Support Chat',
+        screen_class: 'SupportChatPage'
+      });
+    })
   }
 
 }

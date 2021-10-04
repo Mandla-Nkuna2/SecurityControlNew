@@ -27,25 +27,19 @@ export class ResignationPage implements OnInit {
   passedForm;
   data;
   saved = false;
-  
-  isDrawing2 =false
-
+  isDrawing2 = false
   sitesCollection: AngularFirestoreCollection<any>;
   sites: Observable<any[]>;
   siteDetailsCollection: AngularFirestoreCollection<any>;
   siteDetails: Observable<any[]>;
 
-
-
-  
-
-  constructor(private popoverController:PopoverController, public pdf:PdfService, private afs: AngularFirestore, private activatedRoute: ActivatedRoute, public platform: Platform, private storage: Storage, private router: Router,
+  constructor(private popoverController: PopoverController, public pdf: PdfService, private afs: AngularFirestore, private activatedRoute: ActivatedRoute, public platform: Platform, private storage: Storage, private router: Router,
     private alertCtrl: AlertController, private navCtrl: NavController, private toast: ToastService, private loading: LoadingService, private PdfService: PdfService,
     private actionCtrl: ActionSheetController) {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
-  async before() { 
+  async before() {
     const actionSheet = await this.actionCtrl.create({
       header: ``,
       mode: 'ios',
@@ -56,7 +50,7 @@ export class ResignationPage implements OnInit {
           // icon: 'save',
           // cssClass: 'successAction',
           handler: () => {
-                  this.save()
+            this.save()
 
           },
 
@@ -66,9 +60,9 @@ export class ResignationPage implements OnInit {
           // icon: 'save',
           // cssClass: 'successAction',
           handler: () => {
-            this.pdf.download(this.appeal).then(()=>{
-                            this.save()
-                          })
+            this.pdf.download(this.appeal).then(() => {
+              this.save()
+            })
           },
 
         }
@@ -116,10 +110,10 @@ export class ResignationPage implements OnInit {
     });
     return await prompt.present();
   }
-  
-  
 
-   appeal = {
+
+
+  appeal = {
     report: 'resignation',
     key: '',
     date: '',
@@ -134,43 +128,43 @@ export class ResignationPage implements OnInit {
     notice: '',
     site: '',
     last: '',
-    place : '',
+    place: '',
     employeeSign: '',
-    supervisorSign: '',empSig:''
-   
-  
+    supervisorSign: '', empSig: ''
+
+
   }
 
   employeeName = true
-  position= true
-  companyNumber= true
-  notice= true
-  site= true
-  last= true
+  position = true
+  companyNumber = true
+  notice = true
+  site = true
+  last = true
   place = true
-  employeeSign= true
-  supervisorSign= true
+  employeeSign = true
+  supervisorSign = true
 
-  dat(){
-    this.appeal.last =moment(this.appeal.last).format('YYYY/MM/DD');
+  dat() {
+    this.appeal.last = moment(this.appeal.last).format('YYYY/MM/DD');
 
   }
-  
+
   ngOnInit() {
-      
-       
+
+
     if (this.id === 'new') {
 
       this.storage.get('user').then((user) => {
         this.appeal.user = user.name;
         this.appeal.userKey = user.key;
-        this.appeal.userEmail =  user.email;
+        this.appeal.userEmail = user.email;
         this.appeal.company = user.company;
         this.appeal.companyId = user.companyId;
         this.appeal.key = UUID.UUID();
         this.appeal.date = moment(new Date().toISOString()).locale('en').format('YYYY/MM/DD');
       });
-  
+
     } else {
       this.storage.get(this.id).then((visit) => {
         this.appeal = visit;
@@ -211,41 +205,41 @@ export class ResignationPage implements OnInit {
 
 
   check() {
-    if (this.appeal.companyNumber== '') { this.companyNumber= false } else { this.companyNumber= true }
-    if (this.appeal.position== '') { this.position= false } else { this.position= true }
-    if (this.appeal.notice== '') { this.notice= false } else { this.notice= true }
-    if (this.appeal.site== '') { this.site= false } else { this.site= true }
-    if (this.appeal.last== '') { this.last= false } else { this.last= true }
-    if (this.appeal.place == '') { this.place = false } else { this.place = true }
-    if (this.appeal.employeeSign== '') { this.employeeSign= false } else { this.employeeSign= true }
-    if (this.appeal.supervisorSign== '') { this.supervisorSign= false } else { this.supervisorSign= true }
+    if (this.appeal.companyNumber == '') { this.companyNumber = false } else { this.companyNumber = true }
+    if (this.appeal.position == '') { this.position = false } else { this.position = true }
+    if (this.appeal.notice == '') { this.notice = false } else { this.notice = true }
+    if (this.appeal.site == '') { this.site = false } else { this.site = true }
+    if (this.appeal.last == '') { this.last = false } else { this.last = true }
+    if (this.appeal.place == '') { this.place = false } else { this.place = true }
+    if (this.appeal.employeeSign == '') { this.employeeSign = false } else { this.employeeSign = true }
+    if (this.appeal.supervisorSign == '') { this.supervisorSign = false } else { this.supervisorSign = true }
     if (this.appeal.employeeName == '') { this.employeeName = false } else { this.employeeName = true }
-      if (this.employeeName == true && this.companyNumber== true && this.position== true && this.notice== true && this.site== true && this.last== true && this.place == true && this.employeeSign== true && this.supervisorSign== true) { this.before() }
+    if (this.employeeName == true && this.companyNumber == true && this.position == true && this.notice == true && this.site == true && this.last == true && this.place == true && this.employeeSign == true && this.supervisorSign == true) { this.before() }
     else { this.invalidActionSheet() }
   }
-  
+
 
   save() {
-   
+
 
     this.storage.set(this.appeal.key, this.appeal).then(() => { //offline 7  /////
 
 
-    this.appeal.empSig = this.appeal.employeeSign
-    this.loading.present('Saving').then(()=>{
-      this.afs.collection('resign').doc(this.appeal.key).set(this.appeal).then(()=>{
-        this.loading.dismiss()
-        this.toast.show('Saved')
-        
+      this.appeal.empSig = this.appeal.employeeSign
+      this.loading.present('Saving').then(() => {
+        this.afs.collection('resign').doc(this.appeal.key).set(this.appeal).then(() => {
+          this.loading.dismiss()
+          this.toast.show('Saved')
 
-      this.storage.remove(this.appeal.key).then(() => { 
-        this.router.navigate(['forms']).then(() => {
-          this.loading.dismiss().then(() => {
-            this.toast.show('Saved Successfully!');
+
+          this.storage.remove(this.appeal.key).then(() => {
+            this.router.navigate(['forms']).then(() => {
+              this.loading.dismiss().then(() => {
+                this.toast.show('Saved Successfully!');
+              });
+            });
           });
-        });
-      });
-    })
+        })
       })
     })
   }

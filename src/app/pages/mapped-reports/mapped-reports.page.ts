@@ -1,4 +1,4 @@
-import { NavController, LoadingController, ModalController, AlertController } from '@ionic/angular';
+import { NavController, LoadingController, ModalController, AlertController, Platform } from '@ionic/angular';
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -8,6 +8,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import 'leaflet';
 declare let L;
 import { MapReportDetailsPage } from '../map-report-details/map-report-details.page';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-mapped-reports',
@@ -217,7 +218,8 @@ export class MappedReportsPage implements OnInit {
 
 
   constructor(public alertCtrl: AlertController, public modalCtrl: ModalController, public loadingCtrl: LoadingController,
-    private afs: AngularFirestore, public navCtrl: NavController, private storage: Storage, public loading: LoadingService) {
+    private afs: AngularFirestore, public navCtrl: NavController, private storage: Storage, public loading: LoadingService,
+    private platform: Platform, private analyticsService: AnalyticsService) {
   }
 
   ngOnInit() {
@@ -1132,6 +1134,15 @@ export class MappedReportsPage implements OnInit {
     } else {
       this.pnpAdded = false;
     }
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Mapped Reports',
+        screen_class: 'MappedReportsPage'
+      });
+    })
   }
 
 }
