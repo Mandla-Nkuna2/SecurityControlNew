@@ -138,4 +138,16 @@ export class AuthenticationService {
     })
   }
 
+  checkCompanyAccess(user) {
+    return this.afs.collection('companies').doc(user.companyId).ref.get().then(comp => {
+      var company: any = comp.data();
+      if (company) {
+        console.log(company.key)
+        this.storage.set('access', company.access);
+        this.storage.set('subscriptionType', company.subscriptionType);
+        return company.access
+      }
+    })
+  }
+
 }

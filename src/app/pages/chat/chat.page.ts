@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonContent, ActionSheetController, Platform, AlertController } from '@ionic/angular';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { NavController, IonContent, ModalController, ActionSheetController, AlertController, Platform } from '@ionic/angular';
@@ -6,12 +7,13 @@ import { Observable } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AnalyticsService } from 'src/app/services/analytics.service';
-import { IonContent, ActionSheetController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import moment from 'moment';
 import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -32,20 +34,28 @@ export class ChatPage implements OnInit {
   fileName = '';
   today = moment(new Date()).format('YYYY/MM/DD');
 
+  access = false;
   @ViewChild(IonContent, { static: false }) ionContent: IonContent;
 
-  constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService) { }
+  constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private storage: Storage, private alertCtrl: AlertController, private router: Router) { }
 
   ngOnInit() {
-    if (this.platform.is('mobile')) {
-      this.app = true;
-    } else {
-      this.app = false;
-    }
-    this.chats = [];
-    this.chatService.getUser().then(user => {
-      this.user = user;
-      this.getChatSub(user);
+    this.storage.get('subscriptionType').then(subscriptionType => {
+      if (subscriptionType !== 'basic' && subscriptionType !== undefined && subscriptionType !== null) {
+        this.access = true;
+        if (this.platform.is('mobile')) {
+          this.app = true;
+        } else {
+          this.app = false;
+        }
+        this.chats = [];
+        this.chatService.getUser().then(user => {
+          this.user = user;
+          this.getChatSub(user);
+        })
+      } else {
+        this.access = false;
+      }
     })
   }
 
@@ -143,14 +153,39 @@ export class ChatPage implements OnInit {
   }
 
   sendMsg() {
-    if (this.newMsg !== '') {
-      this.chatService.sendSupportChat(this.user, this.newMsg, this.attachment).then(() => {
-        this.ionContent.scrollToBottom(300);
-        this.newMsg = '';
-        this.attachment = '';
-        this.toast.show('Message Send');
-      })
+    if (this.access) {
+      if (this.newMsg !== '') {
+        this.chatService.sendSupportChat(this.user, this.newMsg, this.attachment).then(() => {
+          this.ionContent.scrollToBottom(300);
+          this.newMsg = '';
+          this.attachment = '';
+          this.toast.show('Message Send');
+        })
+      }
+    } else {
+      this.noAccessAlert();
     }
+  }
+
+  async noAccessAlert() {
+    var alert = await this.alertCtrl.create({
+      header: 'Invalid Request',
+      message: 'You do not have access to this functionality. Please upgrade if you wish to access it. Or you can contact our sales team',
+      buttons: [
+        {
+          text: 'CANCEL',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Talk To Sales',
+          handler: () => {
+            this.router.navigate(['chat-sales'])
+          }
+        },
+      ]
+    })
+    return alert.present()
   }
 
   viewAttachment(attachment) {
