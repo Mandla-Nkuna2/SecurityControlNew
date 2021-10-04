@@ -30,7 +30,7 @@ export class FormUploadPage {
 
   ngOnInIt() {
     this.storage.get('subscriptionType').then(subscriptionType => {
-      if (subscriptionType !== 'basic' && subscriptionType !== undefined && subscriptionType !== null) {
+      if (subscriptionType === 'enterprise') {
         this.access = true;
       } else {
         this.access = false;
