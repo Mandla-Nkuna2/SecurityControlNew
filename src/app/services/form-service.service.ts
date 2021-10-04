@@ -83,27 +83,46 @@ export class FormServiceService {
     }
     return regex[type];
   }
-  checkValues(questions: DynamicInput[]): Promise<DynamicInput[]> {
+  checkValues(questions: DynamicInput[]) {
     return new Promise((resolve, reject) => {
       let i = 0;
+      let saveObjects: any = {};
+      // the way around multiple  i = i + 1 seems to be longer.
       questions.forEach(question => {
         if (question.value) {
           if (question.value.includes('@time')) {
             question.value = moment().format('HH: mm').toString();
+            saveObjects[question.fieldName] = question.value;
+            i = i + 1;
           }
           else if (question.value.includes('@date')) {
             question.value = moment().format('YYYY-MM-DD').toString();
+            saveObjects[question.fieldName] = question.value;
+            i = i + 1;
           }
           else if (question.value.includes('{')) {
             this.completeLink(question.value).then((val: string) => {
               question.value = val;
+              saveObjects[question.fieldName] = question.value;
+              i = i + 1;
             });
           }
+          else {
+            i = i + 1;
+          }
         }
-
-        i = i + 1;
-        if (i == questions.length) {
-          resolve(questions)
+        else {
+          i = i + 1;
+        }
+        if (i == questions.length - 1) {
+          setTimeout(() => {
+            resolve(
+              {
+                questions,
+                saveObjects
+              }
+            );
+          }, 1000);
         }
       });
     })
