@@ -8975,21 +8975,27 @@ exports.validatePurchase = functions.https.onCall((data, context) => {
 })
 
 exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 05 * * *').timeZone('Africa/Johannesburg').onRun(() => {
-    return admin.firestore().collection('companies').where('subscribed', '==', true).get().then(comps => {
-        return comps.forEach(company => {
-            var nextDate = moment(company.data().subscriptionDate, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
+    return admin.firestore().collection('subscriptions').get().then(subs => {
+        return subs.forEach(sub => {
+            var nextDate = moment(sub.data().date, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
             var today = moment(new Date()).format('YYYY/MM/DD');
             if (today === nextDate) {
-                console.log('Do check')
-                checkVerify(company.data()).then((msg) => {
-                    if (msg === 'Verified') {
-                        console.log('Still fine')
-                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: true, subscriptionDate: today })
-                    } else {
-                        console.log('Removed premium')
-                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: false, subscriptionDate: '', period: '' })
-                    }
-                })
+                if (sub.data().type === 'App') {
+                    console.log('Do check app')
+                    checkAppVerify(sub.data()).then((msg) => {
+                        if (msg === 'Verified') {
+                            console.log('Still fine')
+                            admin.firestore().collection('subscriptions').doc(sub.data().companyId).update({ date: today })
+                        } else {
+                            console.log('Removed premium')
+                            admin.firestore().collection('subscriptions').doc(sub.data().companyId).delete();
+                            admin.firestore().collection('companies').doc(company.data().key).update({ access: false, accessType: '' })
+                        }
+                    })
+                } else {
+                    console.log('Do check web')
+
+                }
             } else {
                 console.log('No check needed')
             }
@@ -8997,7 +9003,7 @@ exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 
     })
 })
 
-function checkVerify(company) {
+function checkAppVerify(company) {
     return new Promise((resolve, reject) => {
         var transaction = company.transaction;
         if (transaction) {

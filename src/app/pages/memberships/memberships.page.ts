@@ -51,20 +51,17 @@ export class MembershipsPage implements OnInit {
       this.storage.get('user').then(user => {
         var newUser = user;
         var newObj: any = {};
-        
         newObj = transaction;
         newObj.deferred = 'undefined';
-        newObj.transaction.developerPayload = 'undefined'
+        newObj.transaction.developerPayload = 'undefined';
         newObj.user = newUser;
-        newObj.key = newUser.key
-        console.log('New Object: ', newObj);
-        this.afs.collection('transactions').doc(newObj.key).set(Object.assign({}, newObj));
+        newObj.type = 'App';
+        newObj.date = moment(new Date()).format('YYYY/MM/DD');
+        newObj.companyId = newUser.companyId;
+        this.afs.collection('subscriptions').doc(newObj.companyId).set(Object.assign({}, newObj));
         this.afs.collection('companies').doc(user.companyId).update({
-          subscriptionDate: moment(new Date()).format('YYYY/MM/DD'),
-          subscriptionType: transaction.id,
-          subscriptionUser: user,
-          subscription: transaction,
-          subscribed: true
+          accessType: transaction.id,
+          access: true
         })
         .then(() => {
           newUser.premium = true;
