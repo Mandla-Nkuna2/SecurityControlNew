@@ -13,7 +13,7 @@ export class MembershipService {
     private http: HttpClient
   ) { }
 
-  startMembership(companyKey, chosenTier, customerCode, planCode, authCode){
+  startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email){
     return new Promise((resolve, reject)=>{
       this.http.post(FUNCTIONS_HOST + 'startSubscription', { 
         companyKey: companyKey, 
@@ -21,7 +21,7 @@ export class MembershipService {
         customerCode: customerCode,
         planCode: planCode,
         authCode: authCode,
-        email: "lamu@innovativethinking.co.za"
+        email: email
       }).pipe(take(1)).subscribe((onResponse)=>{
         resolve(onResponse)
       }, onError=>{
@@ -61,11 +61,11 @@ export class MembershipService {
     })
   }
 
-  initializePayment(email){
+  initializePayment(email, amount: number){
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST+'initializePayment', {
         email: email,
-        amount: "300",
+        amount: amount,
         currency: "ZAR"
       }).pipe(take(1)).subscribe((onResponse)=>{
         resolve(onResponse)
