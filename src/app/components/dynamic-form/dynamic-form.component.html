@@ -109,7 +109,7 @@
         </ion-item>
       </div>
     </form>
-    <ion-button type="submit" expand="block" fill="clear" shape="round"
+    <ion-button type="submit" expand="block" fill="clear" shape="round" (click)="onSubmit()"
       *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
       Submit
     </ion-button>

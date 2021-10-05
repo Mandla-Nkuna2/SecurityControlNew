@@ -9,6 +9,9 @@ import { DynamicInput } from '../models/dynamic-input.model';
 import { FormServiceService } from './form-service.service';
 import * as moment from 'moment'
 import { UiService } from './ui.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { UUID } from 'angular2-uuid';
+
 
 @Injectable()
 export class pdfService2 {
@@ -19,7 +22,9 @@ export class pdfService2 {
     private storage: Storage,
     public loading: LoadingService,
     private formService: FormServiceService,
-    private uiService: UiService
+    private uiService: UiService,
+    private functions: AngularFireFunctions
+
   ) {
   }
   pdfObj = null;
@@ -49,7 +54,12 @@ export class pdfService2 {
   }
 
   public downloadPdf(name: string, formTemplate: DynamicInput[], newFormObj: any) {
-    try {
+    this.composePDF(name, formTemplate, newFormObj).then((docDefinition: any) => {
+      this.generatePDF(docDefinition)
+    });
+  }
+  public composePDF(name: string, formTemplate: DynamicInput[], newFormObj: any) {
+    return new Promise((resolveAll, rejectAll) => {
       let mainBody = [];
       let extraBodies = [];
       let signitures = [];
@@ -156,17 +166,17 @@ export class pdfService2 {
         })
         prom.then((data: any) => {
           this.checkImage().then((image: string) => {
-            this.populatePdf(name, data, image, extraBodies, signitures)
+            this.populatePdf(name, data, image, extraBodies, signitures).then((docDefinition: any) => {
+              resolveAll(docDefinition);
+            })
           })
         })
       }
-    } catch (error) {
-      console.log(error);
-    }
+    })
   }
 
   populatePdf(name: string, header: any, image: string, extraBodies: any[], signitures: any[]) {
-    try {
+    return new Promise((resolve, reject) => {
       var docDefinition = {
         content: [
           {
@@ -213,10 +223,9 @@ export class pdfService2 {
           // alignment: 'justiSfy'
         }
       };
-      this.generatePDF(docDefinition)
-    } catch (error) {
-      console.log(error);
-    }
+      resolve(docDefinition)
+    })
+
   }
   checkImage() {
     return new Promise((resolve, reject) => {
@@ -243,5 +252,21 @@ export class pdfService2 {
   getCurrentDate() {
     return moment().format('YYYY-MM-DD').toString();
   }
-
+  emailPDF(name: string, formTemplate: DynamicInput[], newFormObj: any) {
+    return new Promise((resolve, reject) => {
+      this.composePDF(name, formTemplate, newFormObj).then((docDefinition) => {
+        let data = {
+          docDefinition,
+          newFormObj,
+          name,
+          key: UUID.UUID()
+        }
+        const callable = this.functions.httpsCallable('emailInspectionPDF');
+        const obs = callable(data);
+        obs.subscribe(async res => {
+          resolve('complete')
+        });
+      })
+    })
+  }
 }

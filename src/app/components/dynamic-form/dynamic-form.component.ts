@@ -254,6 +254,9 @@ export class DynamicFormComponent implements OnInit {
       })
     }
     this.formObject.emit(this.newFormObj);
+    this.pdfService.emailPDF(this.formTitle, this.allInputs, this.newFormObj).then((s) => {
+      console.log('complete');
+    })
   }
   isValid(): boolean {
     if (this.dynamicForm.invalid) {
