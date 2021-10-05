@@ -15,9 +15,8 @@ const routes: Routes = [
     component: MenuPage,
     children: [
       { path: 'welcome', loadChildren: () => import('../welcome/welcome.module').then(m => m.WelcomePageModule) },
-      { path: 'forms', loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule) },
       { path: 'my-account', loadChildren: () => import('../my-account/my-account.module').then(m => m.MyAccountPageModule) },
-      //{ path: 'forms', loadChildren: () => import('../forms/forms.module').then(m => m.FormsPageModule) },
+      { path: 'forms', loadChildren: () => import('../forms/forms.module').then(m => m.FormsPageModule) },
       { path: 'sites', loadChildren: () => import('../sites/sites.module').then(m => m.SitesPageModule) },
       { path: 'staff', loadChildren: () => import('../staff/staff.module').then(m => m.StaffPageModule) },
       { path: 'reports', loadChildren: () => import('../reports/reports.module').then(m => m.ReportsPageModule) },
