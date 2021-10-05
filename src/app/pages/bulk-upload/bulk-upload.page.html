@@ -9,6 +9,17 @@
     </div>
   </div>
 
+  <div class="explanation">
+    Welcome to Security Control Bulk Uploads: The easiest way to upload mass data. <br>
+    Instead of importing each item at a time, try the convenient way!
+    <br><br>
+    How does it work?<br>
+    The first step is to download the template. This will make sure that the format is correct. Input the data according
+    to the template headings. Please do not edit the headings or structure.
+    <br>Once all your data is inputted, all you need to do is upload it here. The new data will be displayed for your
+    convenience. Make sure all the data is correct. Then you can go ahead and save! Easy as that!
+  </div>
+
   <ion-grid>
     <ion-row style="text-align: center;">
       <ion-col (click)="changeTab('Sites')"
@@ -21,17 +32,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <div class="explanation">
-    Welcome to Security Control Bulk Uploads: The easiest way to upload mass data. <br>
-    Instead of importing each item at a time, try the convenient way!
-    <br><br>
-    How does it work?<br>
-    The first step is to download the template. This will make sure that the format is correct. Input the data according
-    to the template headings. Please do not edit the headings or structure.
-    <br>Once all your data is inputted, all you need to do is upload it here. The new data will be displayed for your
-    convenience. Make sure all the data is correct. Then you can go ahead and save! Easy as that!
-  </div>
 
   <ion-button (click)="downloadTemplate()">
     Download {{selected}} Template

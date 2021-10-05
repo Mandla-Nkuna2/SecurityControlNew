@@ -177,6 +177,10 @@ const routes: Routes = [
         path: 'memberships',
         loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
       },
+      {
+        path: 'no-access',
+        loadChildren: () => import('../no-access/no-access.module').then( m => m.NoAccessPageModule)
+      },
     ]
   },
   {

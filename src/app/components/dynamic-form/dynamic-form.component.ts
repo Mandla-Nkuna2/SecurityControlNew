@@ -53,13 +53,13 @@ export class DynamicFormComponent implements OnInit {
     this.dynamicForm = new FormGroup({
       inputs: this.formArray
     });
-    this.formService.checkValues(this.dynamicInputs).then((questions: DynamicInput[]) => {
-      this.dynamicInputs = questions;
+    this.formService.checkValues(this.dynamicInputs).then((data: any) => {
+      this.dynamicInputs = data.questions;
       this.allInputs = Array.from(this.dynamicInputs);
       this.checkSlides().then(() => {
         this.createInputs();
         this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
-        this.newFormObj = { ...this.staticFields };
+        this.newFormObj = { ...this.staticFields, ...data.saveObjects };
         this.show = true;
       })
     })
@@ -237,7 +237,7 @@ export class DynamicFormComponent implements OnInit {
     this.lastIndex = this.lastIndex - (this.dynamicInputs.length)
 
 
-   }
+  }
 
   onSubmit() {
     if (!this.isValid()) {

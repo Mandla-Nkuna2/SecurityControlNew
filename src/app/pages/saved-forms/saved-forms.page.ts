@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { LoadingService } from 'src/app/services/loading.service';
+import { Platform } from '@ionic/angular';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-saved-forms',
@@ -13,7 +15,7 @@ export class SavedFormsPage implements OnInit {
   items = [];
   noForms = false;
 
-  constructor(public loading: LoadingService, private router: Router, private storage: Storage) { }
+  constructor(public loading: LoadingService, private router: Router, private storage: Storage, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.chechStorage().then(() => {
@@ -88,6 +90,15 @@ export class SavedFormsPage implements OnInit {
         this.loading.dismiss();
       });
     });
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Saved Forms',
+        screen_class: 'SavedFormsPage'
+      });
+    })
   }
 
 }

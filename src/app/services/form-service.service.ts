@@ -1,265 +1,25 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, fromRef } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { DynamicInput } from '../models/dynamic-input.model'
 import * as moment from 'moment';
 import { ActionSheetController } from '@ionic/angular';
 import { PdfService } from './pdf.service';
+import { UUID } from 'angular2-uuid';
 @Injectable({
   providedIn: 'root'
 })
 export class FormServiceService {
-  visit: DynamicInput[] = [
-    {
-      label: "car",
-      fieldName: "car",
-      required: true,
-      controlType: "normal",
-      items: [],
-      value: '',
-      hidden: false,
-      link: '',
-      itemsDisplayVal: '',
-      itemsSaveVal: '',
-      itemIsObject: false,
-    }, {
-      label: 'Number of Officers on Duty',
-      fieldName: 'duty',
-      required: true,
-      controlType: "normal",
-      items: [],
-      value: '',
-      hidden: false,
 
-    },
-    {
-      label: 'Registration',
-      fieldName: 'registration',
-      required: true,
-      controlType: "select",
-      link: 'fleet',
-      linkFilterName: 'companyId',
-      linkFilterValue: '{companyId}',
-      itemIsObject: true,
-      itemsDisplayVal: 'registration',
-      itemsSaveVal: 'key',
-      items: [],
-      value: '',
-      hidden: false,
+  visit: DynamicInput[] = []
 
-    },
-    {
-      label: 'Site Name',
-      fieldName: 'site',
-      required: true,
-      controlType: "select",
-      items: [],
-      value: '',
-      hidden: false,
-      link: 'users/{key}/sites',
-      itemsDisplayVal: 'name',
-      itemsSaveVal: 'key',
-      itemIsObject: true,
-      populateQuestionItems: {
-        questionKeyName: 'fieldName',
-        questionKeyValue: 'staffMmeber',
-        collectionPath: 'guards',
-        collectionFilterName: 'siteId',
-        collectionFilterValue: '$site'
-      }
-    },
-    {
-      label: 'Date',
-      fieldName: 'date',
-      required: true,
-      controlType: "normal",
-      value: '@date',
-      hidden: false,
-      disabled: true
-    },
-    {
-      label: 'Manager',
-      fieldName: 'managerName',
-      required: true,
-      controlType: "normal",
-      value: '{name}',
-      hidden: false,
-      disabled: true
-    },
-    {
-      label: 'OB Number',
-      fieldName: 'ob',
-      required: true,
-      controlType: "normal",
-      value: '',
-      inputType: 'number',
-      hidden: false,
-    },
-    {
-      label: 'my pic',
-      fieldName: 'pic1',
-      required: true,
-      controlType: "camera",
-      value: '',
-      hidden: false,
-    },
-    {
-      label: 'my pic2',
-      fieldName: 'pic22',
-      required: true,
-      controlType: "camera",
-      value: '',
-      hidden: false,
-    },
-    {
-      label: 'my pic3',
-      fieldName: 'pic33',
-      required: true,
-      controlType: "camera",
-      value: '',
-      hidden: false,
-    },
-    {
-      label: 'my pic4',
-      fieldName: 'pic44',
-      required: true,
-      controlType: "camera",
-      value: '',
-      hidden: false,
-    },
-    {
-      label: 'my pic5',
-      fieldName: 'pic55',
-      required: true,
-      controlType: "camera",
-      value: '',
-      hidden: false,
-    },
-
-    {
-      label: 'my sig',
-      fieldName: 'sig1',
-      required: false,
-      controlType: "signaturePad",
-      hidden: false,
-    },
-    {
-      label: 'managers sig',
-      fieldName: 'mansig',
-      required: true,
-      controlType: "signaturePad",
-      hidden: false,
-    },
-    {
-      label: 'date seen',
-      fieldName: 'date',
-      required: true,
-      controlType: "date",
-      value: '',
-      hidden: false,
-    },
-    {
-      label: 'time checked',
-      fieldName: 'time',
-      required: true,
-      controlType: "time",
-      value: '',
-      hidden: false,
-    },
-    {
-      label: 'Staff Member on Duty',
-      fieldName: 'staffMmeber',
-      required: true,
-      controlType: "select",
-      items: [],
-      value: '',
-      hidden: false,
-      itemsDisplayVal: 'name',
-      itemsSaveVal: 'name',
-      itemIsObject: true,
-    },
-    {
-      label: 'Any Incidents Reported Since Last Visit?',
-      fieldName: 'incidents',
-      required: true,
-      controlType: "normal",
-      items: ["yes", "no"],
-      value: '',
-      hidden: false,
-      link: '',
-      itemsDisplayVal: '',
-      itemsSaveVal: '',
-      itemIsObject: false,
-    },
-    {
-      label: "color",
-      fieldName: "color",
-      required: true,
-      controlType: 'select',
-      hidden: false
-    },
-    {
-      label: "car type",
-      fieldName: "type",
-      required: true,
-      controlType: 'normal',
-      hidden: false
-    }, {
-      label: 'Comments ',
-      fieldName: 'com2',
-      required: false,
-      controlType: "normal",
-      items: ["Yes", "No", "Not Applicable"],
-      value: '',
-      hidden: false,
-      condition: "$dutyRost == 'Yes' "
-
-    }, {
-      label: 'Job Description on Site?',
-      fieldName: 'jobDesc',
-      required: true,
-      controlType: "select",
-      items: ["Yes", "No", "Not Applicable"],
-      value: '',
-      hidden: false
-
-    },
-
-    {
-      label: 'Comments ',
-      fieldName: 'com3',
-      required: false,
-      controlType: "normal",
-      items: ["Yes", "No", "Not Applicable"],
-      value: '',
-      hidden: false,
-      condition: "$jobDesc == 'Yes' "
-    },
-
-    {
-      label: 'Manger signiture ',
-      fieldName: 'managerSig',
-      controlType: "signaturePad",
-      required: true,
-      hidden: false,
-      value: '',
-    },
-    {
-      label: 'users signiture ',
-      fieldName: 'userSig',
-      controlType: "signaturePad",
-      required: true,
-      hidden: false,
-      value: '',
-    },
-
-  ]
   constructor(
     private afs: AngularFirestore,
     private storage: Storage,
     public actionCtrl: ActionSheetController,
     private pdfService: PdfService
   ) { }
+
   public getCollection(link: string) {
     const promise = new Promise((resolve, reject) => {
       this.completeLink(link).then((newLink: string) => {
@@ -301,12 +61,7 @@ export class FormServiceService {
     return promise;
   }
 
-  retryInBackground(formName: string, uid: string, form: any) {
-    setInterval(() => {
-      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
-      });
-    }, 1000)
-  }
+
 
   public getCollectionByFilter(link: string, option: string, value: string) {
     return new Promise((resolve, reject) => {
@@ -328,38 +83,70 @@ export class FormServiceService {
     }
     return regex[type];
   }
-  checkValues(questions: DynamicInput[]): Promise<DynamicInput[]> {
+  checkValues(questions: DynamicInput[]) {
     return new Promise((resolve, reject) => {
       let i = 0;
+      let saveObjects: any = {};
+      // the way around multiple  i = i + 1 seems to be longer.
       questions.forEach(question => {
         if (question.value) {
           if (question.value.includes('@time')) {
             question.value = moment().format('HH: mm').toString();
+            saveObjects[question.fieldName] = question.value;
+            i = i + 1;
           }
           else if (question.value.includes('@date')) {
             question.value = moment().format('YYYY-MM-DD').toString();
+            saveObjects[question.fieldName] = question.value;
+            i = i + 1;
           }
           else if (question.value.includes('{')) {
             this.completeLink(question.value).then((val: string) => {
               question.value = val;
+              saveObjects[question.fieldName] = question.value;
+              i = i + 1;
             });
           }
+          else {
+            i = i + 1;
+          }
         }
-
-        i = i + 1;
-        if (i == questions.length) {
-          resolve(questions)
+        else {
+          i = i + 1;
+        }
+        if (i == questions.length - 1) {
+          setTimeout(() => {
+            resolve(
+              {
+                questions,
+                saveObjects
+              }
+            );
+          }, 1000);
         }
       });
     })
   }
 
-  public saveForm(formName: string, uid: string, form: any) {
+  async retryInBackground(formName: string, uid: string, companyId: string, form: any) {
+    setInterval(() => {
+      let id = UUID.UUID();
+      form['userId'] = uid;
+      form['companyId'] = companyId;
+      this.afs.collection(formName).doc(id).ref.set(form).then(() => {
+      });
+    }, 1000)
+  }
+  public saveForm(formName: string, uid: string, companyId: string, form: any) {
     return new Promise((resolve, reject) => {
-      this.afs.collection(formName).doc(uid).ref.set(form).then(() => {
+      let id = UUID.UUID();
+      form['userId'] = uid;
+      form['companyId'] = companyId;
+      this.afs.collection(formName).doc(id).ref.set(form).then(() => {
         resolve('compelte')
       }).catch((error) => {
-        reject(error);
+        this.retryInBackground(formName, uid, companyId, form);
+
       })
     })
   }
@@ -418,6 +205,47 @@ export class FormServiceService {
             reject(error);
           })
         })
+      })
+    })
+  }
+  public retrieveForms(companyId: string) {
+    return new Promise((resolve, reject) => {
+      this.afs.collection('companies').doc(companyId).collection('forms').ref.get().then((formsRef) => {
+        if (formsRef.docs.length < 1) {
+          resolve('no forms')
+        }
+        let loop = new Promise((resolveLoop) => {
+          let forms: any = [];
+          let i = fromRef.length;
+          formsRef.docs.forEach((form) => {
+            forms.push(form.data());
+            i = i - 1;
+            if (i == 0) {
+              resolveLoop(forms);
+            }
+          })
+        })
+        loop.then((forms: any[]) => {
+          this.storage.set('forms', forms).then(() => {
+            this.getCompanyInfo(companyId);
+            resolve('complete');
+          })
+        })
+      }).catch((error) => {
+        resolve('some error , moving on')
+      })
+    })
+  }
+  async getCompanyInfo(companyId: string) {
+    this.afs.collection('companies').doc(companyId).ref.get().then((companyDoc) => {
+      this.storage.set('company', companyDoc.data()).then(() => {
+      })
+    })
+  }
+  public getForms() {
+    return new Promise((resolve, reject) => {
+      this.storage.get('forms').then((forms: any[]) => {
+        resolve(forms);
       })
     })
   }

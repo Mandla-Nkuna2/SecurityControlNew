@@ -1,5 +1,5 @@
 import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
-import { ToastController, ActionSheetController, Platform, PopoverController, AlertController } from '@ionic/angular';
+import { ToastController, ActionSheetController, Platform, PopoverController, AlertController, LoadingController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { SigniturePadComponent } from '../components/signiture-popover/signiture-popover.component';
 
@@ -14,8 +14,10 @@ export class UiService {
     private platform: Platform,
     private camera: Camera,
     private popoverController: PopoverController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private loadingCtrl: LoadingController
   ) { }
+  loader: any;
 
   async showToaster(msg, clr, duration?, position?) {
     const toast = await this.toastController.create({
@@ -58,20 +60,20 @@ export class UiService {
     })
   }
 
-  async openConfirmationAlert(msg, confirmBtnText?, cancelBtnText?){
-    return new Promise(async (resolve)=>{
+  async openConfirmationAlert(msg, confirmBtnText?, cancelBtnText?) {
+    return new Promise(async (resolve) => {
       const alert = await this.alertController.create({
         message: msg,
         buttons: [
           {
             text: confirmBtnText ? confirmBtnText : 'Confirm',
-            handler: ()=>{
+            handler: () => {
               resolve(true)
             }
           },
           {
             text: cancelBtnText ? cancelBtnText : 'Cancel',
-            handler: ()=>{
+            handler: () => {
               resolve(false)
             }
           }
@@ -129,5 +131,23 @@ export class UiService {
         reject(error);
       })
     })
+  }
+
+  async showLoading(message: string) {
+    this.loader = await this.loadingCtrl.create({
+      message: 'Loading...',
+      translucent: true
+    }).catch(err => console.log(err));
+
+    return await this.loader.present();
+  }
+
+  async dismissLoading() {
+    if (this.loader) {
+      return await this.loader.dismiss();
+    }
+    else {
+      console.log("popup-helper: dismissLoading called with no loader!");
+    }
   }
 }

@@ -94,20 +94,20 @@ exports.getMainCardAuth = functions.https.onRequest((request, response) => {
     })
 })
 
-// exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *').timeZone('Africa/Johannesburg').onRun(() => {
+exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *').timeZone('Africa/Johannesburg').onRun(() => {
 
-//     var token = 'd24vt2T4xIg:APA91bH-0eOil4-yCpVWArTgZNbznifv-wgdu3MBPMB4a64LlWoUeupBGKJ5Jt_aQfOt5tsH7DtDNLEGjrykpm_p2Zue92Xc5_Ivsi1aSXiuGVQM9a43oIlm7UjMU8WWTxJamMKt3LWe'
+    var token = 'd24vt2T4xIg:APA91bH-0eOil4-yCpVWArTgZNbznifv-wgdu3MBPMB4a64LlWoUeupBGKJ5Jt_aQfOt5tsH7DtDNLEGjrykpm_p2Zue92Xc5_Ivsi1aSXiuGVQM9a43oIlm7UjMU8WWTxJamMKt3LWe'
 
-//     const payload = {
-//         notification: {
-//             title: 'Truck Checked In!',
-//             body: `Truck just completed the Check In`,
-//             icon: 'https://firebasestorage.googleapis.com/v0/b/premier-logistics.appspot.com/o/logo.jpg?alt=media&token=7b4d2f5b-f59d-4822-9bd2-d9ad2392daf7',
-//         }
-//     }
-//     return admin.messaging().sendToDevice(token, payload);
+    const payload = {
+        notification: {
+            title: 'Truck Checked In!',
+            body: `Truck just completed the Check In`,
+            icon: 'https://firebasestorage.googleapis.com/v0/b/premier-logistics.appspot.com/o/logo.jpg?alt=media&token=7b4d2f5b-f59d-4822-9bd2-d9ad2392daf7',
+        }
+    }
+    return admin.messaging().sendToDevice(token, payload);
 
-// })
+})
 
 exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context) => {
     return admin.firestore().collection('trials').get().then((onFulfilled) => {
@@ -9088,6 +9088,23 @@ exports.newFormNotification = functions.firestore
             })
     });
 
+exports.deleteAccountNotification = functions.firestore
+    .document(`/deleteRequests/{uid}`)
+    .onCreate((snap) => {
+        const form = snap.data();
+        const mailOptions = {
+            from: '"Security Control" <system@securitycontrol.co.za>',
+            to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
+            subject: 'SC: Delete Account Request',
+            text: `Good Day,\n\nA user has submitted a request to delete their account\n\nUser Key: ${form.user.key}\nUser Name: ${form.user.name}\nCompany Key: ${form.user.companyId}\nCompany Name: ${form.user.company}\n\nKindly,\nSecurity Control Team`,
+        };
+        return mailTransport.sendMail(mailOptions)
+            .then(() => console.log(`Sent`))
+            .catch(function (error) {
+                return console.error("Failed!" + error);
+            })
+    });
+
 exports.validatePurchase = functions.https.onCall((data, context) => {
     var config = {
         method: 'post',
@@ -9113,21 +9130,27 @@ exports.validatePurchase = functions.https.onCall((data, context) => {
 })
 
 exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 05 * * *').timeZone('Africa/Johannesburg').onRun(() => {
-    return admin.firestore().collection('companies').where('subscribed', '==', true).get().then(comps => {
-        return comps.forEach(company => {
-            var nextDate = moment(company.data().subscriptionDate, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
+    return admin.firestore().collection('subscriptions').get().then(subs => {
+        return subs.forEach(sub => {
+            var nextDate = moment(sub.data().date, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
             var today = moment(new Date()).format('YYYY/MM/DD');
             if (today === nextDate) {
-                console.log('Do check')
-                checkVerify(company.data()).then((msg) => {
-                    if (msg === 'Verified') {
-                        console.log('Still fine')
-                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: true, subscriptionDate: today })
-                    } else {
-                        console.log('Removed premium')
-                        admin.firestore().collection('companies').doc(company.data().key).update({ subscribed: false, subscriptionDate: '', period: '' })
-                    }
-                })
+                if (sub.data().type === 'App') {
+                    console.log('Do check app')
+                    checkAppVerify(sub.data()).then((msg) => {
+                        if (msg === 'Verified') {
+                            console.log('Still fine')
+                            admin.firestore().collection('subscriptions').doc(sub.data().companyId).update({ date: today })
+                        } else {
+                            console.log('Removed premium')
+                            admin.firestore().collection('subscriptions').doc(sub.data().companyId).delete();
+                            admin.firestore().collection('companies').doc(company.data().key).update({ access: false, accessType: '' })
+                        }
+                    })
+                } else {
+                    console.log('Do check web')
+
+                }
             } else {
                 console.log('No check needed')
             }
@@ -9135,7 +9158,7 @@ exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 
     })
 })
 
-function checkVerify(company) {
+function checkAppVerify(company) {
     return new Promise((resolve, reject) => {
         var transaction = company.transaction;
         if (transaction) {

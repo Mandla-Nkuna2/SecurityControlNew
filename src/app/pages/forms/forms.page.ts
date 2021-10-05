@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { LoadingService } from 'src/app/services/loading.service';
+import { Platform } from '@ionic/angular';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-forms',
@@ -15,7 +17,7 @@ export class FormsPage implements OnInit {
   userKey;
   doc;
 
-  constructor(private storage: Storage, private afs: AngularFirestore, public loading: LoadingService) { }
+  constructor(private storage: Storage, private afs: AngularFirestore, public loading: LoadingService, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.storage.get('user').then((user) => {
@@ -47,6 +49,15 @@ export class FormsPage implements OnInit {
 
   async open(doc) {
     await window.open('https://firebasestorage.googleapis.com/v0/b/security-control-app.appspot.com/o/DISCIPLINARY%20CODE%20OF%20OFFENCES.docx?alt=media&token=5c722397-1e50-4212-bf0c-35bf0e7f4913')
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Forms',
+        screen_class: 'FormsPage'
+      });
+    })
   }
 
 }

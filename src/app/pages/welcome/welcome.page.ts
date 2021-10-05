@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController, AlertController, Platform } from '@ionic/angular';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { EditMyAccountPage } from '../edit-my-account/edit-my-account.page';
 import { AddNewsPage } from '../add-news/add-news.page';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-welcome',
@@ -54,41 +55,40 @@ export class WelcomePage implements OnInit {
 
   constructor(public alertCtrl: AlertController, public loadingCtrl: LoadingController, private storage: Storage,
     private afs: AngularFirestore, public navCtrl: NavController, public loading: LoadingService, public router: Router,
-    private auth: AuthenticationService, public modalCtrl: ModalController) { }
+    private auth: AuthenticationService, public modalCtrl: ModalController, private platform: Platform, private analyticsService: AnalyticsService) { }
 
 
   ngOnInit() {
-  //   this.afs.firestore.collection('guards').get().then((gu) => {
-  //     gu.forEach((staff) => {
-  //       // console.log( Array.isArray(staff.data().siteId) )
+    //   this.afs.firestore.collection('guards').get().then((gu) => {
+    //     gu.forEach((staff) => {
+    //       // console.log( Array.isArray(staff.data().siteId) )
 
-  //       if ( staff.data().name == 'AA TEST' ){
+    //       if ( staff.data().name == 'AA TEST' ){
 
-  //         // console.log(staff.data());
+    //         // console.log(staff.data());
 
-  //       // console.log( typeof staff.data().siteId === 'object')
-  //       // console.log(  staff.data().siteId == null )
-  //       // console.log(  Array.isArray( staff.data().siteId) )
-  //       console.log(typeof staff.data().siteId === 'object' && staff.data().siteId !== null && !Array.isArray(staff.data().siteId))
-  //       if (typeof staff.data().siteId === 'object' && staff.data().siteId !== null && !Array.isArray(staff.data().siteId))
-  //        { 
+    //       // console.log( typeof staff.data().siteId === 'object')
+    //       // console.log(  staff.data().siteId == null )
+    //       // console.log(  Array.isArray( staff.data().siteId) )
+    //       console.log(typeof staff.data().siteId === 'object' && staff.data().siteId !== null && !Array.isArray(staff.data().siteId))
+    //       if (typeof staff.data().siteId === 'object' && staff.data().siteId !== null && !Array.isArray(staff.data().siteId))
+    //        { 
 
-  //         console.log('you again', staff.data());
-          
-  //          let nn = staff.data()
-  //          nn.site = nn.siteId.name
-  //          nn.siteId = nn.siteId.key
-  //          console.log(nn);
-   
-  //          this.afs.collection('guards').doc(nn.Key).set(nn).then(()=> console.log('donne '))
-           
-  //        }
-  //       }
+    //         console.log('you again', staff.data());
 
-  // })
-  //   })
+    //          let nn = staff.data()
+    //          nn.site = nn.siteId.name
+    //          nn.siteId = nn.siteId.key
+    //          console.log(nn);
 
-    console.log(window.innerWidth);
+    //          this.afs.collection('guards').doc(nn.Key).set(nn).then(()=> console.log('donne '))
+
+    //        }
+    //       }
+
+    // })
+    //   })
+
     if (window.innerWidth < 500) {
       setTimeout(() => {
         this.router.navigate(['forms']);
@@ -107,7 +107,6 @@ export class WelcomePage implements OnInit {
           users.forEach(user => {
             this.user.name = user.name;
             this.user.company = user.company;
-            console.log(this.user.company);
             this.user.contact = user.contact;
             this.user.companyId = user.companyId;
             this.currentVersion = user.version;
@@ -123,7 +122,6 @@ export class WelcomePage implements OnInit {
             }
             this.user.email = user.email;
             this.user.type = user.type;
-            console.log(this.user.type);
             this.user.key = user.key;
             this.user.endDate = user.endDate;
             this.user.trial = user.trial;
@@ -300,10 +298,10 @@ export class WelcomePage implements OnInit {
     });
   }
 
-  async editUser(user) {
+  async editUser() {
     const modal = await this.modalCtrl.create({
       component: EditMyAccountPage,
-      componentProps: { user: user }
+      componentProps: { user: this.user }
     });
     return await modal.present();
   }
@@ -330,6 +328,15 @@ export class WelcomePage implements OnInit {
         this.loading.dismiss();
       });
     });
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Welcome',
+        screen_class: 'WelcomePage'
+      });
+    })
   }
 
 }

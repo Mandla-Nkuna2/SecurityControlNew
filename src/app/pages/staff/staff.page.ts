@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
   selector: 'app-staff',
@@ -48,7 +49,7 @@ date;
   constructor(private platform: Platform, public loadingCtrl: LoadingController, public toast: ToastService,
     public alertCtrl: AlertController, private afs: AngularFirestore, public modalCtrl: ModalController,
     public navCtrl: NavController, public loading: LoadingService, public router: Router,
-    private storage: Storage, public activatedRoute: ActivatedRoute) {
+    private storage: Storage, public activatedRoute: ActivatedRoute, private analyticsService: AnalyticsService) {
   }
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -160,6 +161,15 @@ date;
 
     /* save to file */
     XLSX.writeFile(wb, `Staff_Report_${this.date}.xlsx`);
+  }
+
+  ionViewWillEnter() {
+    this.platform.ready().then(async () => {
+      this.analyticsService.logAnalyticsEvent('page_view', {
+        screen_name: 'Staff',
+        screen_class: 'StaffPage'
+      });
+    })
   }
 
 }
