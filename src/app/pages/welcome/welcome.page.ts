@@ -298,10 +298,10 @@ export class WelcomePage implements OnInit {
     });
   }
 
-  async editUser(user) {
+  async editUser() {
     const modal = await this.modalCtrl.create({
       component: EditMyAccountPage,
-      componentProps: { user: user }
+      componentProps: { user: this.user }
     });
     return await modal.present();
   }
