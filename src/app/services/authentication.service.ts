@@ -1,3 +1,4 @@
+import { MembershipService } from './membership.service';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -20,6 +21,7 @@ export class AuthenticationService {
     public toastController: ToastController,
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
+    private membershipService: MembershipService,
     private formService: FormServiceService
   ) {
     this.platform.ready().then(() => {
@@ -66,31 +68,32 @@ export class AuthenticationService {
       this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
         .then(
           res =>
-
             this.afAuth.authState.pipe(take(1)).subscribe(auth => {
               if (auth && auth.uid) {
-                const newUser = {
-                  key: auth.uid,
-                  name: user.name,
-                  email: user.email,
-                  companyId: user.companyId,
-                  company: user.companyName,
-                  type: 'Account Admin',
-                  permission: 'Admin',
-                  process: 'New',
-                  site: '',
-                  siteId: '',
-                  contact: 0,
-                  password: user.password
-
-                }
-                this.afs.collection('users').doc(auth.uid).set(newUser).then(() => {
-                  this.storage.set('user', newUser).then(() => {
-                    this.authState.next(true);
-                    this.router.navigate(['menu'])
-                    resolve(res)
+                this.membershipService.createCustomer(user.email, user.name, user.companyName).then((onResponse: any)=>{
+                  const newUser = {
+                    key: auth.uid,
+                    name: user.name,
+                    email: user.email,
+                    companyId: user.companyId,
+                    company: user.companyName,
+                    type: 'Account Admin',
+                    permission: 'Admin',
+                    process: 'New',
+                    site: '',
+                    siteId: '',
+                    contact: 0,
+                    password: user.password,
+                    customerCode: onResponse.data.customer_code
+                  }
+                  this.afs.collection('users').doc(auth.uid).set(newUser).then(() => {
+                    this.storage.set('user', newUser).then(() => {
+                      this.authState.next(true);
+                      this.router.navigate(['menu'])
+                      resolve(res)
+                    })
                   })
-                })
+                }).catch((onError)=>reject(onError))
               }
             }),
           err => reject(err))
