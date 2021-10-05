@@ -227,11 +227,18 @@ export class FormServiceService {
         })
         loop.then((forms: any[]) => {
           this.storage.set('forms', forms).then(() => {
+            this.getCompanyInfo(companyId);
             resolve('complete');
           })
         })
       }).catch((error) => {
         resolve('some error , moving on')
+      })
+    })
+  }
+  async getCompanyInfo(companyId: string) {
+    this.afs.collection('companies').doc(companyId).ref.get().then((companyDoc) => {
+      this.storage.set('company', companyDoc.data()).then(() => {
       })
     })
   }
