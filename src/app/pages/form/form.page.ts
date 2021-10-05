@@ -85,11 +85,15 @@ export class Form implements OnInit {
 
   }
 
-  onChooseMembership(){
-    console.log("FIREDs")
-    this.membershipService.getMainCardAuth(this.userKey).then((response)=>{
-      console.log(response)
+  getPlanCode(tier){
+    let codes = [{ name: "standard", code:"PLN_2nn719ok2gtr1dx", price: 50000 },{ name: "pro", code:"PLN_ikf22antkej1wsd", price: 100000 }]//will be in DB once tiers finalized
+    let chosenCode=''
+    codes.forEach((code)=>{
+      if(code.name == tier){
+        chosenCode=code.code;
+      }
     })
+    return chosenCode;
   }
 
   download() {

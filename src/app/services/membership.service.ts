@@ -13,10 +13,17 @@ export class MembershipService {
     private http: HttpClient
   ) { }
 
-  startMembership(companyKey, chosenTier){
+  startMembership(companyKey, chosenTier, customerCode, planCode, authCode){
     return new Promise((resolve, reject)=>{
-      this.http.post(FUNCTIONS_HOST + 'startSubscription', { companyKey: companyKey, chosenTier: chosenTier}).subscribe((onResponse)=>{
-        resolve("DONE")
+      this.http.post(FUNCTIONS_HOST + 'startSubscription', { 
+        companyKey: companyKey, 
+        tier: chosenTier,
+        customerCode: customerCode,
+        planCode: planCode,
+        authCode: authCode,
+        email: "lamu@innovativethinking.co.za"
+      }).pipe(take(1)).subscribe((onResponse)=>{
+        resolve(onResponse)
       }, onError=>{
         console.log(onError)
         reject(onError)
@@ -24,10 +31,18 @@ export class MembershipService {
     })
   }
 
-  startTrial(companyKey, chosenTier){
+  startTrial(companyKey, chosenTier, customerCode, authCard ,firstCharge, planCode, tier){
     return new Promise((resolve, reject)=>{
-      this.http.post(FUNCTIONS_HOST + 'startTrial', { companyKey: companyKey, chosenTier: chosenTier}).subscribe((onResponse)=>{
-        resolve("DONE")
+      this.http.post(FUNCTIONS_HOST + 'startTrial', { 
+        companyKey: companyKey, 
+        chosenTier: chosenTier,
+        customerCode: customerCode,
+        firstCharge: firstCharge,
+        authCard: authCard,
+        planCode: planCode,
+        tier: tier
+      }).pipe(take(1)).subscribe((onResponse)=>{
+        resolve(onResponse)
       }, onError=>{
         console.log(onError)
         reject(onError)
@@ -35,29 +50,66 @@ export class MembershipService {
     })
   }
 
-  addCardAuth(){
+  saveCardAuth(userKey, cardAuth){
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST+ 'saveCardAuth', {
+        key: userKey,
+        auth: cardAuth
+      }).pipe(take(1)).subscribe((onSaveResponse)=>{
+        resolve("DONE")
+      }, onError=>reject(onError))
+    })
+  }
 
+  initializePayment(email){
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST+'initializePayment', {
+        email: email,
+        amount: "300",
+        currency: "ZAR"
+      }).pipe(take(1)).subscribe((onResponse)=>{
+        resolve(onResponse)
+      }, onError=>reject(onError))
+    })
   }
 
   getMainCardAuth(userKey){
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST + 'getMainCardAuth', {key : userKey}).pipe(take(1)).subscribe((onResponse)=>{
-        console.log(onResponse)
-        resolve('')
-      })
+        resolve(onResponse)
+      }, onError=>reject(onError))
     })
   }
 
-  chargeCardAuth(){
-
+  chargeCardAuth(email, amount, authCode){
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST + 'chargeAuthorization', {
+        email: email,
+        amount: amount,
+        authCode: authCode
+      }).pipe(take(1)).subscribe((onResponse)=>{
+        resolve(onResponse)
+      }, (onError)=>reject(onError));
+    })
   }
 
   checkForCardAuth(userKey){
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST + 'checkForCardAuth', {key: userKey}).pipe(take(1)).subscribe((onResponse)=>{
-        console.log(onResponse);
-        resolve('')
-      })
+        resolve(onResponse)
+      }, (onError)=>reject(onError));
+    })
+  }
+
+  createCustomer(email, firstName, lastName){
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST+ 'createCustomer', {
+        email,
+        firstName,
+        lastName
+      }).pipe(take(1)).subscribe((onResponse)=>{
+        resolve(onResponse);
+      }, (onError)=>reject(onError))  
     })
   }
 }
