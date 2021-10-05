@@ -1,3 +1,4 @@
+import { MembershipService } from './../../services/membership.service';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -38,6 +39,7 @@ export class Form implements OnInit {
     private formsService: FormServiceService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private membershipService: MembershipService,
     private analyticsService: AnalyticsService
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
@@ -84,6 +86,17 @@ export class Form implements OnInit {
       }
     })
     this.showForm = true;
+  }
+
+  getPlanCode(tier){
+    let codes = [{ name: "standard", code:"PLN_2nn719ok2gtr1dx", price: 50000 },{ name: "pro", code:"PLN_ikf22antkej1wsd", price: 100000 }]//will be in DB once tiers finalized
+    let chosenCode=''
+    codes.forEach((code)=>{
+      if(code.name == tier){
+        chosenCode=code.code;
+      }
+    })
+    return chosenCode;
   }
 
   download() {

@@ -1,7 +1,8 @@
 {
   "name": "new-sc",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular",
   "id": "4788e7ff"
