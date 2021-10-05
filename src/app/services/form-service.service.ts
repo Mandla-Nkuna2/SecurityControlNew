@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, fromRef } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { DynamicInput } from '../models/dynamic-input.model'
 import * as moment from 'moment';
@@ -83,27 +83,46 @@ export class FormServiceService {
     }
     return regex[type];
   }
-  checkValues(questions: DynamicInput[]): Promise<DynamicInput[]> {
+  checkValues(questions: DynamicInput[]) {
     return new Promise((resolve, reject) => {
       let i = 0;
+      let saveObjects: any = {};
+      // the way around multiple  i = i + 1 seems to be longer.
       questions.forEach(question => {
         if (question.value) {
           if (question.value.includes('@time')) {
             question.value = moment().format('HH: mm').toString();
+            saveObjects[question.fieldName] = question.value;
+            i = i + 1;
           }
           else if (question.value.includes('@date')) {
             question.value = moment().format('YYYY-MM-DD').toString();
+            saveObjects[question.fieldName] = question.value;
+            i = i + 1;
           }
           else if (question.value.includes('{')) {
             this.completeLink(question.value).then((val: string) => {
               question.value = val;
+              saveObjects[question.fieldName] = question.value;
+              i = i + 1;
             });
           }
+          else {
+            i = i + 1;
+          }
         }
-
-        i = i + 1;
-        if (i == questions.length) {
-          resolve(questions)
+        else {
+          i = i + 1;
+        }
+        if (i == questions.length - 1) {
+          setTimeout(() => {
+            resolve(
+              {
+                questions,
+                saveObjects
+              }
+            );
+          }, 1000);
         }
       });
     })
@@ -186,6 +205,40 @@ export class FormServiceService {
             reject(error);
           })
         })
+      })
+    })
+  }
+  public retrieveForms(companyId: string) {
+    return new Promise((resolve, reject) => {
+      this.afs.collection('companies').doc(companyId).collection('forms').ref.get().then((formsRef) => {
+        if (formsRef.docs.length < 1) {
+          resolve('no forms')
+        }
+        let loop = new Promise((resolveLoop) => {
+          let forms: any = [];
+          let i = fromRef.length;
+          formsRef.docs.forEach((form) => {
+            forms.push(form.data());
+            i = i - 1;
+            if (i == 0) {
+              resolveLoop(forms);
+            }
+          })
+        })
+        loop.then((forms: any[]) => {
+          this.storage.set('forms', forms).then(() => {
+            resolve('complete');
+          })
+        })
+      }).catch((error) => {
+        resolve('some error , moving on')
+      })
+    })
+  }
+  public getForms() {
+    return new Promise((resolve, reject) => {
+      this.storage.get('forms').then((forms: any[]) => {
+        resolve(forms);
       })
     })
   }

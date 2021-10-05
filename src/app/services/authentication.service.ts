@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { FormServiceService } from './form-service.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -18,7 +19,8 @@ export class AuthenticationService {
     private platform: Platform,
     public toastController: ToastController,
     private afAuth: AngularFireAuth,
-    private afs: AngularFirestore
+    private afs: AngularFirestore,
+    private formService: FormServiceService
   ) {
     this.platform.ready().then(() => {
       this.ifLoggedIn();
@@ -105,15 +107,17 @@ export class AuthenticationService {
               if (auth && auth.uid) {
 
                 this.afs.firestore.collection('users').doc(auth.uid).get().then((doc) => {
-                  this.storage.set('user', doc.data()).then(() => {
-                    this.authState.next(true);
-                    if (doc.data().type === 'Technician') {
-                      this.router.navigate(['work-orders']);
-                    } else {
-                      this.router.navigate(['menu']);
-                    }
-                    resolve(res)
-                  });
+                  this.formService.retrieveForms(doc.data().companyId).then(() => {
+                    this.storage.set('user', doc.data()).then(() => {
+                      this.authState.next(true);
+                      if (doc.data().type === 'Technician') {
+                        this.router.navigate(['work-orders']);
+                      } else {
+                        this.router.navigate(['menu']);
+                      }
+                      resolve(res)
+                    });
+                  })
                 });
               }
             }),
