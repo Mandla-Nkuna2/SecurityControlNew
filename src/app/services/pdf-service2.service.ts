@@ -254,8 +254,6 @@ export class pdfService2 {
   }
   emailPDF(name: string, formTemplate: DynamicInput[], newFormObj: any) {
     return new Promise((resolve, reject) => {
-      newFormObj['companyEmail'] = "algorsnipes@gmail.com";
-      newFormObj['userEmail'] = "algorsnipes@gmail.com";
       this.composePDF(name, formTemplate, newFormObj).then((docDefinition) => {
         let data = {
           docDefinition,
