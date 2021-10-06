@@ -67,12 +67,13 @@ export class MembershipsPage implements OnInit {
               userId: this.user.key,
               date: moment(new Date()).format('YYYY/MM/DD HH:mm'),
             }
-            this.afs.collection('enterpriseInquiry').doc(this.company.companyId).set(inq);
+            this.afs.collection('enterpriseInquiry').doc(inq.companyId).set(inq);
             this.toast.show('Your inquiry has been sent. Someone from our team will be contacting you soon!')
           }
         }
       ]
     })
+    return alert.present();
   }
 
 }
