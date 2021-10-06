@@ -348,6 +348,7 @@ export class MenuPage implements OnInit {
   evaluate(condition: string) {
     return eval(condition);
   }
+
   ngOnInit() {
     this.screen = window.innerWidth;
     if (window.innerWidth > 1024) {

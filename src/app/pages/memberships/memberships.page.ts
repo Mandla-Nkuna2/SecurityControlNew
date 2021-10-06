@@ -83,14 +83,16 @@ export class MembershipsPage implements OnInit {
             this.uiService.openPaymentModal(this.user).then(()=>{
               this.uiService.modalDismissal().then((items)=>{
                 if(items.data.authCode){
+                  this.uiService.showLoading("Please wait...")
                   this.membershipService.startTrial(
-                    this.user.companyKey, 
+                    this.user.companyId, 
                     this.user.customerCode, 
                     items.data.authCode,
                     (chosenPlan.price*100) - 300, 
                     chosenPlan.planCode, 
                     plan
                     ).then(()=>{
+                      this.uiService.dismissLoading();
                       this.navCtrl.navigateRoot('welcome');
                       this.uiService.showToaster("Subscribed successfully!", "success", 3000);
                     })

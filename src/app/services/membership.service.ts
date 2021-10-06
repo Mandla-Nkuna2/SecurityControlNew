@@ -38,6 +38,7 @@ export class MembershipService {
 
   startTrial(companyKey, customerCode, authCode, firstCharge, planCode, tier) {
     return new Promise((resolve, reject) => {
+      console.log(`${companyKey} ${customerCode} ${authCode} ${firstCharge} ${planCode} ${tier} `)
       this.http.post(FUNCTIONS_HOST + 'startTrial', {
         companyKey: companyKey,
         customerCode: customerCode,
