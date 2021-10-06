@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
-import { PurchasesService } from 'src/app/services/purchases.service';
+import { MembershipService } from 'src/app/services/membership.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-memberships',
@@ -13,71 +12,74 @@ import { PurchasesService } from 'src/app/services/purchases.service';
 })
 export class MembershipsPage implements OnInit {
 
-  app = false;
-  products = [];
-  chosenItem;
+  accessType;
+  basic = { title: '', price: '', access: [], id: '' };
+  premium = { title: '', price: '', access: [], id: '' };
+  enterprise = { title: '', price: '', access: [], id: '' };
+  user;
+  company;
 
-  constructor(private purchaseService: PurchasesService, private platform: Platform, private storage: Storage, private router: Router, private afs: AngularFirestore) { }
+  constructor(
+    private storage: Storage,
+    private alertCtrl: AlertController,
+    private toast: ToastService,
+    private membershipService: MembershipService
+  ) { }
 
   ngOnInit() {
-    if (this.platform.is('cordova')) {
-      this.app = true;
-      this.purchaseService.register('standard_membership').then(() => {
-        this.purchaseService.getProducts().then(products => {
-          this.products = products;
-          console.log('Products: ', this.products);
-          this.products.forEach(prod => {
-            this.purchaseService.registerHandlers(prod);
-          });
-        })
+    this.membershipService.getMembershipPackages().then((packages: any[]) => {
+      packages.forEach((pack: any) => {
+        if (pack.title === 'Basic') {
+          this.basic = pack;
+        } else if (pack.title === 'Premium') {
+          this.premium = pack;
+        } else {
+          this.enterprise = pack;
+        }
       })
-    } else {
-      this.app = false;
-    }
-  }
-
-  async buy(product) {
-    this.openTransactionSubscription();
-    try {
-      this.chosenItem = product.id;
-      this.purchaseService.buy(product)
-    } catch (err) {
-      console.log('Error Ordering ', err);
-    }
-  }
-
-  openTransactionSubscription() {
-    this.purchaseService.transaction.subscribe((transaction: any) => {
       this.storage.get('user').then(user => {
-        var newUser = user;
-        var newObj: any = {};
-        newObj = transaction;
-        newObj.deferred = 'undefined';
-        newObj.transaction.developerPayload = 'undefined';
-        newObj.user = newUser;
-        newObj.type = 'App';
-        newObj.date = moment(new Date()).format('YYYY/MM/DD');
-        newObj.companyId = newUser.companyId;
-        this.afs.collection('subscriptions').doc(newObj.companyId).set(Object.assign({}, newObj));
-        this.afs.collection('companies').doc(user.companyId).update({
-          accessType: transaction.id,
-          access: true
-        })
-        .then(() => {
-          newUser.premium = true;
-          this.router.navigate(['menu/forms']);
+        this.user = user;
+        this.membershipService.getCompany(user.companyId).then((comp: any) => {
+          this.company = comp;
+          if (comp.accessType && comp.accessType !== '') {
+            this.accessType = comp.accessType;
+          } else {
+            this.accessType = '';
+          }
         })
       })
-    });
+    })
   }
 
-  ngOnDestroy() {
-    this.purchaseService.transaction.unsubscribe();
-  }
-
-  verify(prod) {
-    this.purchaseService.verify(prod);
-
+  async enterpriseContact() {
+    const alert = await this.alertCtrl.create({
+      header: 'Enterprise inquiry',
+      message: 'Would you like to contact us about upgrading to Enterprise?',
+      buttons: [
+        {
+          text: 'CANCEL',
+          handler: data => {
+          }
+        },
+        {
+          text: 'SEND INQUIRY',
+          handler: data => {
+            var inq = {
+              company: this.company.name,
+              companyId: this.company.key,
+              user: this.user.name,
+              userEmail: this.user.email,
+              userId: this.user.key,
+              date: moment(new Date()).format('YYYY/MM/DD HH:mm'),
+            }
+            this.membershipService.setEnterpriseInquiry(inq.companyId, inq).then(() => {
+              this.toast.show('Your inquiry has been sent. Someone from our team will be contacting you soon!')
+            })
+          }
+        }
+      ]
+    })
+    return alert.present();
   }
 
 }
