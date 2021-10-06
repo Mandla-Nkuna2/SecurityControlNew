@@ -317,7 +317,7 @@ exports.saveCardAuth = functions.https.onRequest((request, response) => {
 
 exports.initializePayment = functions.https.onRequest((request, response) => {
     return cors(request, response, () => {
-        axios.post(`${PAYSTACK_HOST}/transaction/initialize`, {
+        axios.post(`${PAYSTACK_HOST}transaction/initialize`, {
             email: request.body.email,
             amount: request.body.amount,
             currency: request.body.currency
@@ -337,7 +337,7 @@ exports.initializePayment = functions.https.onRequest((request, response) => {
 exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
     return cors(request, response, () => {
         let transactionRef = request.body.transactionRef;
-        axios.get(`${PAYSTACK_HOST}/transaction/verify/${transactionRef}`, {
+        axios.get(`${PAYSTACK_HOST}transaction/verify/${transactionRef}`, {
             headers: {
                 'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
             }
