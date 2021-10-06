@@ -89,7 +89,7 @@ export class MembershipsAppPage implements OnInit {
             access: true
           }).then(() => {
             newUser.premium = true;
-            this.router.navigate(['menu/forms']);
+            this.router.navigate(['forms']);
           })
         })
       })
@@ -118,8 +118,8 @@ export class MembershipsAppPage implements OnInit {
           text: 'SEND INQUIRY',
           handler: data => {
             var inq = {
-              company: this.company.name,
-              companyId: this.company.key,
+              company: this.user.company,
+              companyId: this.user.companyId,
               user: this.user.name,
               userEmail: this.user.email,
               userId: this.user.key,

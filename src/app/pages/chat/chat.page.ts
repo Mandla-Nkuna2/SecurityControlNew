@@ -34,8 +34,8 @@ export class ChatPage implements OnInit {
   constructor(private analyticsService: AnalyticsService, private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private storage: Storage, private alertCtrl: AlertController, private router: Router) { }
 
   ngOnInit() {
-    this.storage.get('subscriptionType').then(subscriptionType => {
-      if (subscriptionType !== 'basic' && subscriptionType !== undefined && subscriptionType !== null) {
+    this.storage.get('accessType').then(accessType => {
+      if (accessType !== 'Basic' && accessType !== undefined && accessType !== null) {
         this.access = true;
         if (this.platform.is('mobile')) {
           this.app = true;

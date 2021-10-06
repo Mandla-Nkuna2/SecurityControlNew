@@ -130,6 +130,11 @@ export class MenuPage implements OnInit {
       url: '/saved-forms',
       icon: 'save'
     },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships-app',
+      icon: 'pie-chart'
+    },
   ];
 
 

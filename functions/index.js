@@ -5468,7 +5468,7 @@ exports.sendEmailConfirmation = functions.firestore
 
     // Building Email message.
     mailOptions.subject = `Welcome to Security Control!`;
-    mailOptions.text = `Hi ${user.rep}!\n\nThank you for signing up on Security Control. Your 30 Day Free Trial is active. If you need any assistance in getting started, get in touch and we will gladly get you up and running.\n\nSincerely,\nSecurity Control Team`;
+    mailOptions.text = `Hi ${user.rep}!\n\nThank you for subscribing to Security Control. If you need any assistance in getting started, get in touch and we will gladly get you up and running.\n\nSincerely,\nSecurity Control Team`;
 
     return mailTransport.sendMail(mailOptions)
       .then(() => console.log(`New user sign up email sent to:`,

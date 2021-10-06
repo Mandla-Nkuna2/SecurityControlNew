@@ -152,7 +152,7 @@ export class AuthenticationService {
       if (company) {
         console.log(company.key)
         this.storage.set('access', company.access);
-        this.storage.set('subscriptionType', company.subscriptionType);
+        this.storage.set('accessType', company.accessType);
         return company.access
       }
     })
