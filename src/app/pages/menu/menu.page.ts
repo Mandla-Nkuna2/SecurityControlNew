@@ -288,11 +288,9 @@ export class MenuPage implements OnInit {
   supportCountSub: Subscription
   email=''
   access = true;
-  storedUser;
 
-  constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService,
-    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService,
-    private uiService: UiService) {
+  constructor(private router: Router, private storage: Storage, public loading: LoadingService,
+    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
@@ -311,10 +309,6 @@ export class MenuPage implements OnInit {
     })
   }
 
-  onClick(){
-    this.uiService.openPaymentModal(this.storedUser);
-  }
-
   ngOnInit() {
     this.screen = window.innerWidth;
     if (window.innerWidth > 1024) {
@@ -324,7 +318,6 @@ export class MenuPage implements OnInit {
       this.getToken();
     }
     this.storage.get('user').then((user) => {
-      this.storedUser = user;
       this.getSalesCount(user);
       this.getSupportCount(user);
       this.user.photo = user.photo;
@@ -343,29 +336,9 @@ export class MenuPage implements OnInit {
           this.app = true;
           this.getToken();
         }
-        this.storage.get('user').then((user) => {
-          this.getSalesCount(user);
-          this.getSupportCount(user);
-          this.user.photo = user.photo;
-          this.user.type = user.type;
-          this.thompsonCheck().then(() => {
-            this.user.companyId = user.companyId;
-            if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
-              this.permission = true;
-            } else {
-              this.permission = false;
-            }
-            if (this.user.type === 'Technician') {
-              this.router.navigate(['work-orders'])
-              this.technician = true;
-            } else {
-              this.technician = false;
-            }
-          });
-        });
-      }
     })
-  }
+  })
+}
 
   getSalesCount(user) {
     this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {

@@ -59,16 +59,24 @@ const runtimeOpts = {
 exports.startTrial = functions.https.onRequest((request, response) => {
   return cors(request, response, () => {
     let body = request.body;
-    admin.firestore().collection('trials').doc(body.key).set({
+    admin.firestore().collection('trials').doc(body.companyKey).set({
       companyKey: body.companyKey,
       customerCode: body.customerCode,
       firstChargeAmount: body.firstCharge,
-      authCard: body.authCard,
+      authCode: body.authCode,
       planCode: body.planCode,
       trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
       tier: body.tier
-    }).then((value) => {
-      response.status(200).send(value);
+    }).then(() => {
+        admin.firestore().collection('companies').doc(body.companyKey).update({
+            access: true,
+            accessType: body.tier
+        }).then(()=>{
+            response.status(200).send({ text: "DONE" });
+        }).catch((onError)=>{
+            functions.logger.error(onError)
+            response.sendStatus(500)      
+        })
     }).catch((onError) => {
       functions.logger.error(onError)
       response.sendStatus(500)
@@ -92,6 +100,23 @@ exports.getMainCardAuth = functions.https.onRequest((request, response) => {
     })
   })
 })
+
+exports.checkForCardAuth = functions.https.onRequest((request, response) => {
+    return cors(request, response, () => {
+      let body = request.body;
+      admin.firestore().collection('users').doc(body.key).collection('authCards').get().then((onFulfilled) => {
+        if (onFulfilled.empty) {
+          response.status(200).send(null)
+        }
+        else {
+          response.status(200).send(onFulfilled.docs[0].data())
+        }
+      }).catch(onError => {
+        functions.logger.error(onError)
+        response.sendStatus(500)
+      })
+    })
+  })
 
 exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *').timeZone('Africa/Johannesburg').onRun(() => {
 
@@ -120,7 +145,7 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
             }).then(() => {
               return triggerSubscription(
                 doc.customerCode,
-                doc.authCard,
+                doc.authCode,
                 doc.planCode,
                 doc.firstCharge,
                 doc.email,
@@ -128,9 +153,11 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
                 doc.tier
               ).then((onResponse) => {
                 if (!onResponse) {
-                  functions.logger.error("Subscription failed")
+                    removeAccess(doc.companyKey).then(()=>{
+                        functions.logger.error("Subscription failed")
+                    }).catch((onError)=>functions.logger.error(onError))
                 } else {
-                  functions.logger.log("Subscription created")
+                    functions.logger.log("Subscription created")
                 }
               }).catch((onRejected) => {
                 functions.logger.error("ERROR STARTING SUBSCRIPTION")
@@ -145,6 +172,19 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
   }).catch((onError) => functions.logger.error(onError))
 });
 
+function removeAccess(companyKey){
+    return new Promise((resolve, reject)=>{
+        admin.firestore().collection('companies').doc(companyKey).update({
+            access: false,
+            accessType: ''
+        }).then(()=>{
+            resolve("DONE")
+        }).catch((onError)=>{
+            functions.logger.error(onError)
+            reject(onError)
+        })
+    })
+}
 
 function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount, email, companyKey, tier) {
   return new Promise((resolve, reject) => {

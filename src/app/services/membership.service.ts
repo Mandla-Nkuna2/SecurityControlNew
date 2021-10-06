@@ -34,14 +34,13 @@ export class MembershipService {
     })
   }
 
-  startTrial(companyKey, chosenTier, customerCode, authCard, firstCharge, planCode, tier) {
+  startTrial(companyKey, customerCode, authCode, firstCharge, planCode, tier) {
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST + 'startTrial', {
         companyKey: companyKey,
-        chosenTier: chosenTier,
         customerCode: customerCode,
         firstCharge: firstCharge,
-        authCard: authCard,
+        authCode: authCode,
         planCode: planCode,
         tier: tier
       }).pipe(take(1)).subscribe((onResponse) => {

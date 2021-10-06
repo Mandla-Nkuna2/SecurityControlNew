@@ -24,7 +24,7 @@ export class PaymentComponent implements OnInit {
   ngOnInit() {}
 
   onCancel(){
-    this.uiService.dismissModal();
+    this.uiService.dismissModal("CANCEL");
   }
 
   onPay(){
@@ -37,12 +37,12 @@ export class PaymentComponent implements OnInit {
         if(event){
           this.membershipService.saveCardAuth(this.user.key, event.data.authorization).then(()=>{
             this.loading=false;
-            this.uiService.dismissModal();
+            this.uiService.dismissModal({ authCode:  event.data.authorization.authorization_code });
             this.uiService.showToaster("Card added successfully", "success", 3000)
           })
         }else {
           this.loading= false;
-          this.uiService.dismissModal();
+          this.uiService.dismissModal("FAILED");
           this.uiService.showToaster("Payment Failed", "danger", 3000)
         }
       })

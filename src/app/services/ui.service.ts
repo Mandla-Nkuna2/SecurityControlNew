@@ -9,6 +9,7 @@ import { SigniturePadComponent } from '../components/signiture-popover/signiture
 })
 export class UiService {
   popover;
+  modal;
   constructor(
     private toastController: ToastController,
     private actionSheetController: ActionSheetController,
@@ -31,18 +32,22 @@ export class UiService {
     await toast.present();
   }
 
+  modalDismissal(): Promise<any>{
+    return this.modal.onDidDismiss();
+  }
+
   async openPaymentModal(user){
-    const modal = await this.modalController.create({
+     this.modal = await this.modalController.create({
       component: PaymentComponent,
       componentProps: {
         user: user
       }
     });
-    return await modal.present();
+    return await this.modal.present();
   }
 
-  dismissModal(){
-    this.modalController.dismiss();
+  dismissModal(options?){
+    this.modalController.dismiss(options?options:null);
   }
 
   async openActionSheet(useAlbum: boolean) {
