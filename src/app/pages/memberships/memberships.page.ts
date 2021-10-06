@@ -79,7 +79,7 @@ export class MembershipsPage implements OnInit {
               })
           }else{
             this.uiService.dismissLoading();
-            this.uiService.showToaster("Add a card to complete the payment", "primary", 4000)
+            this.uiService.showToaster("Add a card to complete the subscription", "primary", 4000)
             this.uiService.openPaymentModal(this.user).then(()=>{
               this.uiService.modalDismissal().then((items)=>{
                 if(items.data.authCode){
