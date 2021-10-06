@@ -57,24 +57,23 @@ const runtimeOpts = {
 }
 
 exports.startTrial = functions.https.onRequest((request, response) => {
-  return cors(request, response, () => {
-    let body = request.body;
-    admin.firestore().collection('trials').doc(body.key).set({
-      companyKey: body.companyKey,
-      customerCode: body.customerCode,
-      firstCharge: body.firstCharge,
-      authCard: body.authCard,
-      planCode: body.planCode,
-      trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-      chosenTier: body.tier
-    }).then((value) => {
-      response.status(200).send(value);
-    }).catch((onError) => {
-      functions.logger.error(onError)
-      response.sendStatus(500)
+    return cors(request, response, () => {
+        let body = request.body;
+        admin.firestore().collection('trials').doc(body.key).set({
+            companyKey: body.companyKey,
+            customerCode: body.customerCode,
+            firstChargeAmount: body.firstCharge,
+            authCard: body.authCard,
+            planCode: body.planCode,
+            trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+            tier: body.tier
+        }).then((value) => {
+            response.status(200).send(value);
+        }).catch((onError) => {
+            functions.logger.error(onError)
+            response.sendStatus(500)
+        })
     })
-  })
-
 })
 
 exports.getMainCardAuth = functions.https.onRequest((request, response) => {
@@ -110,166 +109,124 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 })
 
 exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context) => {
-  return admin.firestore().collection('trials').get().then((onFulfilled) => {
-    if (!onFulfilled.empty) {
-      onFulfilled.docs.forEach((doc) => {
-        if (doc.data().trialStartDate) {
-          if (moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14) {
-            return admin.firestore().collection('trials').doc(doc.id).update({
-              trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
-            }).then(() => {
-              return triggerSubscription(
-                doc.data().customerCode,
-                doc.data().authCard,
-                doc.data().planCode,
-                doc.data().firstCharge,
-                doc.data().email,
-                doc.data().companyKey,
-                doc.data().chosenTier
-              ).then((onResponse) => {
-                if (!onResponse) {
-                  functions.logger.error("Subscription failed")
-                } else {
-                  functions.logger.log("Subscription created")
+    return admin.firestore().collection('trials').get().then((onFulfilled) => {
+        if (!onFulfilled.empty) {
+            onFulfilled.docs.forEach((item) => {
+                let doc = item.data();
+                if (doc.trialStartDate) {
+                    if (moment(doc.trialStartDate).diff(moment(), 'days') >= 14) {
+                        return admin.firestore().collection('trials').doc(doc.companyKey).update({
+                            trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
+                        }).then(() => {
+                            return triggerSubscription(
+                                doc.customerCode, 
+                                doc.authCard, 
+                                doc.planCode, 
+                                doc.firstCharge,
+                                doc.email,
+                                doc.companyKey,
+                                doc.tier
+                                ).then((onResponse)=>{
+                                if(!onResponse){
+                                    functions.logger.error("Subscription failed")
+                                }else{
+                                    functions.logger.log("Subscription created")
+                                }
+                            }).catch((onRejected)=>{
+                                functions.logger.error("ERROR STARTING SUBSCRIPTION")
+                                functions.logger.error(onRejected)
+                            })
+                        }).catch((onError) => functions.logger.error(onError))
+                    }
+                    functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
                 }
-              }).catch((onRejected) => {
-                functions.logger.error("ERROR STARTING SUBSCRIPTION")
-                functions.logger.error(onRejected)
-              })
-            }).catch((onError) => functions.logger.error(onError))
-          }
-          functions.logger.info("Trials checked on : " + moment().format("YYYY/MM/DD HH:mm:ss"))
+            })
         }
-      })
-    }
-  }).catch((error) => {
-    console.log(error);
-  })
+    }).catch((onError) => functions.logger.error(onError))
 });
 
 
-
-
-exports.createPlan = functions.runWith(runtimeOpts).runWith(runtimeOpts).https.onRequest((request, response) => {
-  axios.post(`${host}/plan`, {
-    name: "Standard Subscription",
-    amount: 50000,
-    interval: 'monthly',
-    description: 'Standard security control subscription',
-    send_invoices: true, //most probably will send by email
-    currency: 'ZAR'
-  }, {
-    headers: {
-      'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-    }
-  }).then(res => {
-    response.send(res.data);
-  }).catch(error => {
-    console.log(error);
-    response.send(error);
-  });
-});
-
-exports.createSubscription = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
-  axios.get(`${host}/subscription`, {
-    customer: 'user@user.com', //or customer code
-    plan: 'asdasd', //plan codes
-    authorization: 'ajhklasdf', //auth code, or most recent auth if not specified
-    start_date: '2017-05-16T00:30:13+01:00' //NB in this format ISO 8601
-  }, {
-    headers: {
-      'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-    }
-  }).then(res => {
-    functions.logger.debug(res);
-    response.send(res.data);
-  }).catch(error => {
-    functions.logger.error(error);
-    response.status(500).send(error);
-  });
-});
-
-
-function triggerSubscription(customerCode, authCode, planCode, firstCharge, email, companyKey, tier) {
-  return new Promise((resolve, reject) => {
-    axios.post(PAYSTACK_HOST + 'subscription', {
-      customer: customerCode,
-      plan: planCode,
-      authorization: authCode
-    }, {
-      headers: {
-        'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-      }
-    }).then((onResponse) => {
-      if (onResponse.data.message == "Subscription successfully created") {
-        axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
-          amount: firstCharge,
-          email: email,
-          authorization_code: authCode
+function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount, email, companyKey, tier){
+    return new Promise((resolve, reject)=>{
+        axios.post(PAYSTACK_HOST + 'subscription', {
+            customer: customerCode,
+            plan: planCode,
+            authorization: authCode
         }, {
-          headers: {
-            'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-          }
-        }).then((chargeResponse) => {
-          if (chargeResponse.data.data.gateway_response == "Approved") {
-            admin.firestore().collection('memberships').doc(companyKey).set({
-              companyKey: companyKey,
-              email: email,
-              startDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-              lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-              tier: tier,
-              planCode: planCode,
-              subscriptionCode: onResponse.data.data.subscription_code,
-              active: true,
-              emailToken: onResponse.data.data.email_token
-            }).then(() => {
-              resolve(onResponse.data)
-            }).catch((onError) => {
-              reject(onError)
-              functions.logger.error(onError)
-            })
-          }
-          else {
-            cancelSubscription(onResponse.data.data.subscription_code, onResponse.data.data.email_token).then((res) => {
-              functions.logger.debug(res);
-              resolve(false)
-            }).catch((onError) => {
-              functions.logger.error(onError)
-              reject(onError)
-            })
-          }
-        })
-      } else {
-        reject(onResponse.data)
-      }
-    }).catch((onError) => reject(onError))
-  })
+            headers: {
+                'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+            }
+        }).then((onResponse)=>{
+            if(onResponse.data.message =="Subscription successfully created"){
+                axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
+                    amount: firstChargeAmount,
+                    email: email,
+                    authorization_code: authCode
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+                    }
+                }).then((chargeResponse)=>{
+                    if(chargeResponse.data.data.gateway_response == "Approved"){
+                        admin.firestore().collection('memberships').doc(companyKey).set({
+                            companyKey: companyKey,
+                            email: email,
+                            startDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+                            lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+                            tier: tier,
+                            planCode: planCode,
+                            subscriptionCode: onResponse.data.data.subscription_code,
+                            active: true,
+                            emailToken: onResponse.data.data.email_token
+                        }).then(() => {
+                            functions.logger.debug(onResponse.data);
+                            resolve(onResponse.data)
+                        }).catch((onError) => {
+                            functions.logger.error(onError)
+                            reject(onError)
+                        })
+                    }
+                    else{
+                        cancelSubscription(onResponse.data.data.subscription_code,onResponse.data.data.email_token).then((res)=>{
+                            functions.logger.debug(res);
+                            resolve(false)
+                        }).catch((onError)=>{
+                            functions.logger.error(onError)
+                            reject(onError)
+                        })
+                    }
+                }).catch((onError)=>reject(onError))
+            }else{
+                reject(onResponse.data)
+            }
+        }).catch((onError)=>reject(onError))
+    })
 }
 
 exports.startSubscription = functions.https.onRequest((request, response) => {
-  return cors(request, response, () => {
-    let body = request.body;
-    triggerSubscription(
-      body.customerCode,
-      body.authCode,
-      body.planCode,
-      body.firstCharge,
-      body.email,
-      body.companyKey,
-      body.tier
-    ).then((onResponse) => {
-      if (onResponse) {
-        response.status(200).send("DONE")
-      }
-      else {
-        functions.logger.error("FAILED")
-        response.status(500).send("Something went wrong")
-      }
-    }).catch((onError) => {
-      functions.logger.error(onError)
-      response.status(500).send("Something went wrong")
+    return cors(request, response, () => {
+        let body = request.body;
+        triggerSubscription(
+            body.customerCode,
+            body.authCode,
+            body.planCode,
+            body.firstChargeAmount,
+            body.email,
+            body.companyKey,
+            body.tier
+        ).then((onResponse)=>{
+            if(onResponse){
+                response.status(200).send("DONE")
+            }
+            else{
+                functions.logger.error("FAILED")
+                response.status(500).send("Something went wrong")
+            }
+        }).catch((onError)=>{
+            functions.logger.error(onError)
+            response.status(500).send("Something went wrong")
+        })
     })
-  })
 })
 
 function cancelSubscription(code, emailToken) {
@@ -328,22 +285,22 @@ exports.transactionWebhook = functions.https.onRequest((request, response) => {
 
 
 exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
-  return cors(request, response, () => {
-    axios.post(`${PAYSTACK_HOST}/transaction/charge_authorization`, {
-      amount: body.amount,
-      email: body.email,
-      authorization_code: body.authCode
-    }, {
-      headers: {
-        'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-      }
-    }).then(res => {
-      response.sendStatus(200);
-    }).catch(error => {
-      functions.logger.error(error);
-      response.status(500).send(error);
-    });
-  })
+    return cors(request, response, () => {
+        axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
+            amount: body.amount,
+            email: body.email,
+            authorization_code: body.authCode
+        }, {
+            headers: {
+                'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+            }
+        }).then(res => {
+            response.sendStatus(200);
+        }).catch(error => {
+            functions.logger.error(error);
+            response.status(500).send(error);
+        });
+    })
 });
 
 exports.saveCardAuth = functions.https.onRequest((request, response) => {
@@ -359,39 +316,39 @@ exports.saveCardAuth = functions.https.onRequest((request, response) => {
 })
 
 exports.initializePayment = functions.https.onRequest((request, response) => {
-  return cors(request, response, () => {
-    axios.post(`${PAYSTACK_HOST}/transaction/initialize`, {
-      email: request.body.email,
-      amount: request.body.amount,
-      currency: request.body.currency
-    }, {
-      headers: {
-        'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-      }
-    }).then(res => {
-      response.status(200).send(res.data);
-    }).catch(error => {
-      functions.logger.error(error)
-      response.sendStatus(500);
-    });
-  })
+    return cors(request, response, () => {
+        axios.post(`${PAYSTACK_HOST}transaction/initialize`, {
+            email: request.body.email,
+            amount: request.body.amount,
+            currency: request.body.currency
+        }, {
+            headers: {
+                'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+            }
+        }).then(res => {
+            response.status(200).send(res.data);
+        }).catch(error => {
+            functions.logger.error(error)
+            response.sendStatus(500);
+        });
+    })
 });
 
 exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
-  return cors(request, response, () => {
-    let transactionRef = request.body.transactionRef;
-    axios.get(`${PAYSTACK_HOST}/transaction/verify/${transactionRef}`, {
-      headers: {
-        'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
-      }
-    }).then(res => {
-      functions.logger.debug(res);
-      response.send(res.data);
-    }).catch(error => {
-      functions.logger.error(error);
-      response.status(500).send(error);
-    });
-  })
+    return cors(request, response, () => {
+        let transactionRef = request.body.transactionRef;
+        axios.get(`${PAYSTACK_HOST}transaction/verify/${transactionRef}`, {
+            headers: {
+                'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
+            }
+        }).then(res => {
+            functions.logger.debug(res);
+            response.send(res.data);
+        }).catch(error => {
+            functions.logger.error(error);
+            response.status(500).send(error);
+        });
+    })
 });
 
 exports.deleteGuards = functions.firestore
