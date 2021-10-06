@@ -9107,7 +9107,7 @@ exports.deleteAccountNotification = functions.firestore
       })
   });
 
-  exports.enterpriseInquiry = functions.firestore
+exports.enterpriseInquiry = functions.firestore
   .document(`/enterpriseInquiry/{uid}`)
   .onCreate((snap) => {
     const form = snap.data();
@@ -9133,20 +9133,23 @@ exports.validatePurchase = functions.https.onCall((data, context) => {
     },
     data: data
   };
-  axios(config)
-    .then(function (response) {
-      console.log('Resp: ', response.data.ok);
-      var msg = {
-        verified: response.data.ok
-      }
-      return msg;
-    })
-    .catch(function (error) {
-      functions.logger.info('Error: ', error);
-      msg = JSON.stringify('error');
-      return res.send(msg);
-    });
+  return makeCall(config).then(resp => {
+    console.log(resp);
+    return resp
+  })
 })
+
+function makeCall(config) {
+  return new Promise((resolve, reject) => {
+    axios(config).then(function (response) {
+      return resolve(response.data.ok);
+    })
+      .catch(function (error) {
+        functions.logger.info('Error: ', error);
+        return resolve(error);
+      });
+  })
+}
 
 exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('00 05 * * *').timeZone('Africa/Johannesburg').onRun(() => {
   return admin.firestore().collection('subscriptions').get().then(subs => {
@@ -9192,19 +9195,16 @@ function checkAppVerify(company) {
         },
         data: data
       };
-      axios(config)
-        .then(function (response) {
-          if (response.data.ok === true) {
-            msg = 'Verified';
-          } else {
-            console.log('Invalid')
-            msg = 'Invalid';
-          }
-          resolve(msg);
-        })
-        .catch(function (error) {
-          reject(error)
-        });
+      return makeCall(config).then(resp => {
+        console.log(resp);
+        if (response.data.ok === true) {
+          msg = 'Verified';
+        } else {
+          console.log('Invalid')
+          msg = 'Invalid';
+        }
+        return resolve(msg);
+      })
     }
   })
 }

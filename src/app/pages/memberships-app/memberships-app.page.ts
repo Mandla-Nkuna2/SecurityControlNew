@@ -39,6 +39,7 @@ export class MembershipsAppPage implements OnInit {
       this.app = true;
       this.storage.get('user').then(user => {
         this.user = user;
+        console.log(this.user.openedSubscription);
         this.membershipService.getCompany(user.companyId).then((comp: any) => {
           this.company = comp;
           this.purchaseService.register(this.productIDs).then(() => {
@@ -81,8 +82,9 @@ export class MembershipsAppPage implements OnInit {
         newObj.type = 'App';
         newObj.date = moment(new Date()).format('YYYY/MM/DD');
         newObj.companyId = newUser.companyId;
+        newObj.number = 1;
         this.membershipService.setSubscriptions(newObj.companyId, Object.assign({}, newObj)).then(() => {
-          this.membershipService.updateCompany(user.companyId, {
+          this.membershipService.updateCompany(user, {
             accessType: this.chosenItem.title,
             access: true
           }).then(() => {

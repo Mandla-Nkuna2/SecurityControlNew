@@ -84,7 +84,8 @@ export class AuthenticationService {
                     siteId: '',
                     contact: 0,
                     password: user.password,
-                    customerCode: onResponse.data.customer_code
+                    customerCode: onResponse.data.customer_code,
+                    openedSubscription: false
                   }
                   this.afs.collection('users').doc(auth.uid).set(newUser).then(() => {
                     this.storage.set('user', newUser).then(() => {

@@ -1,8 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { InAppPurchase2, IAPProduct } from '@ionic-native/in-app-purchase-2/ngx';
-import { AlertController, Platform } from '@ionic/angular';
-import { HTTP } from '@ionic-native/http/ngx';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AlertController } from '@ionic/angular';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({
@@ -13,8 +11,8 @@ export class PurchasesService {
   public transaction: EventEmitter<any>;
   trans;
 
-  constructor(private store: InAppPurchase2, private platform: Platform, private alertCtrl: AlertController,
-    private http: HTTP, private afs: AngularFirestore, private functions: AngularFireFunctions) {
+  constructor(private store: InAppPurchase2, private alertCtrl: AlertController,
+    private functions: AngularFireFunctions) {
     this.transaction = new EventEmitter()
   }
 
@@ -89,29 +87,17 @@ export class PurchasesService {
   verify(p) {
     return new Promise<any>((resolve, reject) => {
       console.log(p)
-
       const callable = this.functions.httpsCallable('validatePurchase');
       const obs = callable(p);
       obs.subscribe(async res => {
         console.log('Resp: ' , res);
-        if (res.verified == true) {
+        if (res == true) {
           resolve('complete')
         }
         else {
-          reject(res.error);
+          reject(res);
         }
       });
-
-      // this.http.post('https://us-central1-security-control-app.cloudfunctions.net/validatePurchase', {}, {}).then((res) => {
-      //   if (res.status == 200) {
-      //     resolve('complete')
-      //   }
-      //   else {
-      //     reject(res.error);
-      //   }
-      // }).catch((error) => {
-      //   reject(error);
-      // })
     })
   }
 

@@ -39,6 +39,7 @@ export class MembershipsPage implements OnInit {
       })
       this.storage.get('user').then(user => {
         this.user = user;
+        console.log(this.user.openedSubscription);
         this.membershipService.getCompany(user.companyId).then((comp: any) => {
           this.company = comp;
           if (comp.accessType && comp.accessType !== '') {
