@@ -18,17 +18,17 @@ export class PurchasesService {
     this.transaction = new EventEmitter()
   }
 
-  register(my_product_id) {
+  register(productIDs) {
     return new Promise<void>((resolve, reject) => {
-      this.platform.ready().then(() => {
-        //this.store.verbosity = this.store.DEBUG; 
+      productIDs.forEach(productId => {
         this.store.register({
-          id: my_product_id,
+          id: productId,
           type: this.store.PAID_SUBSCRIPTION,
+          alias: productId
         });
-        this.store.refresh();
-        resolve();
       });
+      this.store.refresh();
+      resolve();
     });
   }
 

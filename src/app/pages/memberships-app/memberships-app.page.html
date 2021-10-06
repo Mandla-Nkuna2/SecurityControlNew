@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Memberships</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngFor="let prod of products" class="products">
+    <h3>{{prod.title}}</h3>
+    <h6>{{prod.description}}</h6>
+    <h6>{{prod.price}}</h6>
+    <div *ngIf="prod.title === 'Basic'">
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Bulk upload of sites
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Bulk upload of staff
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Company form upload
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Support Chat
+        </ion-col>
+      </ion-row>
+    </div>
+    <div *ngIf="prod.title === 'Premium'">
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Bulk upload of sites
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Bulk upload of staff
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Company form upload
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Support Chat
+        </ion-col>
+      </ion-row>
+    </div>
+    <div *ngIf="prod.title === 'Enterprise'">
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Bulk upload of sites
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Bulk upload of staff
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Company form upload
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+        </ion-col>
+        <ion-col>
+          Support Chat
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-button (click)="buy(prod)" class='buy-button' *ngIf="prod.title !== 'Enterprise'">
+      Buy Now
+    </ion-button>
+    <ion-button (click)="enterpriseContact()" class='buy-button' *ngIf="prod.title === 'Enterprise'">
+      Contact Us
+    </ion-button>
+  </ion-card>
+</ion-content>

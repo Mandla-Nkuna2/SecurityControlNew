@@ -1,10 +1,10 @@
-import { AngularFirestore } from '@angular/fire/firestore';
 import { take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
 
-const FUNCTIONS_HOST = "https://us-central1-security-control-app.cloudfunctions.net/"; 
+const FUNCTIONS_HOST = "https://us-central1-security-control-app.cloudfunctions.net/";
 
 @Injectable({
   providedIn: 'root'
@@ -16,37 +16,37 @@ export class MembershipService {
     private firestore: AngularFirestore
   ) { }
 
-  startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email){
-    return new Promise((resolve, reject)=>{
-      this.http.post(FUNCTIONS_HOST + 'startSubscription', { 
-        companyKey: companyKey, 
+  startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email) {
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST + 'startSubscription', {
+        companyKey: companyKey,
         tier: chosenTier,
         customerCode: customerCode,
         planCode: planCode,
         authCode: authCode,
         email: email
-      }).pipe(take(1)).subscribe((onResponse)=>{
+      }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
-      }, onError=>{
+      }, onError => {
         console.log(onError)
         reject(onError)
       })
     })
   }
 
-  startTrial(companyKey, chosenTier, customerCode, authCard ,firstCharge, planCode, tier){
-    return new Promise((resolve, reject)=>{
-      this.http.post(FUNCTIONS_HOST + 'startTrial', { 
-        companyKey: companyKey, 
+  startTrial(companyKey, chosenTier, customerCode, authCard, firstCharge, planCode, tier) {
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST + 'startTrial', {
+        companyKey: companyKey,
         chosenTier: chosenTier,
         customerCode: customerCode,
         firstCharge: firstCharge,
         authCard: authCard,
         planCode: planCode,
         tier: tier
-      }).pipe(take(1)).subscribe((onResponse)=>{
+      }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
-      }, onError=>{
+      }, onError => {
         console.log(onError)
         reject(onError)
       })
@@ -90,59 +90,108 @@ export class MembershipService {
         console.log("SAVED")
         console.log(onSaveResponse)
         resolve("DONE")
-      }, onError=>reject(onError))
+      }, onError => reject(onError))
     })
   }
 
-  initializePayment(email, amount: number){
+  initializePayment(email, amount: number) {
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST+'initializePayment', {
+      this.http.post(FUNCTIONS_HOST + 'initializePayment', {
         email: email,
         amount: amount,
         currency: "ZAR"
-      }).pipe(take(1)).subscribe((onResponse)=>{
+      }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
-      }, onError=>reject(onError))
+      }, onError => reject(onError))
     })
   }
 
-  getMainCardAuth(userKey){
+  getMainCardAuth(userKey) {
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST + 'getMainCardAuth', {key : userKey}).pipe(take(1)).subscribe((onResponse)=>{
+      this.http.post(FUNCTIONS_HOST + 'getMainCardAuth', { key: userKey }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
-      }, onError=>reject(onError))
+      }, onError => reject(onError))
     })
   }
 
-  chargeCardAuth(email, amount, authCode){
+  chargeCardAuth(email, amount, authCode) {
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST + 'chargeAuthorization', {
         email: email,
         amount: amount,
         authCode: authCode
-      }).pipe(take(1)).subscribe((onResponse)=>{
+      }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
-      }, (onError)=>reject(onError));
+      }, (onError) => reject(onError));
     })
   }
 
-  checkForCardAuth(userKey){
+  checkForCardAuth(userKey) {
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST + 'checkForCardAuth', {key: userKey}).pipe(take(1)).subscribe((onResponse)=>{
+      this.http.post(FUNCTIONS_HOST + 'checkForCardAuth', { key: userKey }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
-      }, (onError)=>reject(onError));
+      }, (onError) => reject(onError));
     })
   }
 
-  createCustomer(email, firstName, lastName){
+  createCustomer(email, firstName, lastName) {
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST+ 'createCustomer', {
+      this.http.post(FUNCTIONS_HOST + 'createCustomer', {
         email,
         firstName,
         lastName
-      }).pipe(take(1)).subscribe((onResponse)=>{
+      }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse);
-      }, (onError)=>reject(onError))  
+      }, (onError) => reject(onError))
     })
+  }
+  public getCompany(companyId: string) {
+    return new Promise((resolve, reject) => {
+      this.firestore.collection('companies').doc(companyId).ref.get().then((companyDoc) => {
+        resolve(companyDoc.data());
+      }).catch((error) => {
+        reject(error);
+      })
+    })
+  }
+  public getMembershipPackages() {
+    return new Promise((resolve, reject) => {
+      this.firestore.collection('membershipPackages').ref.orderBy('title').get().then((packages) => {
+        let allPackages = [];
+        packages.docs.forEach((packageDoc) => {
+          allPackages.push(packageDoc.data());
+        });
+        resolve(allPackages);
+      }).catch((error) => {
+        reject(error);
+      })
+    })
+  }
+  public setEnterpriseInquiry(companyId: string, inquiry: any) {
+    return new Promise((resolve, reject) => {
+      this.firestore.collection('enterpriseInquiry').doc(companyId).set(inquiry).then(() => {
+        resolve('saved');
+      }).catch((error) => {
+        reject(error);
+      })
+    })
+  }
+  public setSubscriptions(companyId: string, subscription: any) {
+    return new Promise((resolve, reject) => {
+      this.firestore.collection('subscriptions').doc(companyId).ref.set(subscription).then(() => {
+        resolve('complete')
+      }).catch((error) => {
+        reject(error);
+      })
+    });
+  }
+  public updateCompany(companyId: string, updateData: any) {
+    return new Promise((resolve, reject) => {
+      this.firestore.collection('companies').doc(companyId).update(updateData).then(() => {
+        resolve('complete')
+      }).catch((error) => {
+        reject(error);
+      })
+    });
   }
 }

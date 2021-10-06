@@ -1,0 +1,18 @@
+ion-content {
+
+    .products {
+        width: 80%;
+        margin-left: 10%;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        border-radius: 5px;
+        border: 1px solid #858B98;
+        h3 {
+            color: #FF4343;
+        }
+    }
+    .buy-button {
+        color: white;
+        --background: #FF4343
+    }
+ }
