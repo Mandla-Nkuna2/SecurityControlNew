@@ -1,6 +1,8 @@
+import { AngularFirestore } from '@angular/fire/firestore';
 import { take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 const FUNCTIONS_HOST = "https://us-central1-security-control-app.cloudfunctions.net/"; 
 
@@ -10,7 +12,8 @@ const FUNCTIONS_HOST = "https://us-central1-security-control-app.cloudfunctions.
 export class MembershipService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private firestore: AngularFirestore
   ) { }
 
   startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email){
@@ -50,12 +53,42 @@ export class MembershipService {
     })
   }
 
+  subToPaymentEvent(reference){
+    return new Promise((resolve, reject) => {
+      let match = null;
+      let timeout = setTimeout(()=>{
+        if(!match){
+          sub.unsubscribe();
+          resolve(null)
+          clearTimeout(timeout);
+        }
+      },60000)
+      let sub = this.firestore.collection('paymentEvents').valueChanges().subscribe((onResponse)=>{
+        onResponse.forEach((doc: any)=>{
+          if(reference == doc.data.reference && doc.event == "charge.success"){
+            match = doc;
+          }
+        })
+        if(match){
+          clearTimeout(timeout);
+          sub.unsubscribe();
+          resolve(match)
+        }
+      }, (onError)=>{
+        console.log(onError)
+        reject(onError)
+      })
+    })
+  }
+
   saveCardAuth(userKey, cardAuth){
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST+ 'saveCardAuth', {
+      this.http.post<any>(FUNCTIONS_HOST+ 'saveCardAuth', {
         key: userKey,
         auth: cardAuth
       }).pipe(take(1)).subscribe((onSaveResponse)=>{
+        console.log("SAVED")
+        console.log(onSaveResponse)
         resolve("DONE")
       }, onError=>reject(onError))
     })

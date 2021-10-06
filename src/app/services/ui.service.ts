@@ -1,5 +1,6 @@
+import { PaymentComponent } from './../components/payment/payment.component';
 import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
-import { ToastController, ActionSheetController, Platform, PopoverController, AlertController, LoadingController } from '@ionic/angular';
+import { ToastController, ActionSheetController, Platform, PopoverController, AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { SigniturePadComponent } from '../components/signiture-popover/signiture-popover.component';
 
@@ -15,7 +16,8 @@ export class UiService {
     private camera: Camera,
     private popoverController: PopoverController,
     private alertController: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private modalController: ModalController
   ) { }
   loader: any;
 
@@ -27,6 +29,20 @@ export class UiService {
       position: position ? position : 'bottom'
     });
     await toast.present();
+  }
+
+  async openPaymentModal(user){
+    const modal = await this.modalController.create({
+      component: PaymentComponent,
+      componentProps: {
+        user: user
+      }
+    });
+    return await modal.present();
+  }
+
+  dismissModal(){
+    this.modalController.dismiss();
   }
 
   async openActionSheet(useAlbum: boolean) {

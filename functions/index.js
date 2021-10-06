@@ -307,7 +307,7 @@ exports.saveCardAuth = functions.https.onRequest((request, response) => {
   let body = request.body;
   return cors(request, response, () => {
     admin.firestore().collection('users').doc(body.key).collection('authCards').add(body.auth).then(() => {
-      response.status(200).send("DONE")
+      response.status(200).send({ text: "DONE"})
     }).catch(onError => {
       functions.logger.error(onError)
       response.sendStatus(500)

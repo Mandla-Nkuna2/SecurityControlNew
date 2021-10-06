@@ -1,3 +1,4 @@
+import { PaymentComponent } from './payment/payment.component';
 import { CameraComponent } from './camera/camera.component';
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
@@ -10,8 +11,8 @@ import { SignaturePadModule } from 'angular2-signaturepad';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
-  declarations: [PopoverComponent, DynamicFormComponent, SigniturePadComponent, CameraComponent],
-  exports: [PopoverComponent, DynamicFormComponent, SigniturePadComponent, CameraComponent],
+  declarations: [PopoverComponent, DynamicFormComponent, SigniturePadComponent, CameraComponent, PaymentComponent],
+  exports: [PopoverComponent, DynamicFormComponent, SigniturePadComponent, CameraComponent, PaymentComponent],
   imports: [
     IonicModule,
     CommonModule,

@@ -1,3 +1,5 @@
+import { UiService } from './../../services/ui.service';
+import { MembershipService } from './../../services/membership.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -274,11 +276,13 @@ export class MenuPage implements OnInit {
   salesCountSub: Subscription;
   supportCount = 0;
   supportCountSub: Subscription
-
+  email=''
   access = true;
+  storedUser;
 
   constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService,
-    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService) {
+    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService,
+    private uiService: UiService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
@@ -297,6 +301,10 @@ export class MenuPage implements OnInit {
     })
   }
 
+  onClick(){
+    this.uiService.openPaymentModal(this.storedUser);
+  }
+
   ngOnInit() {
     this.screen = window.innerWidth;
     if (window.innerWidth > 1024) {
@@ -306,6 +314,7 @@ export class MenuPage implements OnInit {
       this.getToken();
     }
     this.storage.get('user').then((user) => {
+      this.storedUser = user;
       this.getSalesCount(user);
       this.getSupportCount(user);
       this.user.photo = user.photo;
