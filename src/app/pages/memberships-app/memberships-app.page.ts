@@ -16,6 +16,10 @@ export class MembershipsAppPage implements OnInit {
   app = false;
   products = [];
   chosenItem;
+  productIDs = ['standard_membership', 'premium_membership'];
+  enterprise = {
+    title: 'Enterprise', description: 'Bespoke features and access', price: 'Custom'
+  }
 
   constructor(
     private purchaseService: PurchasesService,
@@ -28,13 +32,14 @@ export class MembershipsAppPage implements OnInit {
   ngOnInit() {
     if (this.platform.is('cordova')) {
       this.app = true;
-      this.purchaseService.register('standard_membership').then(() => {
+      this.purchaseService.register(this.productIDs).then(() => {
         this.purchaseService.getProducts().then(products => {
           this.products = products;
           console.log('Products: ', this.products);
           this.products.forEach(prod => {
             this.purchaseService.registerHandlers(prod);
           });
+          this.products.push(this.enterprise)
         })
       })
     } else {
@@ -45,7 +50,7 @@ export class MembershipsAppPage implements OnInit {
   async buy(product) {
     this.openTransactionSubscription();
     try {
-      this.chosenItem = product.id;
+      this.chosenItem = product;
       this.purchaseService.buy(product)
     } catch (err) {
       console.log('Error Ordering ', err);
@@ -66,7 +71,7 @@ export class MembershipsAppPage implements OnInit {
         newObj.companyId = newUser.companyId;
         this.memberShipService.setSubscriptions(newObj.companyId, Object.assign({}, newObj)).then(() => {
           this.memberShipService.updateCompany(user.companyId, {
-            accessType: transaction.id,
+            accessType: this.chosenItem.title,
             access: true
           }).then(() => {
             newUser.premium = true;
