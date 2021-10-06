@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, Platform } from '@ionic/angular';
+import { AlertController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 import { MembershipService } from 'src/app/services/membership.service';
@@ -31,7 +31,8 @@ export class MembershipsAppPage implements OnInit {
     private router: Router,
     private membershipService: MembershipService,
     private alertCtrl: AlertController,
-    private toast: ToastService
+    private toast: ToastService,
+    private navController: NavController
   ) { }
 
   ngOnInit() {
@@ -89,7 +90,9 @@ export class MembershipsAppPage implements OnInit {
             access: true
           }).then(() => {
             newUser.premium = true;
-            this.router.navigate(['menu/forms']);
+            this.navController.navigateRoot('').then(() => {
+              this.navController.navigateRoot('menu/forms');
+            })
           })
         })
       })
