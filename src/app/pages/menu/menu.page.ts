@@ -92,6 +92,11 @@ export class MenuPage implements OnInit {
       url: '/chat-sales',
       icon: 'pie-chart'
     },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships',
+      icon: 'pie-chart'
+    },
   ];
 
   pages2 = [
@@ -199,6 +204,11 @@ export class MenuPage implements OnInit {
       url: '/chat-sales',
       icon: 'pie-chart'
     },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships',
+      icon: 'pie-chart'
+    },
   ];
 
   pages4 = [
@@ -244,7 +254,7 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'MEMBERSHIP',
-      url: '/memberships',
+      url: '/memberships-app',
       icon: 'pie-chart'
     },
   ];
@@ -284,11 +294,11 @@ export class MenuPage implements OnInit {
     });
   }
 
-  ionViewWillEnter() {
-    this.storage.get('user').then((user) => {
-      this.authService.checkCompanyAccess(user).then(access => {
+  checkAccess() {
+    return this.storage.get('user').then((user) => {
+      return this.authService.checkCompanyAccess(user).then(access => {
         if (access === true) {
-          this.access = true;
+          return true;
         } else {
           this.access = false;
           this.router.navigate(['no-access'])
@@ -298,50 +308,54 @@ export class MenuPage implements OnInit {
   }
 
   ngOnInit() {
-    this.screen = window.innerWidth;
-    if (window.innerWidth > 1024) {
-      this.app = false;
-    } else {
-      this.app = true;
-      this.getToken();
-    }
-    this.storage.get('user').then((user) => {
-      this.getSalesCount(user);
-      this.getSupportCount(user);
-      this.user.photo = user.photo;
-      this.user.type = user.type;
-      this.thompsonCheck().then(() => {
-        this.user.companyId = user.companyId;
-        if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
-          this.permission = true;
+    this.checkAccess().then(access => {
+      if (access === true) {
+        this.screen = window.innerWidth;
+        if (window.innerWidth > 1024) {
+          this.app = false;
         } else {
-          this.permission = false;
+          this.app = true;
+          this.getToken();
         }
-        if (this.user.type === 'Technician') {
-          this.router.navigate(['work-orders'])
-          this.technician = true;
-        } else {
-          this.technician = false;
-        }
-        this.companysCollection = this.afs.collection('companys', ref => ref.where('key', '==', user.companyId));
-        this.companys = this.companysCollection.snapshotChanges().pipe(map(changes => {
-          return changes.map((a: any) => {
-            const info = a.payload.doc.data() as any;
-            const key = a.payload.doc.id;
-            return { key, ...info };
-          });
-        }));
-        this.companys.subscribe(companys => {
-          companys.forEach(company => {
-            if (company.account === 'Free') {
-              this.account = false;
+        this.storage.get('user').then((user) => {
+          this.getSalesCount(user);
+          this.getSupportCount(user);
+          this.user.photo = user.photo;
+          this.user.type = user.type;
+          this.thompsonCheck().then(() => {
+            this.user.companyId = user.companyId;
+            if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
+              this.permission = true;
             } else {
-              this.account = true;
+              this.permission = false;
             }
+            if (this.user.type === 'Technician') {
+              this.router.navigate(['work-orders'])
+              this.technician = true;
+            } else {
+              this.technician = false;
+            }
+            this.companysCollection = this.afs.collection('companys', ref => ref.where('key', '==', user.companyId));
+            this.companys = this.companysCollection.snapshotChanges().pipe(map(changes => {
+              return changes.map((a: any) => {
+                const info = a.payload.doc.data() as any;
+                const key = a.payload.doc.id;
+                return { key, ...info };
+              });
+            }));
+            this.companys.subscribe(companys => {
+              companys.forEach(company => {
+                if (company.account === 'Free') {
+                  this.account = false;
+                } else {
+                  this.account = true;
+                }
+              });
+            });
           });
         });
-      });
-    });
+      }
+    })
   }
 
   getSalesCount(user) {

@@ -9150,6 +9150,23 @@ exports.deleteAccountNotification = functions.firestore
       })
   });
 
+  exports.enterpriseInquiry = functions.firestore
+  .document(`/enterpriseInquiry/{uid}`)
+  .onCreate((snap) => {
+    const form = snap.data();
+    const mailOptions = {
+      from: '"Security Control" <system@securitycontrol.co.za>',
+      to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
+      subject: 'SC: Enterprise Inquiry',
+      text: `Good Day,\n\nA user has inquired about Enterprise access\n\nUser Name: ${form.user}\nUser Key: ${form.userId}\nUser Email: ${form.userEmail}\nCompany Name: ${form.company}\nCompany Key: ${form.companyId}\n\nKindly,\nSecurity Control Team`,
+    };
+    return mailTransport.sendMail(mailOptions)
+      .then(() => console.log(`Sent`))
+      .catch(function (error) {
+        return console.error("Failed!" + error);
+      })
+  });
+
 exports.validatePurchase = functions.https.onCall((data, context) => {
   var config = {
     method: 'post',

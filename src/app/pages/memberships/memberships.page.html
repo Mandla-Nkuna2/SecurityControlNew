@@ -1,24 +1,349 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Memberships</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+  <div class="top-holder flex al-center jc-between">
+    <div class="left">
+      <h1>Upgrade Your Account</h1>
+    </div>
 
-<ion-content>
+    <div class="right path-holder">
+      <h4>{{accessType}}</h4>
+    </div>
+  </div>
 
-  <ion-row *ngIf="products !== []">
-    <ion-col *ngFor="let prod of products">
-      <div class="products">
-        <h3>{{prod.title}}</h3>
-        <h6>{{prod.description}}</h6>
-        <h6>{{prod.price}}</h6>
-        <ion-button (click)="buy(prod)" class='buy-button'>
-          Buy Now
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="headers ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4>Features</h4>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+        <h4>{{basic.title}}</h4>
+        <h5>R {{basic.price}}/month</h5>
+        <ion-button expand="block" *ngIf="accessType === 'Basic'">
+          Current Plan
         </ion-button>
-        <ion-button (click)="verify(prod)" class='buy-button'>
-          Verify
+        <ion-button expand="block" *ngIf="accessType === ''">
+          Select
         </ion-button>
-      </div>
-    </ion-col>
-  </ion-row>
+        <ion-button expand="block" *ngIf="accessType !== 'Basic' && accessType !== ''">
+          Unavailable
+        </ion-button>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+        <h4>{{premium.title}} </h4>
+        <h5>R {{premium.price}}/month</h5>
+        <ion-button expand="block" *ngIf="accessType === 'Premium'">
+          Current Plan
+        </ion-button>
+        <ion-button id="selected" expand="block" *ngIf="accessType === '' || accessType === 'Basic'">
+          Select
+        </ion-button>
+        <ion-button expand="block" *ngIf="accessType === 'Enterprise'">
+          Unavailable
+        </ion-button>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+        <h4>{{enterprise.title}}</h4>
+        <h5>{{enterprise.price}}</h5>
+        <ion-button expand="block" *ngIf="accessType === 'Enterprise'">
+          Current Plan
+        </ion-button>
+        <ion-button (click)="enterpriseContact()" id="selected" expand="block" *ngIf="accessType === '' || accessType === 'Basic' || accessType === 'Premium'">
+          Contact Us
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 tooltip="This feature allows you to upload mass data in excel format. A very efficient way to add sites!" placement="bottom">Bulk Upload of Sites</h4>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 tooltip="This feature allows you to upload mass data in excel format. A very efficient way to add staff!" placement="bottom" class="ion-text-wrap">Bulk Upload of Staff</h4>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 tooltip="This feature allows you to upload your own company forms and inspections. We will generate the form for you and add it to the platform" placement="bottom" class="ion-text-wrap">Upload of Company Forms</h4>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 matTooltipClass='red-tooltip' tooltip="Having problems with the platform? Have access to a 24/7 support chat" placement="bottom" class="ion-text-wrap">Support Chat</h4>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="footer desktop">
+    <p  class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+  </div>
 </ion-content>
+
+<!--
+
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="headers ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4>Features</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+        <h4>Basic</h4>
+        <h5>Free</h5>
+        <ion-button  expand="block" >
+          Current Plan
+        </ion-button>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+        <h4>Premium</h4>
+        <h5>$45/month</h5>
+        <ion-button  expand="block" id="selected">
+          Selected
+        </ion-button>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+        <h4>Enterprise</h4>
+        <h5>$100/month</h5>
+        <ion-button  expand="block"  id="selected">
+          Select
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4>Drop-Down Selection</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>01 User</h5>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>10 Users</h5>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>Unlimited</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4>Tick Boxes</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>01 User</h5>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>05 Users</h5>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>Unlimited</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4>Mandatory Fields</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>01 User</h5>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>05 Users</h5>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
+
+        <h5>Unlimited</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4>Autocorrect and Spellcheck</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 class="ion-text-wrap">Dynamic Fields & Conditional
+          Responses</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 class="ion-text-wrap">Legal Binding Digital
+          Signature</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 class="ion-text-wrap">GPS Stamped Reports</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row class="values ion-justify-content-center">
+      <ion-col sizeXs="12" sizeSm="12"  sizeMd="4.55" sizeLg="4.55" sizeXl="4.55" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" >
+        <h4 class="ion-text-wrap">Branded Professional PDF
+          Reports</h4>
+
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"   class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="close" name="close-circle-outline"></ion-icon>
+      </ion-col>
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
+        offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="flex al-center jc-center ion-text-center">
+
+        <ion-icon id="check" name="checkmark-circle"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+-->

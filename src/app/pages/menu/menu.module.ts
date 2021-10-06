@@ -180,6 +180,10 @@ const routes: Routes = [
         path: 'no-access',
         loadChildren: () => import('../no-access/no-access.module').then( m => m.NoAccessPageModule)
       },
+      {
+        path: 'memberships-app',
+        loadChildren: () => import('../memberships-app/memberships-app.module').then( m => m.MembershipsAppPageModule)
+      },
     ]
   },
   {
