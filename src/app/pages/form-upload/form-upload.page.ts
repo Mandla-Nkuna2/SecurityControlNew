@@ -29,8 +29,8 @@ export class FormUploadPage {
     private alertCtrl: AlertController, private router: Router) { }
 
   ngOnInIt() {
-    this.storage.get('subscriptionType').then(subscriptionType => {
-      if (subscriptionType === 'enterprise') {
+    this.storage.get('accessType').then(accessType => {
+      if (accessType === 'Enterprise') {
         this.access = true;
       } else {
         this.access = false;

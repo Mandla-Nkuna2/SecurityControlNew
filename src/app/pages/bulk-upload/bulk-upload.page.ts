@@ -34,8 +34,8 @@ export class BulkUploadPage implements OnInit {
     private afs: AngularFirestore, private loading: LoadingService, private toast: ToastService, private platform: Platform, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
-    this.storage.get('subscriptionType').then(subscriptionType => {
-      if (subscriptionType !== 'basic' && subscriptionType !== undefined && subscriptionType !== null) {
+    this.storage.get('accessType').then(accessType => {
+      if (accessType !== 'Basic' && accessType !== undefined && accessType !== null) {
         this.access = true;
       } else {
         this.access = false;

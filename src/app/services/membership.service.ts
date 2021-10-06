@@ -165,6 +165,8 @@ export class MembershipService {
           name: user.company,
           accessType: updateData.accessType,
           access: true,
+          email: user.email,
+          rep: user.name
         }
         this.afs.collection('companies').doc(company.key).set(company).then(() => {
           this.afs.collection('users').doc(user.key).update({ openedSubscription: true });

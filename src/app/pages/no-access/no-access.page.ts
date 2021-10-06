@@ -29,12 +29,13 @@ export class NoAccessPage implements OnInit {
       } else {
         this.owner = false;
       }
-      this.storage.get('subscriptionType').then(subscriptionType => {
-        if (subscriptionType) {
+      this.storage.get('accessType').then(accessType => {
+        if (accessType) {
           this.firstLogin = false;
         } else {
           this.firstLogin = true;
         }
+        console.log(this.firstLogin)
       })
     })
   }
