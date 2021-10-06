@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, Platform } from '@ionic/angular';
+import { AlertController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
 import { MembershipService } from 'src/app/services/membership.service';
@@ -31,7 +31,8 @@ export class MembershipsAppPage implements OnInit {
     private router: Router,
     private membershipService: MembershipService,
     private alertCtrl: AlertController,
-    private toast: ToastService
+    private toast: ToastService,
+    private navController: NavController
   ) { }
 
   ngOnInit() {
@@ -39,6 +40,7 @@ export class MembershipsAppPage implements OnInit {
       this.app = true;
       this.storage.get('user').then(user => {
         this.user = user;
+        console.log(this.user.openedSubscription);
         this.membershipService.getCompany(user.companyId).then((comp: any) => {
           this.company = comp;
           this.purchaseService.register(this.productIDs).then(() => {
@@ -81,13 +83,16 @@ export class MembershipsAppPage implements OnInit {
         newObj.type = 'App';
         newObj.date = moment(new Date()).format('YYYY/MM/DD');
         newObj.companyId = newUser.companyId;
+        newObj.number = 1;
         this.membershipService.setSubscriptions(newObj.companyId, Object.assign({}, newObj)).then(() => {
-          this.membershipService.updateCompany(user.companyId, {
+          this.membershipService.updateCompany(user, {
             accessType: this.chosenItem.title,
             access: true
           }).then(() => {
             newUser.premium = true;
-            this.router.navigate(['menu/forms']);
+            this.navController.navigateRoot('').then(() => {
+              this.navController.navigateRoot('menu/forms');
+            })
           })
         })
       })
@@ -116,8 +121,8 @@ export class MembershipsAppPage implements OnInit {
           text: 'SEND INQUIRY',
           handler: data => {
             var inq = {
-              company: this.company.name,
-              companyId: this.company.key,
+              company: this.user.company,
+              companyId: this.user.companyId,
               user: this.user.name,
               userEmail: this.user.email,
               userId: this.user.key,

@@ -84,7 +84,8 @@ export class AuthenticationService {
                     siteId: '',
                     contact: 0,
                     password: user.password,
-                    customerCode: onResponse.data.customer_code
+                    customerCode: onResponse.data.customer_code,
+                    openedSubscription: false
                   }
                   this.afs.collection('users').doc(auth.uid).set(newUser).then(() => {
                     this.storage.set('user', newUser).then(() => {
@@ -151,7 +152,7 @@ export class AuthenticationService {
       if (company) {
         console.log(company.key)
         this.storage.set('access', company.access);
-        this.storage.set('subscriptionType', company.subscriptionType);
+        this.storage.set('accessType', company.accessType);
         return company.access
       }
     })

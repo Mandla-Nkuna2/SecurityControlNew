@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Storage } from '@ionic/storage';
 
 const FUNCTIONS_HOST = "https://us-central1-security-control-app.cloudfunctions.net/";
 
@@ -13,7 +14,8 @@ export class MembershipService {
 
   constructor(
     private http: HttpClient,
-    private firestore: AngularFirestore
+    private firestore: AngularFirestore,
+    private storage: Storage
   ) { }
 
   startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email) {
@@ -184,13 +186,33 @@ export class MembershipService {
       })
     });
   }
-  public updateCompany(companyId: string, updateData: any) {
+  public updateCompany(user: any, updateData: any) {
     return new Promise((resolve, reject) => {
-      this.firestore.collection('companies').doc(companyId).update(updateData).then(() => {
-        resolve('complete')
-      }).catch((error) => {
-        reject(error);
-      })
+      if (user.openedSubscription === false) {
+        console.log('New comp')
+        var company = {
+          key: user.companyId,
+          name: user.company,
+          accessType: updateData.accessType,
+          access: true,
+          email: user.email,
+          rep: user.name
+        }
+        this.firestore.collection('companies').doc(company.key).set(company).then(() => {
+          this.firestore.collection('users').doc(user.key).update({ openedSubscription: true });
+          user.openedSubscription = true;
+          this.storage.set('user', user);
+          resolve('complete')
+        }).catch((error) => {
+          reject(error);
+        })
+      } else {
+        this.firestore.collection('companies').doc(user.companyId).update(updateData).then(() => {
+          resolve('complete')
+        }).catch((error) => {
+          reject(error);
+        })
+      }
     });
   }
 }

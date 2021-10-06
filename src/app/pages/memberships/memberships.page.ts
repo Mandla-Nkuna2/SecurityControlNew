@@ -44,6 +44,7 @@ export class MembershipsPage implements OnInit {
       })
       this.storage.get('user').then(user => {
         this.user = user;
+        console.log(this.user.openedSubscription);
         this.membershipService.getCompany(user.companyId).then((comp: any) => {
           this.company = comp;
           if (comp.accessType && comp.accessType !== '') {
@@ -119,8 +120,8 @@ export class MembershipsPage implements OnInit {
           text: 'SEND INQUIRY',
           handler: data => {
             var inq = {
-              company: this.company.name,
-              companyId: this.company.key,
+              company: this.user.company,
+              companyId: this.user.companyId,
               user: this.user.name,
               userEmail: this.user.email,
               userId: this.user.key,
