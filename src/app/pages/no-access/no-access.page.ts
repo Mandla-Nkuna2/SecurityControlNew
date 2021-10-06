@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { UUID } from 'angular2-uuid';
 import moment from 'moment';
@@ -18,7 +19,7 @@ export class NoAccessPage implements OnInit {
   owner = false;
   firstLogin = true;
 
-  constructor(private afs: AngularFirestore, private storage: Storage, private toast: ToastService, private router: Router) { }
+  constructor(private afs: AngularFirestore, private storage: Storage, private toast: ToastService, private router: Router, private platform: Platform) { }
 
   ngOnInit() {
     this.storage.get('user').then(user => {
@@ -49,7 +50,11 @@ export class NoAccessPage implements OnInit {
   }
 
   upgrade() {
-    // this.router.navigate(['packages'])
+    if (this.platform.is('cordova')) {
+      this.router.navigate(['memberships-app'])
+    } else {
+      this.router.navigate(['memberships'])
+    }
   }
 
 }
