@@ -62,11 +62,11 @@ exports.startTrial = functions.https.onRequest((request, response) => {
         admin.firestore().collection('trials').doc(body.key).set({
             companyKey: body.companyKey,
             customerCode: body.customerCode,
-            firstCharge: body.firstCharge,
+            firstChargeAmount: body.firstCharge,
             authCard: body.authCard,
             planCode: body.planCode,
             trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-            chosenTier: body.tier
+            tier: body.tier
         }).then((value) => {
             response.status(200).send(value);
         }).catch((onError) => {
@@ -112,20 +112,21 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/Johannesburg').onRun((context) => {
     return admin.firestore().collection('trials').get().then((onFulfilled) => {
         if (!onFulfilled.empty) {
-            onFulfilled.docs.forEach((doc) => {
-                if (doc.data().trialStartDate) {
-                    if (moment(doc.data().trialStartDate).diff(moment(), 'days') >= 14) {
-                        return admin.firestore().collection('trials').doc(doc.id).update({
+            onFulfilled.docs.forEach((item) => {
+                let doc = item.data();
+                if (doc.trialStartDate) {
+                    if (moment(doc.trialStartDate).diff(moment(), 'days') >= 14) {
+                        return admin.firestore().collection('trials').doc(doc.companyKey).update({
                             trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
                         }).then(() => {
                             return triggerSubscription(
-                                doc.data().customerCode, 
-                                doc.data().authCard, 
-                                doc.data().planCode, 
-                                doc.data().firstCharge,
-                                doc.data().email,
-                                doc.data().companyKey,
-                                doc.data().chosenTier
+                                doc.customerCode, 
+                                doc.authCard, 
+                                doc.planCode, 
+                                doc.firstCharge,
+                                doc.email,
+                                doc.companyKey,
+                                doc.tier
                                 ).then((onResponse)=>{
                                 if(!onResponse){
                                     functions.logger.error("Subscription failed")
@@ -145,7 +146,7 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
     }).catch((onError) => functions.logger.error(onError))
 })
 
-function triggerSubscription(customerCode, authCode, planCode, firstCharge, email, companyKey, tier){
+function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount, email, companyKey, tier){
     return new Promise((resolve, reject)=>{
         axios.post(PAYSTACK_HOST + 'subscription', {
             customer: customerCode,
@@ -158,7 +159,7 @@ function triggerSubscription(customerCode, authCode, planCode, firstCharge, emai
         }).then((onResponse)=>{
             if(onResponse.data.message =="Subscription successfully created"){
                 axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
-                    amount: firstCharge,
+                    amount: firstChargeAmount,
                     email: email,
                     authorization_code: authCode
                 }, {
@@ -178,10 +179,11 @@ function triggerSubscription(customerCode, authCode, planCode, firstCharge, emai
                             active: true,
                             emailToken: onResponse.data.data.email_token
                         }).then(() => {
+                            functions.logger.debug(onResponse.data);
                             resolve(onResponse.data)
                         }).catch((onError) => {
-                            reject(onError)
                             functions.logger.error(onError)
+                            reject(onError)
                         })
                     }
                     else{
@@ -193,7 +195,7 @@ function triggerSubscription(customerCode, authCode, planCode, firstCharge, emai
                             reject(onError)
                         })
                     }
-                })
+                }).catch((onError)=>reject(onError))
             }else{
                 reject(onResponse.data)
             }
@@ -208,7 +210,7 @@ exports.startSubscription = functions.https.onRequest((request, response) => {
             body.customerCode,
             body.authCode,
             body.planCode,
-            body.firstCharge,
+            body.firstChargeAmount,
             body.email,
             body.companyKey,
             body.tier
@@ -284,7 +286,7 @@ exports.transactionWebhook = functions.https.onRequest((request, response) => {
 
 exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
     return cors(request, response, () => {
-        axios.post(`${PAYSTACK_HOST}/transaction/charge_authorization`, {
+        axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
             amount: body.amount,
             email: body.email,
             authorization_code: body.authCode
