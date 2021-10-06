@@ -335,23 +335,6 @@ export class MenuPage implements OnInit {
             } else {
               this.technician = false;
             }
-            this.companysCollection = this.afs.collection('companys', ref => ref.where('key', '==', user.companyId));
-            this.companys = this.companysCollection.snapshotChanges().pipe(map(changes => {
-              return changes.map((a: any) => {
-                const info = a.payload.doc.data() as any;
-                const key = a.payload.doc.id;
-                return { key, ...info };
-              });
-            }));
-            this.companys.subscribe(companys => {
-              companys.forEach(company => {
-                if (company.account === 'Free') {
-                  this.account = false;
-                } else {
-                  this.account = true;
-                }
-              });
-            });
           });
         });
       }

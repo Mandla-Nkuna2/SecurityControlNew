@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
+import { MembershipService } from 'src/app/services/membership.service';
 import { PurchasesService } from 'src/app/services/purchases.service';
 
 @Component({
@@ -17,7 +17,13 @@ export class MembershipsAppPage implements OnInit {
   products = [];
   chosenItem;
 
-  constructor(private purchaseService: PurchasesService, private platform: Platform, private storage: Storage, private router: Router, private afs: AngularFirestore) { }
+  constructor(
+    private purchaseService: PurchasesService,
+    private platform: Platform,
+    private storage: Storage,
+    private router: Router,
+    private memberShipService: MembershipService
+  ) { }
 
   ngOnInit() {
     if (this.platform.is('cordova')) {
@@ -58,14 +64,14 @@ export class MembershipsAppPage implements OnInit {
         newObj.type = 'App';
         newObj.date = moment(new Date()).format('YYYY/MM/DD');
         newObj.companyId = newUser.companyId;
-        this.afs.collection('subscriptions').doc(newObj.companyId).set(Object.assign({}, newObj));
-        this.afs.collection('companies').doc(user.companyId).update({
-          accessType: transaction.id,
-          access: true
-        })
-        .then(() => {
-          newUser.premium = true;
-          this.router.navigate(['menu/forms']);
+        this.memberShipService.setSubscriptions(newObj.companyId, Object.assign({}, newObj)).then(() => {
+          this.memberShipService.updateCompany(user.companyId, {
+            accessType: transaction.id,
+            access: true
+          }).then(() => {
+            newUser.premium = true;
+            this.router.navigate(['menu/forms']);
+          })
         })
       })
     });

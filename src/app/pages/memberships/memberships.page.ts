@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
+import { MembershipService } from 'src/app/services/membership.service';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -13,31 +13,36 @@ import { ToastService } from 'src/app/services/toast.service';
 export class MembershipsPage implements OnInit {
 
   accessType;
-  basic = { title: '', price: '', access: [], id: ''};
-  premium = { title: '', price: '', access: [], id: ''};
-  enterprise = { title: '', price: '', access: [], id: ''};
+  basic = { title: '', price: '', access: [], id: '' };
+  premium = { title: '', price: '', access: [], id: '' };
+  enterprise = { title: '', price: '', access: [], id: '' };
   user;
   company;
 
-  constructor(private afs: AngularFirestore, private storage: Storage, private alertCtrl: AlertController, private toast: ToastService) { }
+  constructor(
+    private storage: Storage,
+    private alertCtrl: AlertController,
+    private toast: ToastService,
+    private membershipService: MembershipService
+  ) { }
 
   ngOnInit() {
-    this.afs.collection('membershipPackages').ref.orderBy('title').get().then(packages => {
+    this.membershipService.getMembershipPackages().then((packages: any[]) => {
       packages.forEach((pack: any) => {
-        if (pack.data().title === 'Basic') {
-          this.basic = pack.data();
-        } else if (pack.data().title === 'Premium') {
-          this.premium = pack.data();
+        if (pack.title === 'Basic') {
+          this.basic = pack;
+        } else if (pack.title === 'Premium') {
+          this.premium = pack;
         } else {
-          this.enterprise = pack.data();
+          this.enterprise = pack;
         }
       })
       this.storage.get('user').then(user => {
-        this.user= user;
-        this.afs.collection('companies').doc(user.companyId).ref.get().then((comp: any) => {
-          this.company = comp.data();
-          if (comp.data().accessType && comp.data().accessType !== '') {
-            this.accessType = comp.data().accessType;
+        this.user = user;
+        this.membershipService.getCompany(user.companyId).then((comp: any) => {
+          this.company = comp;
+          if (comp.accessType && comp.accessType !== '') {
+            this.accessType = comp.accessType;
           } else {
             this.accessType = '';
           }
@@ -67,8 +72,9 @@ export class MembershipsPage implements OnInit {
               userId: this.user.key,
               date: moment(new Date()).format('YYYY/MM/DD HH:mm'),
             }
-            this.afs.collection('enterpriseInquiry').doc(inq.companyId).set(inq);
-            this.toast.show('Your inquiry has been sent. Someone from our team will be contacting you soon!')
+            this.membershipService.setEnterpriseInquiry(inq.companyId, inq).then(() => {
+              this.toast.show('Your inquiry has been sent. Someone from our team will be contacting you soon!')
+            })
           }
         }
       ]
