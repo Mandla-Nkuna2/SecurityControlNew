@@ -91,7 +91,7 @@ export class WelcomePage implements OnInit {
 
     if (window.innerWidth < 500) {
       setTimeout(() => {
-        this.router.navigate(['forms']);
+        this.router.navigate(['form-menu']);
       }, 500);
     } else {
       this.storage.get('user').then((user) => {
