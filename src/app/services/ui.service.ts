@@ -1,5 +1,6 @@
+import { PaymentComponent } from './../components/payment/payment.component';
 import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
-import { ToastController, ActionSheetController, Platform, PopoverController, AlertController, LoadingController } from '@ionic/angular';
+import { ToastController, ActionSheetController, Platform, PopoverController, AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { SigniturePadComponent } from '../components/signiture-popover/signiture-popover.component';
 
@@ -8,6 +9,7 @@ import { SigniturePadComponent } from '../components/signiture-popover/signiture
 })
 export class UiService {
   popover;
+  modal;
   constructor(
     private toastController: ToastController,
     private actionSheetController: ActionSheetController,
@@ -15,7 +17,8 @@ export class UiService {
     private camera: Camera,
     private popoverController: PopoverController,
     private alertController: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private modalController: ModalController
   ) { }
   loader: any;
 
@@ -27,6 +30,24 @@ export class UiService {
       position: position ? position : 'bottom'
     });
     await toast.present();
+  }
+
+  modalDismissal(): Promise<any>{
+    return this.modal.onDidDismiss();
+  }
+
+  async openPaymentModal(user){
+     this.modal = await this.modalController.create({
+      component: PaymentComponent,
+      componentProps: {
+        user: user
+      }
+    });
+    return await this.modal.present();
+  }
+
+  dismissModal(options?){
+    this.modalController.dismiss(options?options:null);
   }
 
   async openActionSheet(useAlbum: boolean) {

@@ -1,6 +1,7 @@
 import { take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 
@@ -13,7 +14,7 @@ export class MembershipService {
 
   constructor(
     private http: HttpClient,
-    private afs: AngularFirestore,
+    private firestore: AngularFirestore,
     private storage: Storage
   ) { }
 
@@ -35,14 +36,14 @@ export class MembershipService {
     })
   }
 
-  startTrial(companyKey, chosenTier, customerCode, authCard, firstCharge, planCode, tier) {
+  startTrial(companyKey, customerCode, authCode, firstCharge, planCode, tier) {
     return new Promise((resolve, reject) => {
+      console.log(`${companyKey} ${customerCode} ${authCode} ${firstCharge} ${planCode} ${tier} `)
       this.http.post(FUNCTIONS_HOST + 'startTrial', {
         companyKey: companyKey,
-        chosenTier: chosenTier,
         customerCode: customerCode,
         firstCharge: firstCharge,
-        authCard: authCard,
+        authCode: authCode,
         planCode: planCode,
         tier: tier
       }).pipe(take(1)).subscribe((onResponse) => {
@@ -54,12 +55,42 @@ export class MembershipService {
     })
   }
 
-  saveCardAuth(userKey, cardAuth) {
+  subToPaymentEvent(reference){
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST + 'saveCardAuth', {
+      let match = null;
+      let timeout = setTimeout(()=>{
+        if(!match){
+          sub.unsubscribe();
+          resolve(null)
+          clearTimeout(timeout);
+        }
+      },60000)
+      let sub = this.firestore.collection('paymentEvents').valueChanges().subscribe((onResponse)=>{
+        onResponse.forEach((doc: any)=>{
+          if(reference == doc.data.reference && doc.event == "charge.success"){
+            match = doc;
+          }
+        })
+        if(match){
+          clearTimeout(timeout);
+          sub.unsubscribe();
+          resolve(match)
+        }
+      }, (onError)=>{
+        console.log(onError)
+        reject(onError)
+      })
+    })
+  }
+
+  saveCardAuth(userKey, cardAuth){
+    return new Promise((resolve, reject) => {
+      this.http.post<any>(FUNCTIONS_HOST+ 'saveCardAuth', {
         key: userKey,
         auth: cardAuth
-      }).pipe(take(1)).subscribe((onSaveResponse) => {
+      }).pipe(take(1)).subscribe((onSaveResponse)=>{
+        console.log("SAVED")
+        console.log(onSaveResponse)
         resolve("DONE")
       }, onError => reject(onError))
     })
@@ -118,7 +149,7 @@ export class MembershipService {
   }
   public getCompany(companyId: string) {
     return new Promise((resolve, reject) => {
-      this.afs.collection('companies').doc(companyId).ref.get().then((companyDoc) => {
+      this.firestore.collection('companies').doc(companyId).ref.get().then((companyDoc) => {
         resolve(companyDoc.data());
       }).catch((error) => {
         reject(error);
@@ -127,7 +158,7 @@ export class MembershipService {
   }
   public getMembershipPackages() {
     return new Promise((resolve, reject) => {
-      this.afs.collection('membershipPackages').ref.orderBy('title').get().then((packages) => {
+      this.firestore.collection('membershipPackages').ref.orderBy('title').get().then((packages) => {
         let allPackages = [];
         packages.docs.forEach((packageDoc) => {
           allPackages.push(packageDoc.data());
@@ -140,7 +171,7 @@ export class MembershipService {
   }
   public setEnterpriseInquiry(companyId: string, inquiry: any) {
     return new Promise((resolve, reject) => {
-      this.afs.collection('enterpriseInquiry').doc(companyId).set(inquiry).then(() => {
+      this.firestore.collection('enterpriseInquiry').doc(companyId).set(inquiry).then(() => {
         resolve('saved');
       }).catch((error) => {
         reject(error);
@@ -149,7 +180,7 @@ export class MembershipService {
   }
   public setSubscriptions(companyId: string, subscription: any) {
     return new Promise((resolve, reject) => {
-      this.afs.collection('subscriptions').doc(companyId).ref.set(subscription).then(() => {
+      this.firestore.collection('subscriptions').doc(companyId).ref.set(subscription).then(() => {
         resolve('complete')
       }).catch((error) => {
         reject(error);
@@ -168,8 +199,8 @@ export class MembershipService {
           email: user.email,
           rep: user.name
         }
-        this.afs.collection('companies').doc(company.key).set(company).then(() => {
-          this.afs.collection('users').doc(user.key).update({ openedSubscription: true });
+        this.firestore.collection('companies').doc(company.key).set(company).then(() => {
+          this.firestore.collection('users').doc(user.key).update({ openedSubscription: true });
           user.openedSubscription = true;
           this.storage.set('user', user);
           resolve('complete')
@@ -177,7 +208,7 @@ export class MembershipService {
           reject(error);
         })
       } else {
-        this.afs.collection('companies').doc(user.companyId).update(updateData).then(() => {
+        this.firestore.collection('companies').doc(user.companyId).update(updateData).then(() => {
           resolve('complete')
         }).catch((error) => {
           reject(error);

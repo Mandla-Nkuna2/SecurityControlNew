@@ -1,3 +1,5 @@
+import { UiService } from './../../services/ui.service';
+import { MembershipService } from './../../services/membership.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -321,10 +323,10 @@ export class MenuPage implements OnInit {
   salesCountSub: Subscription;
   supportCount = 0;
   supportCountSub: Subscription
-
+  email=''
   access = true;
 
-  constructor(private router: Router, private afs: AngularFirestore, private storage: Storage, public loading: LoadingService,
+  constructor(private router: Router, private storage: Storage, public loading: LoadingService,
     private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
@@ -346,39 +348,37 @@ export class MenuPage implements OnInit {
   evaluate(condition: string) {
     return eval(condition);
   }
+
   ngOnInit() {
-    this.checkAccess().then(access => {
-      if (access === true) {
-        this.screen = window.innerWidth;
-        if (window.innerWidth > 1024) {
-          this.app = false;
+    this.screen = window.innerWidth;
+    if (window.innerWidth > 1024) {
+      this.app = false;
+    } else {
+      this.app = true;
+      this.getToken();
+    }
+    this.storage.get('user').then((user) => {
+      this.getSalesCount(user);
+      this.getSupportCount(user);
+      this.user.photo = user.photo;
+      this.user.type = user.type;
+      this.thompsonCheck().then(() => {
+        this.user.companyId = user.companyId;
+        if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
+          this.permission = true;
+        } else {
+          this.permission = false;
+        }
+        if (this.user.type === 'Technician') {
+          this.router.navigate(['work-orders'])
+          this.technician = true;
         } else {
           this.app = true;
           this.getToken();
         }
-        this.storage.get('user').then((user) => {
-          this.getSalesCount(user);
-          this.getSupportCount(user);
-          this.user.photo = user.photo;
-          this.user.type = user.type;
-          this.thompsonCheck().then(() => {
-            this.user.companyId = user.companyId;
-            if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
-              this.permission = true;
-            } else {
-              this.permission = false;
-            }
-            if (this.user.type === 'Technician') {
-              this.router.navigate(['work-orders'])
-              this.technician = true;
-            } else {
-              this.technician = false;
-            }
-          });
-        });
-      }
     })
-  }
+  })
+}
 
   getSalesCount(user) {
     this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {

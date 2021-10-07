@@ -19,10 +19,10 @@
         offsetMd="0.25" offsetLg="0.25" offsetXl="0.25"  class="ion-text-center">
         <h4>{{basic.title}}</h4>
         <h5>R {{basic.price}}/month</h5>
-        <ion-button expand="block" *ngIf="accessType === 'Basic'">
+        <ion-button  expand="block" *ngIf="accessType === 'Basic'">
           Current Plan
         </ion-button>
-        <ion-button expand="block" *ngIf="accessType === ''" id="selected">
+        <ion-button (click)="onSelect('Basic')" expand="block" *ngIf="accessType === ''" id="selected">
           Select
         </ion-button>
         <ion-button expand="block" *ngIf="accessType !== 'Basic' && accessType !== ''">
@@ -36,7 +36,7 @@
         <ion-button expand="block" *ngIf="accessType === 'Premium'">
           Current Plan
         </ion-button>
-        <ion-button id="selected" expand="block" *ngIf="accessType === '' || accessType === 'Basic'">
+        <ion-button (click)="onSelect('Premium')" id="selected" expand="block" *ngIf="accessType === '' || accessType === 'Basic'">
           Select
         </ion-button>
         <ion-button expand="block" *ngIf="accessType === 'Enterprise'">
