@@ -81,23 +81,23 @@ export class MembershipsAppPage implements OnInit {
         newObj = transaction;
         newObj.deferred = 'undefined';
         newObj.transaction.developerPayload = 'undefined';
-        this.firestore.collection('subscriptions').doc(newUser.companyId).ref.set({ 
-          user: newUser, 
-          date: moment(new Date()).format('YYYY/MM/DD'), 
+        this.firestore.collection('subscriptions').doc(newUser.companyId).ref.set({
+          user: newUser,
+          date: moment(new Date()).format('YYYY/MM/DD'),
           companyId: newUser.companyId,
           number: 1,
-          transaction: Object.assign({}, newObj) 
+          transaction: Object.assign({}, newObj)
         });
         //this.membershipService.setAppSubscriptions(newUser.companyId, sub).then(() => {
-          this.membershipService.updateCompany(user, {
-            accessType: this.chosenItem.title,
-            access: true
-          }).then(() => {
-            newUser.premium = true;
-            this.navController.navigateRoot('').then(() => {
-              this.navController.navigateRoot('menu/forms');
-            })
+        this.membershipService.updateCompany(user, {
+          accessType: this.chosenItem.title,
+          access: true
+        }).then(() => {
+          newUser.premium = true;
+          this.navController.navigateRoot('').then(() => {
+            this.navController.navigateRoot('menu/form-menu');
           })
+        })
         //})
       })
     });
