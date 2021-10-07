@@ -258,6 +258,9 @@ ion-footer {
 {
     background: #000000;
 
+    .alert-title.sc-ion-alert-md {
+        color: white;
+    }
     .alert-sub-title.sc-ion-alert-md {
         color: white;
     }

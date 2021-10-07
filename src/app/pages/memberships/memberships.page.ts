@@ -44,9 +44,9 @@ export class MembershipsPage implements OnInit {
       })
       this.storage.get('user').then(user => {
         this.user = user;
-        console.log(this.user.openedSubscription);
         this.membershipService.getCompany(user.companyId).then((comp: any) => {
           this.company = comp;
+          console.log(this.company.accessType)
           if (comp.accessType && comp.accessType !== '') {
             this.accessType = comp.accessType;
           } else {
@@ -55,6 +55,27 @@ export class MembershipsPage implements OnInit {
         })
       })
     })
+  }
+
+  async cancel() {
+    const alert = await this.alertCtrl.create({
+      header: 'Cancel Subscription',
+      message: 'Are you sure you want to delete your subscription to Security Control? We will only store your data for 14 days. After this time your account will be deleted',
+      buttons: [
+        {
+          text: 'EXIT',
+          handler: data => {
+          }
+        },
+        {
+          text: 'CANCEL SUBSCRIPTION',
+          handler: data => {
+            this.membershipService.cancelSubscription(this.user, this.company);
+          }
+        }
+      ]
+    })
+    return alert.present();
   }
 
   //to be refactored

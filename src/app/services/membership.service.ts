@@ -216,4 +216,7 @@ export class MembershipService {
       }
     });
   }
+  public cancelSubscription(user, company) {
+    
+  }
 }

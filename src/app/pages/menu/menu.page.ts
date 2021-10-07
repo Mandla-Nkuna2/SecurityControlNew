@@ -264,7 +264,7 @@ export class MenuPage implements OnInit {
     {
       title: 'MEMBERSHIP',
       url: '/memberships-app',
-      condition: '!this.permission && !this.technician && this.access && this.app',
+      condition: 'this.permission && !this.technician && this.access && this.app',
       icon: 'pie-chart'
     },
     {
