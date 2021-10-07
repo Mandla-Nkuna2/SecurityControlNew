@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
+import { LoadingService } from 'src/app/services/loading.service';
 import { MembershipService } from 'src/app/services/membership.service';
 import { PurchasesService } from 'src/app/services/purchases.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -36,6 +37,7 @@ export class MembershipsAppPage implements OnInit {
     private toast: ToastService,
     private navController: NavController,
     private firestore: AngularFirestore,
+    private loading: LoadingService
   ) { }
 
   ngOnInit() {
@@ -43,6 +45,7 @@ export class MembershipsAppPage implements OnInit {
       this.user = user;
       this.getCompany(user);
       console.log(this.user.openedSubscription);
+      this.products = []; 
       this.purchaseService.register(this.productIDs).then(() => {
         this.purchaseService.getProducts().then(products => {
           this.products = products;
@@ -58,9 +61,13 @@ export class MembershipsAppPage implements OnInit {
 
   getCompany(user) {
     this.membershipService.getCompany(user.companyId).then((comp: any) => {
-      this.company = comp;
-      if (comp.accessType && comp.accessType !== '') {
-        this.accessType = comp.accessType;
+      if (comp) {
+        this.company = comp;
+        if (comp.accessType && comp.accessType !== '') {
+          this.accessType = comp.accessType;
+        } else {
+          this.accessType = '';
+        }
       } else {
         this.accessType = '';
       }
@@ -98,11 +105,11 @@ export class MembershipsAppPage implements OnInit {
           access: true
         }).then(() => {
           newUser.premium = true;
+          this.loading.dismiss();
           this.navController.navigateRoot('').then(() => {
             this.navController.navigateRoot('menu/form-menu');
           })
         })
-        //})
       })
     });
   }

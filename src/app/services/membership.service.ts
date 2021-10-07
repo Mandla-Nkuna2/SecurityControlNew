@@ -200,6 +200,12 @@ export class MembershipService {
           rep: user.name
         }
         this.firestore.collection('companies').doc(company.key).set(company).then(() => {
+          this.firestore.collection('default-forms').ref.get().then(forms => {
+            forms.forEach((form: any) => {
+              var key = '-' + (form.data().name.toLowerCase()).replaceAll(' ', '-'); 
+              this.firestore.collection(`companies/${company.key}/forms`).doc(key).set(form.data());
+            })
+          })
           this.firestore.collection('users').doc(user.key).update({ openedSubscription: true });
           user.openedSubscription = true;
           this.storage.set('user', user);
