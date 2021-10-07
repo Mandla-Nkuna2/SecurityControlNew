@@ -9294,13 +9294,30 @@ exports.emailInspectionPDF = functions.https.onCall((data, context) => {
         return sendPdfEmail(myPdf, report, type).then((s) => {
         })
       }).catch(function (error) {
-        return console.error("Failed!" + error);
+        return sendErrorEmail(error).then(() => {
+          return console.error("Failed!" + error);
+        })
       })
   }).catch(function (error) {
-    return console.error("Failed!" + error);
+    return sendErrorEmail(error).then(() => {
+      return console.error("Failed!" + error);
+    })
   })
 })
-
+function sendErrorEmail(error) {
+  return new Promise((resolve, reject) => {
+    const mailOptions = {
+      from: '"Security Control" <support@securitycontrol.co.za>',
+      to: 'lamu@innovativethinking.co.za',
+    };
+    // Building Email message.
+    mailOptions.subject = 'There seems to be a problem with emailInspectionPDF function';
+    mailOptions.text = error;
+    mailTransport.sendMail(mailOptions).then(() => {
+      resolve('sent');
+    })
+  })
+}
 exports.updateClients = functions.https.onRequest((req, res) => {
   return admin.firestore().collection(`companies`).get().then(companies => {
     companies.forEach(comp => {
@@ -9363,7 +9380,7 @@ function monthlyInvoice(subscription) {
 function sendInvoiceEmail(myPdf, subscription, invoiceNumber) {
   const mailOptions = {
     from: '"Security Control" <system@securitycontrol.co.za>',
-    to: 'kathryn@innovativethinking.co.za', // subscription.user.email 
+    to: 'kathryn@innovativethinking.co.za', // subscription.user.email
     subject: 'Security Control: Monthly Invoice',
     //html: `Security Control
     //<br>Good Day,<br><br>Please find your monthly invoice attached.<br><br>Kindly,<br>Security Control Team`,
