@@ -68,15 +68,15 @@ exports.startTrial = functions.https.onRequest((request, response) => {
       trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
       tier: body.tier
     }).then(() => {
-        admin.firestore().collection('companies').doc(body.companyKey).update({
-            access: true,
-            accessType: body.tier
-        }).then(()=>{
-            response.status(200).send({ text: "DONE" });
-        }).catch((onError)=>{
-            functions.logger.error(onError)
-            response.sendStatus(500)      
-        })
+      admin.firestore().collection('companies').doc(body.companyKey).update({
+        access: true,
+        accessType: body.tier
+      }).then(() => {
+        response.status(200).send({ text: "DONE" });
+      }).catch((onError) => {
+        functions.logger.error(onError)
+        response.sendStatus(500)
+      })
     }).catch((onError) => {
       functions.logger.error(onError)
       response.sendStatus(500)
@@ -102,21 +102,21 @@ exports.getMainCardAuth = functions.https.onRequest((request, response) => {
 })
 
 exports.checkForCardAuth = functions.https.onRequest((request, response) => {
-    return cors(request, response, () => {
-      let body = request.body;
-      admin.firestore().collection('users').doc(body.key).collection('authCards').get().then((onFulfilled) => {
-        if (onFulfilled.empty) {
-          response.status(200).send(null)
-        }
-        else {
-          response.status(200).send(onFulfilled.docs[0].data())
-        }
-      }).catch(onError => {
-        functions.logger.error(onError)
-        response.sendStatus(500)
-      })
+  return cors(request, response, () => {
+    let body = request.body;
+    admin.firestore().collection('users').doc(body.key).collection('authCards').get().then((onFulfilled) => {
+      if (onFulfilled.empty) {
+        response.status(200).send(null)
+      }
+      else {
+        response.status(200).send(onFulfilled.docs[0].data())
+      }
+    }).catch(onError => {
+      functions.logger.error(onError)
+      response.sendStatus(500)
     })
   })
+})
 
 exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *').timeZone('Africa/Johannesburg').onRun(() => {
 
@@ -153,11 +153,11 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
                 doc.tier
               ).then((onResponse) => {
                 if (!onResponse) {
-                    removeAccess(doc.companyKey).then(()=>{
-                        functions.logger.error("Subscription failed")
-                    }).catch((onError)=>functions.logger.error(onError))
+                  removeAccess(doc.companyKey).then(() => {
+                    functions.logger.error("Subscription failed")
+                  }).catch((onError) => functions.logger.error(onError))
                 } else {
-                    functions.logger.log("Subscription created")
+                  functions.logger.log("Subscription created")
                 }
               }).catch((onRejected) => {
                 functions.logger.error("ERROR STARTING SUBSCRIPTION")
@@ -172,18 +172,18 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
   }).catch((onError) => functions.logger.error(onError))
 });
 
-function removeAccess(companyKey){
-    return new Promise((resolve, reject)=>{
-        admin.firestore().collection('companies').doc(companyKey).update({
-            access: false,
-            accessType: ''
-        }).then(()=>{
-            resolve("DONE")
-        }).catch((onError)=>{
-            functions.logger.error(onError)
-            reject(onError)
-        })
+function removeAccess(companyKey) {
+  return new Promise((resolve, reject) => {
+    admin.firestore().collection('companies').doc(companyKey).update({
+      access: false,
+      accessType: ''
+    }).then(() => {
+      resolve("DONE")
+    }).catch((onError) => {
+      functions.logger.error(onError)
+      reject(onError)
     })
+  })
 }
 
 function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount, email, companyKey, tier) {
@@ -347,7 +347,7 @@ exports.saveCardAuth = functions.https.onRequest((request, response) => {
   let body = request.body;
   return cors(request, response, () => {
     admin.firestore().collection('users').doc(body.key).collection('authCards').add(body.auth).then(() => {
-      response.status(200).send({ text: "DONE"})
+      response.status(200).send({ text: "DONE" })
     }).catch(onError => {
       functions.logger.error(onError)
       response.sendStatus(500)
@@ -9191,6 +9191,37 @@ function makeCall(config) {
   })
 }
 
+exports.testAppVerify = functions.firestore
+  .document(`/subscriptions/{uid}`)
+  .onUpdate((snap) => {
+    return admin.firestore().collection('subscriptions').get().then(subs => {
+      return subs.forEach(sub => {
+        // var nextDate = moment(sub.data().date, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
+        // var today = moment(new Date()).format('YYYY/MM/DD');
+        // if (today === nextDate) {
+        if (sub.data().type === 'App') {
+          console.log('Do check app')
+          checkAppVerify(sub.data()).then((msg) => {
+            if (msg === 'Verified') {
+              console.log('Still fine')
+              admin.firestore().collection('subscriptions').doc(sub.data().companyId).update({ date: today, number: sub.data().number + 1 })
+            } else {
+              console.log('Removed premium')
+              admin.firestore().collection('subscriptions').doc(sub.data().companyId).delete();
+              admin.firestore().collection('companies').doc(company.data().key).update({ access: false, accessType: '' })
+            }
+          })
+        } else {
+          console.log('Do check web')
+
+        }
+        // } else {
+        //   console.log('No check needed')
+        // }
+      })
+    })
+  })
+
 exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('every 5 minutes').timeZone('Africa/Johannesburg').onRun(() => {
   return admin.firestore().collection('subscriptions').get().then(subs => {
     return subs.forEach(sub => {
@@ -9220,11 +9251,11 @@ exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('eve
   })
 })
 
-function checkAppVerify(company) {
+function checkAppVerify(subscription) {
   return new Promise((resolve, reject) => {
-    var transaction = company.transaction;
+    var transaction = subscription.transaction;
+    console.log(transaction.id);
     if (transaction) {
-      functions.logger.info(transaction);
       var data = transaction;
       var config = {
         method: 'post',
@@ -9235,8 +9266,8 @@ function checkAppVerify(company) {
         data: data
       };
       return makeCall(config).then(resp => {
-        console.log(resp);
-        if (response.data.ok === true) {
+        console.log('Resp: ', resp.data.ok);
+        if (resp.data.ok === true) {
           msg = 'Verified';
         } else {
           console.log('Invalid')

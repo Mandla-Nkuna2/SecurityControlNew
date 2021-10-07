@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
@@ -32,7 +33,8 @@ export class MembershipsAppPage implements OnInit {
     private membershipService: MembershipService,
     private alertCtrl: AlertController,
     private toast: ToastService,
-    private navController: NavController
+    private navController: NavController,
+    private firestore: AngularFirestore
   ) { }
 
   ngOnInit() {
@@ -79,12 +81,14 @@ export class MembershipsAppPage implements OnInit {
         newObj = transaction;
         newObj.deferred = 'undefined';
         newObj.transaction.developerPayload = 'undefined';
-        newObj.user = newUser;
-        newObj.type = 'App';
-        newObj.date = moment(new Date()).format('YYYY/MM/DD');
-        newObj.companyId = newUser.companyId;
-        newObj.number = 1;
-        this.membershipService.setSubscriptions(newObj.companyId, Object.assign({}, newObj)).then(() => {
+        this.firestore.collection('subscriptions').doc(newUser.companyId).ref.set({ 
+          user: newUser, 
+          date: moment(new Date()).format('YYYY/MM/DD'), 
+          companyId: newUser.companyId,
+          number: 1,
+          transaction: Object.assign({}, newObj) 
+        });
+        //this.membershipService.setAppSubscriptions(newUser.companyId, sub).then(() => {
           this.membershipService.updateCompany(user, {
             accessType: this.chosenItem.title,
             access: true
@@ -94,7 +98,7 @@ export class MembershipsAppPage implements OnInit {
               this.navController.navigateRoot('menu/forms');
             })
           })
-        })
+        //})
       })
     });
   }

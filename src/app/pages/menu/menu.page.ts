@@ -323,7 +323,7 @@ export class MenuPage implements OnInit {
   salesCountSub: Subscription;
   supportCount = 0;
   supportCountSub: Subscription
-  email=''
+  email = ''
   access = true;
 
   constructor(private router: Router, private storage: Storage, public loading: LoadingService,
@@ -350,35 +350,39 @@ export class MenuPage implements OnInit {
   }
 
   ngOnInit() {
-    this.screen = window.innerWidth;
-    if (window.innerWidth > 1024) {
-      this.app = false;
-    } else {
-      this.app = true;
-      this.getToken();
-    }
-    this.storage.get('user').then((user) => {
-      this.getSalesCount(user);
-      this.getSupportCount(user);
-      this.user.photo = user.photo;
-      this.user.type = user.type;
-      this.thompsonCheck().then(() => {
-        this.user.companyId = user.companyId;
-        if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
-          this.permission = true;
-        } else {
-          this.permission = false;
-        }
-        if (this.user.type === 'Technician') {
-          this.router.navigate(['work-orders'])
-          this.technician = true;
+    this.checkAccess().then(res => {
+      if (res === true) {
+        this.screen = window.innerWidth;
+        if (window.innerWidth > 1024) {
+          this.app = false;
         } else {
           this.app = true;
           this.getToken();
         }
+        this.storage.get('user').then((user) => {
+          this.getSalesCount(user);
+          this.getSupportCount(user);
+          this.user.photo = user.photo;
+          this.user.type = user.type;
+          this.thompsonCheck().then(() => {
+            this.user.companyId = user.companyId;
+            if (this.user.type === 'Owner' || this.user.type === 'Admin' || this.user.type === 'Account Admin') {
+              this.permission = true;
+            } else {
+              this.permission = false;
+            }
+            if (this.user.type === 'Technician') {
+              this.router.navigate(['work-orders'])
+              this.technician = true;
+            } else {
+              this.app = true;
+              this.getToken();
+            }
+          })
+        })
+      }
     })
-  })
-}
+  }
 
   getSalesCount(user) {
     this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {
