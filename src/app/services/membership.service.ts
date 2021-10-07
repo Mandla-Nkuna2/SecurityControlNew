@@ -55,40 +55,40 @@ export class MembershipService {
     })
   }
 
-  subToPaymentEvent(reference){
+  subToPaymentEvent(reference) {
     return new Promise((resolve, reject) => {
       let match = null;
-      let timeout = setTimeout(()=>{
-        if(!match){
+      let timeout = setTimeout(() => {
+        if (!match) {
           sub.unsubscribe();
           resolve(null)
           clearTimeout(timeout);
         }
-      },60000)
-      let sub = this.firestore.collection('paymentEvents').valueChanges().subscribe((onResponse)=>{
-        onResponse.forEach((doc: any)=>{
-          if(reference == doc.data.reference && doc.event == "charge.success"){
+      }, 60000)
+      let sub = this.firestore.collection('paymentEvents').valueChanges().subscribe((onResponse) => {
+        onResponse.forEach((doc: any) => {
+          if (reference == doc.data.reference && doc.event == "charge.success") {
             match = doc;
           }
         })
-        if(match){
+        if (match) {
           clearTimeout(timeout);
           sub.unsubscribe();
           resolve(match)
         }
-      }, (onError)=>{
+      }, (onError) => {
         console.log(onError)
         reject(onError)
       })
     })
   }
 
-  saveCardAuth(userKey, cardAuth){
+  saveCardAuth(userKey, cardAuth) {
     return new Promise((resolve, reject) => {
-      this.http.post<any>(FUNCTIONS_HOST+ 'saveCardAuth', {
+      this.http.post<any>(FUNCTIONS_HOST + 'saveCardAuth', {
         key: userKey,
         auth: cardAuth
-      }).pipe(take(1)).subscribe((onSaveResponse)=>{
+      }).pipe(take(1)).subscribe((onSaveResponse) => {
         console.log("SAVED")
         console.log(onSaveResponse)
         resolve("DONE")
@@ -202,14 +202,14 @@ export class MembershipService {
         this.firestore.collection('companies').doc(company.key).set(company).then(() => {
           this.firestore.collection('default-forms').ref.get().then(forms => {
             forms.forEach((form: any) => {
-              var key = '-' + (form.data().name.toLowerCase()).replaceAll(' ', '-'); 
+              var key = '-' + (form.data().name.toLowerCase()).replaceAll(' ', '-');
               this.firestore.collection(`companies/${company.key}/forms`).doc(key).set(form.data());
             })
+            this.firestore.collection('users').doc(user.key).update({ openedSubscription: true });
+            user.openedSubscription = true;
+            this.storage.set('user', user);
+            resolve('complete')
           })
-          this.firestore.collection('users').doc(user.key).update({ openedSubscription: true });
-          user.openedSubscription = true;
-          this.storage.set('user', user);
-          resolve('complete')
         }).catch((error) => {
           reject(error);
         })
@@ -223,6 +223,6 @@ export class MembershipService {
     });
   }
   public cancelSubscription(user, company) {
-    
+
   }
 }
