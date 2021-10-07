@@ -99,7 +99,7 @@ export class MembershipsAppPage implements OnInit {
         }).then(() => {
           newUser.premium = true;
           this.navController.navigateRoot('').then(() => {
-            this.navController.navigateRoot('menu/forms');
+            this.navController.navigateRoot('menu/form-menu');
           })
         })
         //})

@@ -26,16 +26,11 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'FORMS',
-      url: '/forms',
-      condition: 'this.permission && !this.technician && this.access && !this.app',
-      icon: 'clipboard'
-    },
-    {
-      title: 'Form',
       url: '/form-menu',
       condition: 'this.permission && !this.technician && this.access && !this.app',
       icon: 'clipboard'
     },
+
     {
       title: 'SITES',
       url: '/sites',
@@ -110,16 +105,11 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'FORMS',
-      url: '/forms',
-      condition: 'this.permission && !this.technician && this.access && this.app',
-      icon: 'clipboard'
-    },
-    {
-      title: 'Form',
       url: '/form-menu',
       condition: 'this.permission && !this.technician && this.access && this.app',
       icon: 'clipboard'
     },
+
     {
       title: 'SITES',
       url: '/sites',
@@ -152,12 +142,6 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'FORMS',
-      url: '/forms',
-      condition: '!this.permission && !this.technician && this.access && !this.app',
-      icon: 'clipboard'
-    },
-    {
-      title: 'Form',
       url: '/form-menu',
       condition: '!this.permission && !this.technician && this.access && !this.app',
       icon: 'clipboard'
@@ -236,16 +220,11 @@ export class MenuPage implements OnInit {
     },
     {
       title: 'FORMS',
-      url: '/forms',
-      condition: '!this.permission && !this.technician && this.access && this.app',
-      icon: 'clipboard'
-    },
-    {
-      title: 'Form',
       url: '/form-menu',
       condition: '!this.permission && !this.technician && this.access && this.app',
       icon: 'clipboard'
     },
+
     {
       title: 'SITES',
       url: '/sites',
