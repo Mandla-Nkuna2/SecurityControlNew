@@ -16,26 +16,11 @@ const routes: Routes = [
     children: [
       { path: 'welcome', loadChildren: () => import('../welcome/welcome.module').then(m => m.WelcomePageModule) },
       { path: 'my-account', loadChildren: () => import('../my-account/my-account.module').then(m => m.MyAccountPageModule) },
-      { path: 'forms', loadChildren: () => import('../forms/forms.module').then(m => m.FormsPageModule) },
       { path: 'sites', loadChildren: () => import('../sites/sites.module').then(m => m.SitesPageModule) },
       { path: 'staff', loadChildren: () => import('../staff/staff.module').then(m => m.StaffPageModule) },
       { path: 'reports', loadChildren: () => import('../reports/reports.module').then(m => m.ReportsPageModule) },
       { path: 'saved-forms', loadChildren: () => import('../saved-forms/saved-forms.module').then(m => m.SavedFormsPageModule) },
       { path: 'support', loadChildren: () => import('../support/support.module').then(m => m.SupportPageModule) },
-      { path: 'site-visit/:id', loadChildren: () => import('../site-visit/site-visit.module').then(m => m.SiteVisitPageModule) },
-      { path: 'training-form/:id', loadChildren: () => import('../training-form/training-form.module').then(m => m.TrainingFormPageModule) },
-      { path: 'uniform-order/:id', loadChildren: () => import('../uniform-order/uniform-order.module').then(m => m.UniformOrderPageModule) },
-      { path: 'vehicle-inspection/:id', loadChildren: () => import('../vehicle-inspection/vehicle-inspection.module').then(m => m.VehicleInspectionPageModule) },
-      { path: 'crime-incident-report/:id', loadChildren: () => import('../crime-incident-report/crime-incident-report.module').then(m => m.CrimeIncidentReportPageModule) },
-      { path: 'incident-notification/:id', loadChildren: () => import('../incident-notification/incident-notification.module').then(m => m.IncidentNotificationPageModule) },
-      { path: 'risk-assessment/:id', loadChildren: () => import('../risk-assessment/risk-assessment.module').then(m => m.RiskAssessmentPageModule) },
-      { path: 'general-incident-report/:id', loadChildren: () => import('../general-incident-report/general-incident-report.module').then(m => m.GeneralIncidentReportPageModule) },
-      { path: 'leave-application/:id', loadChildren: () => import('../leave-application/leave-application.module').then(m => m.LeaveApplicationPageModule) },
-      { path: 'disciplinary-report/:id', loadChildren: () => import('../disciplinary-report/disciplinary-report.module').then(m => m.DisciplinaryReportPageModule) },
-      { path: 'meeting-report/:id', loadChildren: () => import('../meeting-report/meeting-report.module').then(m => m.MeetingReportPageModule) },
-      { path: 'client-instruction/:id', loadChildren: () => import('../client-instruction/client-instruction.module').then(m => m.ClientInstructionPageModule) },
-      { path: 'ob-entry/:id', loadChildren: () => import('../ob-entry/ob-entry.module').then(m => m.ObEntryPageModule) },
-      { path: 'tenant-visit/:id', loadChildren: () => import('../tenant-visit/tenant-visit.module').then(m => m.TenantVisitPageModule) },
       { path: 'add-guard/:id', loadChildren: () => import('../add-guard/add-guard.module').then(m => m.AddGuardPageModule) },
       { path: 'add-guard-to-site/:id', loadChildren: () => import('../add-guard-to-site/add-guard-to-site.module').then(m => m.AddGuardToSitePageModule) },
       { path: 'ar-site-visit/:id', loadChildren: () => import('../ar-site-visit/ar-site-visit.module').then(m => m.ArSiteVisitPageModule) },
@@ -47,7 +32,6 @@ const routes: Routes = [
       { path: 'house-agreement', loadChildren: () => import('../house-agreement/house-agreement.module').then(m => m.HouseAgreementPageModule) },
       { path: 'household-app', loadChildren: () => import('../household-app/household-app.module').then(m => m.HouseholdAppPageModule) },
       { path: 'mine-visit', loadChildren: () => import('../mine-visit/mine-visit.module').then(m => m.MineVisitPageModule) },
-      { path: 'pnp-visit/:id', loadChildren: () => import('../pnp-visit/pnp-visit.module').then(m => m.PnpVisitPageModule) },
       { path: 'parade', loadChildren: () => import('../parade/parade.module').then(m => m.ParadePageModule) },
       { path: 'view-site/:id', loadChildren: () => import('../view-site/view-site.module').then(m => m.ViewSitePageModule) },
       { path: 'view-guard/:id', loadChildren: () => import('../view-guard/view-guard.module').then(m => m.ViewGuardPageModule) },
@@ -68,7 +52,6 @@ const routes: Routes = [
       { path: 'bugs', loadChildren: () => import('../bugs/bugs.module').then(m => m.BugsPageModule) },
       { path: 'add-site-to-user', loadChildren: () => import('../add-site-to-user/add-site-to-user.module').then(m => m.AddSiteToUserPageModule) },
       { path: 'view-user-reports', loadChildren: () => import('../view-user-reports/view-user-reports.module').then(m => m.ViewUserReportsPageModule) },
-      { path: 'transparency-report/:id', loadChildren: () => import('../transparency-report/transparency-report.module').then(m => m.TransparencyReportPageModule) },
       { path: 'client-users', loadChildren: () => import('../client-users/client-users.module').then(m => m.ClientUsersPageModule) },
       { path: 'mapped-reports', loadChildren: () => import('../mapped-reports/mapped-reports.module').then(m => m.MappedReportsPageModule) },
       { path: 'map-report-details', loadChildren: () => import('../map-report-details/map-report-details.module').then(m => m.MapReportDetailsPageModule) },
@@ -79,66 +62,9 @@ const routes: Routes = [
       { path: 'add-user/:id', loadChildren: () => import('../add-user/add-user.module').then(m => m.AddUserPageModule) },
       { path: 'my-sites', loadChildren: () => import('../my-sites/my-sites.module').then(m => m.MySitesPageModule) },
       { path: 'all-sites', loadChildren: () => import('../all-sites/all-sites.module').then(m => m.AllSitesPageModule) },
-      { path: 'work-order-form', loadChildren: () => import('../work-order-form/work-order-form.module').then(m => m.WorkOrderFormPageModule) },
       { path: 'job-card', loadChildren: () => import('../job-card/job-card.module').then(m => m.JobCardPageModule) },
       { path: 'work-orders', loadChildren: () => import('../work-orders/work-orders.module').then(m => m.WorkOrdersPageModule) },
-      { path: 'aod/:id', loadChildren: () => import('../aod/aod.module').then(m => m.AodPageModule) },
-      { path: 'emp-performance-form/:id', loadChildren: () => import('../emp-performance-form/emp-performance-form.module').then(m => m.EmpPerformanceFormPageModule) },
-      { path: 'ncr/:id', loadChildren: () => import('../ncr/ncr.module').then(m => m.NcrPageModule) },
-      { path: 'equipment-inventory/:id', loadChildren: () => import('../equipment-inventory/equipment-inventory.module').then(m => m.EquipmentInventoryPageModule) },
-      { path: 'incident-report/:id', loadChildren: () => import('../incident-report/incident-report.module').then(m => m.IncidentReportPageModule) },
-      {
-        path: 'appeal/:id',
-        loadChildren: () => import('../appeal/appeal.module').then(m => m.AppealPageModule)
-      },
-      {
-        path: 'site-temperature/:id',
-        loadChildren: () => import('../site-temperature/site-temperature.module').then(m => m.SiteTemperaturePageModule)
-      },
-      {
-        path: 'performance-appraisal/:id',
-        loadChildren: () => import('../performance-appraisal/performance-appraisal.module').then(m => m.PerformanceAppraisalPageModule)
-      },
-      {
-        path: 'fence-inspection/:id',
-        loadChildren: () => import('../fence-inspection/fence-inspection.module').then(m => m.FenceInspectionPageModule)
-      },
-      {
-        path: 'grievance/:id',
-        loadChildren: () => import('../grievance/grievance.module').then(m => m.GrievancePageModule)
-      },
-      {
-        path: 'polygraph/:id',
-        loadChildren: () => import('../polygraph/polygraph.module').then(m => m.PolygraphPageModule)
-      },
-      {
-        path: 'pay-query/:id',
-        loadChildren: () => import('../pay-query/pay-query.module').then(m => m.PayQueryPageModule)
-      },
-      {
-        path: 'resignation/:id',
-        loadChildren: () => import('../resignation/resignation.module').then(m => m.ResignationPageModule)
-      },
-      {
-        path: 'injury/:id',
-        loadChildren: () => import('../injury/injury.module').then(m => m.InjuryPageModule)
-      },
-      {
-        path: 'fire/:id',
-        loadChildren: () => import('../fire/fire.module').then(m => m.FirePageModule)
-      },
-      {
-        path: 'gas-explosion/:id',
-        loadChildren: () => import('../gas-explosion/gas-explosion.module').then(m => m.GasExplosionPageModule)
-      },
-      {
-        path: 'extinguisher-checklist/:id',
-        loadChildren: () => import('../extinguisher-checklist/extinguisher-checklist.module').then(m => m.ExtinguisherChecklistPageModule)
-      },
-      {
-        path: 'theft/:id',
-        loadChildren: () => import('../theft/theft.module').then(m => m.TheftPageModule)
-      },
+
       {
         path: 'cost',
         loadChildren: () => import('../cost/cost.module').then(m => m.CostPageModule)
@@ -156,12 +82,12 @@ const routes: Routes = [
         loadChildren: () => import('../bulk-upload/bulk-upload.module').then(m => m.BulkUploadPageModule)
       },
       {
-        path: 'form',
-        loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule)
-      },
-      {
         path: 'form-menu',
         loadChildren: () => import('../form-menu/form-menu.module').then(m => m.FormMenuPageModule)
+      },
+      {
+        path: 'form',
+        loadChildren: () => import('../form/form.module').then(m => m.FormsPageModule)
       },
       {
 
@@ -170,19 +96,19 @@ const routes: Routes = [
       },
       {
         path: 'form-upload',
-        loadChildren: () => import('../form-upload/form-upload.module').then( m => m.FormUploadPageModule)
+        loadChildren: () => import('../form-upload/form-upload.module').then(m => m.FormUploadPageModule)
       },
       {
         path: 'memberships',
-        loadChildren: () => import('../memberships/memberships.module').then( m => m.MembershipsPageModule)
+        loadChildren: () => import('../memberships/memberships.module').then(m => m.MembershipsPageModule)
       },
       {
         path: 'no-access',
-        loadChildren: () => import('../no-access/no-access.module').then( m => m.NoAccessPageModule)
+        loadChildren: () => import('../no-access/no-access.module').then(m => m.NoAccessPageModule)
       },
       {
         path: 'memberships-app',
-        loadChildren: () => import('../memberships-app/memberships-app.module').then( m => m.MembershipsAppPageModule)
+        loadChildren: () => import('../memberships-app/memberships-app.module').then(m => m.MembershipsAppPageModule)
       },
     ]
   },
