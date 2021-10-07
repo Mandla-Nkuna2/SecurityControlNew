@@ -108,9 +108,6 @@ export class MenuPage implements OnInit {
       condition: 'this.permission && !this.technician && this.access && !this.app',
       icon: 'pie-chart'
     },
-  ];
-
-  pages2 = [
     {
       title: 'FORMS',
       url: '/forms',
@@ -288,7 +285,7 @@ export class MenuPage implements OnInit {
     {
       title: 'MEMBERSHIP',
       url: '/memberships-app',
-      condition: '!this.permission && !this.technician && this.access && this.app',
+      condition: 'this.permission && !this.technician && this.access && this.app',
       icon: 'pie-chart'
     },
     {

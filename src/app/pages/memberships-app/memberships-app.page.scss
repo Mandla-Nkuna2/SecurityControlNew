@@ -1,5 +1,71 @@
 ion-content {
 
+    .main-grid
+    {
+        background: #100F10;
+        border-radius: 23px;
+        padding: 30px;
+        .headers
+        {
+            h6
+            {
+                color: var(--ion-color-primary);
+                font-family: 'SBold';
+                font-size: 15px;
+            }
+
+            #selected
+            {
+                --background: var(--ion-color-primary);
+                --border-style: none !important;
+                --color: white !important;
+            }
+
+            ion-button
+            {
+                --background: transparent;
+                --border-radius: 29px;
+                --border-color: #9CAEC7;
+                --border-style: solid;
+                --border-width: 1px;
+                --color: #848484;
+                font-family: 'Medium';
+            }
+        }
+
+        .values
+        {
+            h4
+            {
+                color: white;
+                font-family: 'Medium';
+                font-size: 17px;
+            }
+
+            h5
+            {
+                color: #848484;
+                font-family: 'Medium';
+                font-size: 17px;
+            }
+
+            ion-icon
+            {
+                font-size: 26px !important;
+            }
+
+            #close
+            {
+                color: var(--ion-color-primary);
+            }
+
+            #check
+            {
+                color: #47A26F;
+            }
+        }
+    }
+
     .products {
         width: 80%;
         margin-left: 10%;
@@ -15,4 +81,5 @@ ion-content {
         color: white;
         --background: #FF4343
     }
+    
  }
