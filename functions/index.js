@@ -9191,72 +9191,60 @@ function makeCall(config) {
   })
 }
 
-exports.testAppVerify = functions.firestore
-  .document(`/subscriptions/{uid}`)
-  .onUpdate((snap) => {
-    return admin.firestore().collection('subscriptions').get().then(subs => {
-      return subs.forEach(sub => {
-        // var nextDate = moment(sub.data().date, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
-        // var today = moment(new Date()).format('YYYY/MM/DD');
-        // if (today === nextDate) {
-        if (sub.data().type === 'App') {
-          console.log('Do check app')
-          checkAppVerify(sub.data()).then((msg) => {
-            if (msg === 'Verified') {
-              console.log('Still fine')
-              admin.firestore().collection('subscriptions').doc(sub.data().companyId).update({ date: today, number: sub.data().number + 1 })
-            } else {
-              console.log('Removed premium')
-              admin.firestore().collection('subscriptions').doc(sub.data().companyId).delete();
-              admin.firestore().collection('companies').doc(company.data().key).update({ access: false, accessType: '' })
-            }
-          })
-        } else {
-          console.log('Do check web')
-
-        }
-        // } else {
-        //   console.log('No check needed')
-        // }
-      })
-    })
-  })
-
-exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('every 5 minutes').timeZone('Africa/Johannesburg').onRun(() => {
+exports.checkSubscriptions = functions.runWith(runtimeOpts).pubsub.schedule('0 12 * * *').timeZone('Africa/Johannesburg').onRun(() => {
   return admin.firestore().collection('subscriptions').get().then(subs => {
     return subs.forEach(sub => {
-      // var nextDate = moment(sub.data().date, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
-      // var today = moment(new Date()).format('YYYY/MM/DD');
-      // if (today === nextDate) {
+      // Check is day after sub
+      var nextDate = moment(sub.data().date, 'YYYY/MM/DD').add(1, 'month').add(1, 'days').format('YYYY/MM/DD');
+      var today = moment(new Date()).format('YYYY/MM/DD');
+      if (today === nextDate) {
+      // Check is app or paystack
       if (sub.data().type === 'App') {
         console.log('Do check app')
         checkAppVerify(sub.data()).then((msg) => {
           if (msg === 'Verified') {
             console.log('Still fine')
-            admin.firestore().collection('subscriptions').doc(sub.data().companyId).update({ date: today, number: sub.data().number + 1 })
+            // Update subscription date
+            admin.firestore().collection('subscriptions').doc(sub.data().companyId).update({ date: today, number: sub.data().number + 1 });
+            // Send monthly invoive pdf
+            sendMonthlyInvoice(sub.data());
           } else {
             console.log('Removed premium')
             admin.firestore().collection('subscriptions').doc(sub.data().companyId).delete();
-            admin.firestore().collection('companies').doc(company.data().key).update({ access: false, accessType: '' })
+            admin.firestore().collection('companies').doc(sub.data().companyId).update({ access: false, accessType: '' });
+            sendCancelEmail(sub.data());
           }
         })
       } else {
         console.log('Do check web')
 
       }
-      // } else {
-      //   console.log('No check needed')
-      // }
+      } else {
+        console.log('No check needed')
+      }
     })
   })
 })
 
+function sendCancelEmail(subscription) {
+  const mailOptions = {
+    from: '"Security Control" <system@securitycontrol.co.za>',
+    to: 'support@securitycontrol.co.za, lamu@innovativethinking.co.za, kathryn@innovativethinking.co.za',
+    subject: 'SC: Cancelled Account',
+    text: `Good Day,\n\nA user has cancelled their account\n\nUser: ${subscription.user.name}\nUser Key: ${subscription.user.key}\nCompany Key: ${subscription.user.companyId}\nCompany Name: ${subscription.user.company}\n\nKindly,\nSecurity Control Team`,
+  };
+  return mailTransport.sendMail(mailOptions)
+    .then(() => console.log(`Cancel Email Sent`))
+    .catch(function (error) {
+      return console.error("Failed!" + error);
+    })
+}
+
 function checkAppVerify(subscription) {
   return new Promise((resolve, reject) => {
     var transaction = subscription.transaction;
-    console.log(transaction.id);
     if (transaction) {
-      var data = transaction;
+      var data = JSON.stringify(transaction);
       var config = {
         method: 'post',
         url: 'https://validator.fovea.cc/v1/validate?appName=com.innovativethinking.adminforms&apiKey=561f8169-eec5-4a83-9f6a-556058eb3215',
@@ -9266,8 +9254,9 @@ function checkAppVerify(subscription) {
         data: data
       };
       return makeCall(config).then(resp => {
-        console.log('Resp: ', resp.data.ok);
-        if (resp.data.ok === true) {
+        console.log('Resp: ', resp);
+        var msg;
+        if (resp === true) {
           msg = 'Verified';
         } else {
           console.log('Invalid')
@@ -9343,15 +9332,7 @@ exports.updateClients = functions.https.onRequest((req, res) => {
   })
 })
 
-exports.testingInvoices = functions.runWith(runtimeOpts).pubsub.schedule('13 17 * * *').timeZone('Africa/Johannesburg').onRun(() => {
-  return admin.firestore().collection('subscriptions').get().then(subs => {
-    subs.forEach(sub => {
-      monthlyInvoice(sub.data());
-    })
-  })
-})
-
-function monthlyInvoice(subscription) {
+function sendMonthlyInvoice(subscription) {
   return new Promise((resolve, reject) => {
     var invoiceNumber = '';
     if (subscription.number < 10) {
@@ -9386,9 +9367,8 @@ function sendInvoiceEmail(myPdf, subscription, invoiceNumber) {
     from: '"Security Control" <system@securitycontrol.co.za>',
     to: 'kathryn@innovativethinking.co.za', // subscription.user.email
     subject: 'Security Control: Monthly Invoice',
-    //html: `Security Control
-    //<br>Good Day,<br><br>Please find your monthly invoice attached.<br><br>Kindly,<br>Security Control Team`,
-    text: `Monthly invoice`,
+    html: `Good Day,<br><br>Please find your monthly invoice attached.<br><br>Kindly,<br>Security Control Team`,
+    //text: `Monthly invoice`,
     attachments: [{
       filename: `${invoiceNumber}.pdf`,
       content: myPdf,
@@ -9397,7 +9377,7 @@ function sendInvoiceEmail(myPdf, subscription, invoiceNumber) {
     ]
   };
   return mailTransport.sendMail(mailOptions)
-    .then(() => console.log(`Sent`))
+    .then(() => console.log(`Invoice Sent`))
     .catch(function (error) {
       return console.error("Failed!" + error);
     })
@@ -9406,7 +9386,7 @@ function sendInvoiceEmail(myPdf, subscription, invoiceNumber) {
 function createInvoice(subscription, invoiceNumber) {
   return new Promise((resolve, reject) => {
     var today = moment(new Date()).format('DD/MM/YYYY');
-    var price = subscription.priceMicros / 1000000;
+    var price = subscription.transaction.priceMicros / 1000000;
     var amountExTax = (price * 0.85).toFixed(2);
     var amountTax = (price * 0.15).toFixed(2);
 
@@ -9466,7 +9446,7 @@ function createInvoice(subscription, invoiceNumber) {
             body: [
               [{ text: 'Description', style: 'headLabel' }, { text: 'Rate', style: 'headLabel' },
               { text: 'Qty', style: 'headLabel' }, { text: 'Amount', style: 'headLabel' }],
-              [{ text: subscription.title }, { text: `R${price} /month` },
+              [{ text: subscription.transaction.title }, { text: `R${price} /month` },
               { text: '1' }, { text: `R${price}` }]
             ]
           },
