@@ -9296,10 +9296,14 @@ exports.emailInspectionPDF = functions.https.onCall((data, context) => {
       }).catch(function (error) {
         return sendErrorEmail(error).then(() => {
           return console.error("Failed!" + error);
+        }).catch((error) => {
+          return console.error("Failed!" + error);
         })
       })
   }).catch(function (error) {
     return sendErrorEmail(error).then(() => {
+      return console.error("Failed!" + error);
+    }).catch((error) => {
       return console.error("Failed!" + error);
     })
   })

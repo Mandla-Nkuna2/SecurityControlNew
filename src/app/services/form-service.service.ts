@@ -246,4 +246,14 @@ export class FormServiceService {
       })
     })
   }
+  public getAssessmentEmails() {
+    return new Promise((resolve, reject) => {
+      this.storage.get('company').then((company: any) => {
+        let emails = company.assessment;
+        resolve({
+          companyEmail: emails
+        })
+      })
+    })
+  }
 }
