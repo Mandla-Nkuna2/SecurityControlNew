@@ -209,4 +209,8 @@ export class MembershipsAppPage implements OnInit {
     return alert.present();
   }
 
+  goDesktop() {
+    window.open('https://app.securitycontrol.co.za')
+  }
+
 }

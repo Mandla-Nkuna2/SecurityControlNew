@@ -80,16 +80,28 @@ export class MenuPage implements OnInit {
       icon: 'pie-chart'
     },
     {
-      title: 'BILLING',
-      url: '/billing',
-      condition: 'this.permission && !this.technician && this.access && !this.app',
-      icon: 'card'
-    },
-    {
       title: 'SETUP',
       url: '/setup',
       condition: 'this.permission && !this.technician && this.access && !this.app',
       icon: 'cog'
+    },
+    {
+      title: 'BULK UPLOAD',
+      url: '/bulk-upload',
+      condition: 'this.permission && !this.technician && this.access && !this.app',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'FORM UPLOAD',
+      url: '/form-upload',
+      condition: 'this.permission && !this.technician && this.access && !this.app',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'SUPPORT CHAT',
+      url: '/chat',
+      condition: 'this.permission && !this.technician && this.access && !this.app',
+      icon: 'pie-chart'
     },
     {
       title: 'SALES CHAT',
@@ -109,7 +121,6 @@ export class MenuPage implements OnInit {
       condition: 'this.permission && !this.technician && this.access && this.app',
       icon: 'clipboard'
     },
-
     {
       title: 'SITES',
       url: '/sites',
@@ -133,6 +144,24 @@ export class MenuPage implements OnInit {
       url: '/saved-forms',
       condition: 'this.permission && !this.technician && this.access && this.app',
       icon: 'save'
+    },
+    {
+      title: 'SUPPORT CHAT',
+      url: '/chat',
+      condition: 'this.permission && !this.technician && this.access && this.app',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'SALES CHAT',
+      url: '/chat-sales',
+      condition: 'this.permission && !this.technician && this.access && this.app',
+      icon: 'pie-chart'
+    },
+    {
+      title: 'MEMBERSHIP',
+      url: '/memberships-app',
+      condition: 'this.permission && !this.technician && this.access && this.app',
+      icon: 'pie-chart'
     },
     {
       title: 'WELCOME',
@@ -189,18 +218,6 @@ export class MenuPage implements OnInit {
       icon: 'pie-chart'
     },
     {
-      title: 'BULK UPLOAD',
-      url: '/bulk-upload',
-      condition: '!this.permission && !this.technician && this.access && !this.app',
-      icon: 'pie-chart'
-    },
-    {
-      title: 'FORM UPLOAD',
-      url: '/form-upload',
-      condition: '!this.permission && !this.technician && this.access && !this.app',
-      icon: 'pie-chart'
-    },
-    {
       title: 'SUPPORT CHAT',
       url: '/chat',
       condition: '!this.permission && !this.technician && this.access && !this.app',
@@ -209,12 +226,6 @@ export class MenuPage implements OnInit {
     {
       title: 'SALES CHAT',
       url: '/chat-sales',
-      condition: '!this.permission && !this.technician && this.access && !this.app',
-      icon: 'pie-chart'
-    },
-    {
-      title: 'MEMBERSHIP',
-      url: '/memberships',
       condition: '!this.permission && !this.technician && this.access && !this.app',
       icon: 'pie-chart'
     },
@@ -259,12 +270,6 @@ export class MenuPage implements OnInit {
       title: 'SALES CHAT',
       url: '/chat-sales',
       condition: '!this.permission && !this.technician && this.access && this.app',
-      icon: 'pie-chart'
-    },
-    {
-      title: 'MEMBERSHIP',
-      url: '/memberships-app',
-      condition: 'this.permission && !this.technician && this.access && this.app',
       icon: 'pie-chart'
     },
     {
