@@ -87,34 +87,30 @@ export class FormServiceService {
     return new Promise((resolve, reject) => {
       let i = 0;
       let saveObjects: any = {};
-      // the way around multiple  i = i + 1 seems to be longer.
+      let completeNumber = 0;
+
       questions.forEach(question => {
+        i = i + 1;
         if (question.value) {
           if (question.value.includes('@time')) {
             question.value = moment().format('HH: mm').toString();
             saveObjects[question.fieldName] = question.value;
-            i = i + 1;
+            completeNumber++;
           }
           else if (question.value.includes('@date')) {
             question.value = moment().format('YYYY-MM-DD').toString();
             saveObjects[question.fieldName] = question.value;
-            i = i + 1;
+            completeNumber++;
           }
           else if (question.value.includes('{')) {
             this.completeLink(question.value).then((val: string) => {
               question.value = val;
               saveObjects[question.fieldName] = question.value;
-              i = i + 1;
+              completeNumber++;
             });
           }
-          else {
-            i = i + 1;
-          }
         }
-        else {
-          i = i + 1;
-        }
-        if (i == questions.length - 1) {
+        if (i == questions.length && (Object.values(saveObjects).length == completeNumber)) {
           setTimeout(() => {
             resolve(
               {
@@ -122,7 +118,8 @@ export class FormServiceService {
                 saveObjects
               }
             );
-          }, 1000);
+          }, 500);
+
         }
       });
     })
