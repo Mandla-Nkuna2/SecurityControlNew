@@ -4089,10 +4089,10 @@ function getSiteVisit(report) {
 
         body.push([{ text: 'Staff Member on Duty', style: 'headLabel' }, { text: element.guardName }]);
 
-        if (element.guardPhoto !== '' || element.guardPhoto !== undefined) {
+        if (element.guardPhoto !== '' && element.guardPhoto !== undefined) {
           body.push([{ text: 'Photo of Staff Member', style: 'headLabel', alignment: 'center' }, { image: element.guardPhoto, width: 100, alignment: 'center' }]);
         }
-        if (element.guardSig !== '' || element.guardSig !== undefined) {
+        if (element.guardSig !== '' && element.guardSig !== undefined) {
           body.push([{ text: 'Guard Signature', style: 'headLabel' },
           { image: element.guardSig, width: 100, alignment: 'center' }]);
         }
