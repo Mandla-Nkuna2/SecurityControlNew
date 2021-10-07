@@ -97,9 +97,9 @@ export class MembershipsAppPage implements OnInit {
           date: moment(new Date()).format('YYYY/MM/DD'),
           companyId: newUser.companyId,
           number: 1,
+          type: 'App',
           transaction: Object.assign({}, newObj)
         });
-        //this.membershipService.setAppSubscriptions(newUser.companyId, sub).then(() => {
         this.membershipService.updateCompany(user, {
           accessType: this.chosenItem.title,
           access: true
