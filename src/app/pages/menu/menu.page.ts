@@ -375,8 +375,7 @@ export class MenuPage implements OnInit {
               this.router.navigate(['work-orders'])
               this.technician = true;
             } else {
-              this.app = true;
-              this.getToken();
+              this.technician = false;
             }
           })
         })
@@ -411,14 +410,6 @@ export class MenuPage implements OnInit {
           this.thompsons = false;
         }
         resolve();
-      });
-    });
-  }
-
-  upgrade() {
-    this.loading.present('Opening Please Wait...').then(() => {
-      this.router.navigate(['subscribe']).then(() => {
-        this.loading.dismiss();
       });
     });
   }
