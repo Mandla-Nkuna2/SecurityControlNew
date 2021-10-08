@@ -54,7 +54,7 @@ export class AllSitesPage implements OnInit {
         var id = user.key;
         this.user.companyId = user.companyId;
         this.user.type = user.type;
-        if (this.user.type === 'Owner' || this.user.type === 'Account Admin') {
+        if (this.user.type === 'Owner' || this.user.type === 'Account Admin' || this.user.type === 'Admin') {
           this.permission = true;
         }
         this.user.key = user.key;

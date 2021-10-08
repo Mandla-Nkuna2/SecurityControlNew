@@ -34,14 +34,14 @@ export class ChatPage implements OnInit {
   constructor(private analyticsService: AnalyticsService, private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private storage: Storage, private alertCtrl: AlertController, private router: Router) { }
 
   ngOnInit() {
+    if (window.innerWidth > 1024) {
+      this.app = false;
+    } else {
+      this.app = true;
+    }
     this.storage.get('accessType').then(accessType => {
       if (accessType !== 'Basic' && accessType !== undefined && accessType !== null) {
         this.access = true;
-        if (this.platform.is('mobile')) {
-          this.app = true;
-        } else {
-          this.app = false;
-        }
         this.chats = [];
         this.chatService.getUser().then(user => {
           this.user = user;

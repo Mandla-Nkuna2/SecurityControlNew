@@ -1,31 +1,39 @@
- 
 <ion-header class="ion-no-border">
   <ion-toolbar class="mtool">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="sites" text="My Sites"></ion-back-button>
+      <ion-back-button defaultHref="sites" text="All Sites"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="mysites">
+  <ion-fab *ngIf="permission" vertical="bottom" horizontal="end" slot="fixed" activated="false">
+    <ion-fab-button color="primary">
+      <ion-icon name="settings"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="primary" (click)="addSite()" data-desc="Add New Site">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
   <div class="top-holder desktop flex al-center jc-between">
     <div class="left">
-      <h1>My Sites</h1>
+      <h1>All Sites</h1>
     </div>
 
     <div class="right path-holder">
-      <h4>Home/Sites<span>&nbsp;My Sites</span> </h4>
+      <h4>Home/Sites<span>&nbsp;All Sites</span> </h4>
     </div>
   </div>
-
-
 
   <ion-grid class="main-grid" fixed>
     <ion-row class="ion-align-items-center">
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
         <div class="holder left">
           <div class="the-header">
-            <h2>My Sites</h2>
+            <h2>All Sites</h2>
           </div>
 
           <ion-grid fixed>

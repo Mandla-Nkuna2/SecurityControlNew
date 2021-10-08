@@ -125,10 +125,10 @@
           class="message-input-app" (keyup.enter)="sendMsg()"></textarea>
       </ion-col>
       <ion-col>
-        <ion-icon name="send" size="small" (click)="sendMsg()" style="color: green;margin-top: 40%;"></ion-icon>
+        <ion-icon name="send" size="small" (click)="sendMsg()" style="color: green;margin-top: 20%;"></ion-icon>
       </ion-col>
       <ion-col *ngIf="access">
-        <ion-icon name="attach" size="small" (click)="attach()" style="color: red; margin-top: 40%;"></ion-icon>
+        <ion-icon name="attach" size="small" (click)="attach()" style="color: red; margin-top: 20%;"></ion-icon>
       </ion-col>
     </ion-row>
     <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"

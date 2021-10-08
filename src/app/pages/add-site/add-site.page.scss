@@ -115,7 +115,7 @@ ion-content
                     {
                         p
                         {
-                            color: #848484;
+                            color: #ffffff;
                             font-family: 'Regular';
                             font-size: 16px;
                             margin:0
@@ -132,12 +132,37 @@ ion-content
                 }
 
                 .the-form
-                {
-                    .input-item
                     {
-                        margin: 0 !important;
+                        .input-item
+                        {
+                            margin: 10px 0;
+                            ion-label
+                            {
+                                color: #fff;
+                                font-size: 14px;
+                                opacity: 0.29;
+                                text-align: left;
+                            }
+
+                            ion-item
+                            {
+                                --background: #00000059;
+                                --border-color: #fff;
+                                --border-radius: 5px;
+                                --border-style: solid;
+                                --border-width: 1px;
+                                margin-top: 10px;
+
+
+                                ion-input,ion-select,ion-datetime
+                                {
+                                    color: var(--ion-color-light);
+                                    opacity: 0.45;
+                                    font-family: 'Regular';
+                                }
+                            }
+                        }   
                     }
-                }
             }
         }
 

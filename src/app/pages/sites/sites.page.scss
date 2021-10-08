@@ -118,10 +118,11 @@ ion-content
             --background: transparent;
             --color: var(--ion-color-primary) !important;
             font-family: 'SBold';
-            font-size: 15px;
+            font-size: 25px;
             height: 40vh;
             width: 100%;
             margin: 0;
+            border: 2px solid var(--ion-color-primary);
         }
     }
 }

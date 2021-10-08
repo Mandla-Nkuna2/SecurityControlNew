@@ -93,10 +93,10 @@ export class DynamicFormComponent implements OnInit {
     this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave) => {
       if (shouldSave) {
         this.storage.set(this.formAlias, this.newFormObj).then(() => {
-          this.navController.navigateRoot('welcome')
+          this.navController.navigateRoot('form-menu')
         }).catch(error => console.log(error))
       } else {
-        this.navController.navigateRoot('welcome')
+        this.navController.navigateRoot('form-menu')
       }
     })
   }
