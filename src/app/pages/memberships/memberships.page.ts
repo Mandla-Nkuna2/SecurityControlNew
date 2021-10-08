@@ -19,6 +19,7 @@ export class MembershipsPage implements OnInit {
   enterprise = { title: '', price: '', access: [], id: '' };
   user;
   company;
+  membership;
   packages =[];
 
   constructor(
@@ -44,14 +45,17 @@ export class MembershipsPage implements OnInit {
       })
       this.storage.get('user').then(user => {
         this.user = user;
-        this.membershipService.getCompany(user.companyId).then((comp: any) => {
-          this.company = comp;
-          console.log(this.company.accessType)
-          if (comp.accessType && comp.accessType !== '') {
-            this.accessType = comp.accessType;
-          } else {
-            this.accessType = '';
-          }
+        this.membershipService.getMembershipDetails(user.companyId).then((membership)=>{
+          this.membership = membership;
+          this.membershipService.getCompany(user.companyId).then((comp: any) => {
+            this.company = comp;
+            console.log(this.company.accessType)
+            if (comp.accessType && comp.accessType !== '') {
+              this.accessType = comp.accessType;
+            } else {
+              this.accessType = '';
+            }
+          })
         })
       })
     })
@@ -70,7 +74,11 @@ export class MembershipsPage implements OnInit {
         {
           text: 'CANCEL SUBSCRIPTION',
           handler: data => {
-            this.membershipService.cancelSubscription(this.user, this.company);
+            this.uiService.showLoading("Please wait..")
+            this.membershipService.cancelSubscription(this.membership.subscriptionCode, this.membership.emailToken, this.membership.companyKey).then(()=>{
+              this.uiService.dismissLoading();
+              this.uiService.showToaster("Subscription Cancelled", "success", 3000)
+            })
           }
         }
       ]
