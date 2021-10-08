@@ -235,11 +235,10 @@ export class MembershipService {
       }
     });
   }
-  cancelSubscription(subCode, emailToken, companyKey) {
+  cancelSubscription(subCode, emailToken) {
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST+'cancelSubscription', {
         code: subCode, 
-        companyKey:companyKey, 
         emailToken: emailToken
       }).pipe(take(1)).subscribe((response)=>{
           resolve(response);

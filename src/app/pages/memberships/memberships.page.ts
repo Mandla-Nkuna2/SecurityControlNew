@@ -75,9 +75,12 @@ export class MembershipsPage implements OnInit {
           text: 'CANCEL SUBSCRIPTION',
           handler: data => {
             this.uiService.showLoading("Please wait..")
-            this.membershipService.cancelSubscription(this.membership.subscriptionCode, this.membership.emailToken, this.membership.companyKey).then(()=>{
+            this.membershipService.cancelSubscription(this.membership.subscriptionCode, this.membership.emailToken).then(()=>{
               this.uiService.dismissLoading();
               this.uiService.showToaster("Subscription Cancelled", "success", 3000)
+            }).catch((onError)=>{
+              console.log(onError)
+              this.uiService.showToaster("Something went wrong", "danger", 2000)
             })
           }
         }
