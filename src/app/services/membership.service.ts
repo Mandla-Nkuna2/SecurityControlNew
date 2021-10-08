@@ -235,11 +235,31 @@ export class MembershipService {
       }
     });
   }
-  cancelSubscription(subCode, emailToken, companyKey) {
+
+  upgradeOrDowngrade(chosenTier, isDowngrade, price, companyKey, nextPaymentDate, cusCode, authCode, emailToken, email, planCode){
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST+'upgradeSubscription', { 
+        price: price,
+        isDowngrade: isDowngrade,
+        nextPaymentDate: nextPaymentDate,
+        companyKey: companyKey,
+        customerCode: cusCode,
+        authCode: authCode,
+        planCode: planCode,
+        emailToken: emailToken,
+        tier: chosenTier
+      }).subscribe((onResponse)=>{
+        resolve(onResponse)
+      }, (onError)=>{
+        reject(onError)
+      })
+    })
+  }
+  
+  cancelSubscription(subCode, emailToken) {
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST+'cancelSubscription', {
         code: subCode, 
-        companyKey:companyKey, 
         emailToken: emailToken
       }).pipe(take(1)).subscribe((response)=>{
           resolve(response);

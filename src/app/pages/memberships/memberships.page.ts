@@ -75,9 +75,12 @@ export class MembershipsPage implements OnInit {
           text: 'CANCEL SUBSCRIPTION',
           handler: data => {
             this.uiService.showLoading("Please wait..")
-            this.membershipService.cancelSubscription(this.membership.subscriptionCode, this.membership.emailToken, this.membership.companyKey).then(()=>{
+            this.membershipService.cancelSubscription(this.membership.subscriptionCode, this.membership.emailToken).then(()=>{
               this.uiService.dismissLoading();
               this.uiService.showToaster("Subscription Cancelled", "success", 3000)
+            }).catch((onError)=>{
+              console.log(onError)
+              this.uiService.showToaster("Something went wrong", "danger", 2000)
             })
           }
         }
@@ -86,9 +89,50 @@ export class MembershipsPage implements OnInit {
     return alert.present();
   }
 
+  upgradeOrDowngrade(chosenTier, isDowngrade){
+    let chosenPlan = this.packages.find(x => x.title == chosenTier);
+    this.uiService.openConfirmationAlert(
+      `You are about to ${isDowngrade ? 'downgrade' : 'upgrade'} to the ${chosenTier} plan, are you sure?`, 'Yes', 'No'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.uiService.showLoading("Please wait ...")
+        this.membershipService.upgradeOrDowngrade(
+          chosenPlan.title,
+          isDowngrade,
+          chosenPlan.price,
+          this.membership.companyKey,
+          this.membership.nextPaymentDate,
+          this.membership.customerCode,
+          this.membership.authCode,
+          this.membership.emailToken,
+          this.user.email,
+          chosenPlan.planCode
+        ).then(() => {
+          this.uiService.dismissLoading();
+          this.uiService.showToaster("Subscription changed successfully", "success", 2000)
+        }).catch((onError) => {
+          this.uiService.showToaster("Something went wrong", "danger", 2000)
+          this.uiService.dismissLoading();
+          console.log(onError)
+        })
+      }
+    })
+    
+  }
+
   //to be refactored
   onSelect(plan){
     let chosenPlan = this.packages.find(x => x.title == plan);
+    let isDowngrade;
+    if(this.accessType){
+      let currentPlan = this.packages.find(x=>x.title == this.accessType)
+      if(currentPlan.rank<chosenPlan.rank){
+        isDowngrade=false;
+      }else{
+        isDowngrade=true;
+      }
+      this.upgradeOrDowngrade(plan, isDowngrade);
+    }else{
     this.uiService.openConfirmationAlert(`You are about to get the ${plan} membership which comes with a free 14-day trial, are you sure?`,"Yes", "No").then((confirmed)=>{
       if(confirmed){
         this.uiService.showLoading("Please wait...")
@@ -135,6 +179,7 @@ export class MembershipsPage implements OnInit {
         })
       }
     })
+    }
   }
 
   async enterpriseContact() {
