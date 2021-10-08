@@ -31,10 +31,10 @@ export class ChatSalesPage implements OnInit {
   constructor(private chatService: ChatServiceService, private platform: Platform, private camera: Camera, private actionCtrl: ActionSheetController, private toast: ToastService, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
-    if (this.platform.is('mobile')) {
-      this.app = true;
-    } else {
+    if (window.innerWidth > 1024) {
       this.app = false;
+    } else {
+      this.app = true;
     }
     this.chats = [];
     this.chatService.getUser().then(user => {
@@ -142,7 +142,7 @@ export class ChatSalesPage implements OnInit {
         this.ionContent.scrollToBottom(300);
         this.newMsg = '';
         this.attachment = '';
-        this.toast.show('Message Send');
+        this.toast.show('Message Sent');
       })
     }
   }

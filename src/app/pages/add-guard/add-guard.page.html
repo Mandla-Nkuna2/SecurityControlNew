@@ -1,135 +1,193 @@
-<ion-header>
-  <ion-toolbar  mode="ios">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="mtool">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="staff" text="Add Staff"></ion-back-button>
     </ion-buttons>
-    <ion-title class="title-font">ADD STAFF</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <section class="common-img-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-            <div class="md-float-material">
-              <div class="auth-box">
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1 *ngIf="!new">Edit Staff</h1>
+      <h1 *ngIf="new">Add Staff</h1>
+    </div>
+    <div class="right path-holder">
+      <h4>Home/Staff/Add Staff<span>&nbsp;Staff</span> </h4>
+    </div>
+  </div>
 
-                <ion-item>
-                  <ion-label *ngIf="nameValid" position="floating">Full Name *</ion-label>
-                  <ion-label *ngIf="!nameValid" position="floating" style="color: red !important">Full Name *
-                  </ion-label>
-                  <ion-input [(ngModel)]="guard.name" (ngModelChange)="guard.name = $event.toLocaleUpperCase()">
-                  </ion-input>
-                </ion-item>
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="10" sizeLg="8" sizeXl="10">
+        <div class="holder left">
 
-                <ion-item>
-                  <ion-label *ngIf="compValid" position="floating">Company Number *</ion-label>
-                  <ion-label *ngIf="!compValid" position="floating" style="color: red !important">Company Number *
-                  </ion-label>
-                  <ion-input type="text" [(ngModel)]="guard.CoNo"
-                    (ngModelChange)="guard.CoNo = $event.toLocaleUpperCase()">
-                  </ion-input>
-                </ion-item>
-                <p *ngIf="guardExists && !edit" text-center style="color: red !important">THIS GUARD ALREADY EXISTS ON
-                  THE
-                  PLATFORM!</p>
+          <div class="the-header">
+            <h2> Staff</h2>
+          </div>
 
-                <ion-item>
-                  <ion-label *ngIf="idValid" position="floating">ID Number *</ion-label>
-                  <ion-label *ngIf="!idValid" position="floating" style="color: red !important">ID Number *</ion-label>
-                  <ion-input type="text" [(ngModel)]="guard.id">
-                  </ion-input>
-                </ion-item>
+          <div class="the-content">
 
-                <ion-item>
-                  <ion-label *ngIf="assValid" position="floating">PSIRA Number *</ion-label>
-                  <ion-label *ngIf="!assValid" position="floating" style="color: red !important">PSIRA Number *
-                  </ion-label>
-                  <ion-input type="number" [(ngModel)]="guard.AssNo">
-                  </ion-input>
-                </ion-item>
+            <div class="the-form">
 
-                <ion-item>
-                  <ion-label *ngIf="gradeValid" position="floating">Grade *</ion-label>
-                  <ion-label *ngIf="!gradeValid" position="floating" style="color: red !important">Grade *</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="guard.grade">
-                    <ion-select-option *ngFor="let grade of grades | async">{{grade.name}}</ion-select-option>
-                  </ion-select>
-                </ion-item>
+              <ion-row>
 
-                <ion-item>
-                  <ion-label position="floating">Cell Number</ion-label>
-                  <ion-input type="number" [(ngModel)]="guard.cell"></ion-input>
-                </ion-item>
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="nameValid">Full Name *</ion-label>
+                    <ion-label *ngIf="!nameValid" style="color: red !important">Full Name *</ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="text" [(ngModel)]="guard.name"
+                        (ngModelChange)="guard.name = $event.toLocaleUpperCase()">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
-                <ion-item *ngIf="change">
-                  <ion-label *ngIf="siteValid" position="floating">Current Site *</ion-label>
-                  <ion-label *ngIf="!siteValid" position="floating" style="color: red !important">Current Site *
-                  </ion-label>
-                  <ion-input *ngIf="id === 'edit'" [(ngModel)]="guard.site"></ion-input>
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="compValid">Company Number *</ion-label>
+                    <ion-label *ngIf="!compValid" style="color: red !important">Company Number *
+                    </ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="text" [(ngModel)]="guard.CoNo"
+                        (ngModelChange)="guard.CoNo = $event.toLocaleUpperCase()">
+                      </ion-input>
+                    </ion-item>
+                    <p *ngIf="guardExists && !edit" text-center style="color: red !important">THIS GUARD ALREADY EXISTS
+                      ON
+                      THE
+                      PLATFORM!</p>
+                  </div>
+                </ion-col>
 
-                </ion-item>
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="idValid">ID Number *</ion-label>
+                    <ion-label *ngIf="!idValid" style="color: red !important">ID Number *</ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="text" [(ngModel)]="guard.id">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="assValid">PSIRA Number *</ion-label>
+                    <ion-label *ngIf="!assValid" style="color: red !important">PSIRA Number *</ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="number" [(ngModel)]="guard.AssNo">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="gradeValid">Grade *</ion-label>
+                    <ion-label *ngIf="!gradeValid" style="color: red !important">Grade *</ion-label>
+                    <ion-item lines="none">
+                      <ion-select interface="popover" [(ngModel)]="guard.grade">
+                        <ion-select-option *ngFor="let grade of grades | async">{{grade.name}}</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
-                <ion-item>
-                  <ion-label *ngIf="id === 'edit'" position="floating">Change to:</ion-label>
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label>Cell Number</ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="number" [(ngModel)]="guard.cell"></ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
-                  <ionic-selectable style="text-align: left;" [items]="sites" (onChange)="getSite($event)"
-                    itemValueField="name" itemTextField="name" [canSearch]="true">
-                  </ionic-selectable>
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="siteValid">Current Site *</ion-label>
+                    <ion-label *ngIf="!siteValid" style="color: red !important">Current Site *</ion-label>
+                    <ion-item lines="none" *ngIf="id === 'edit'">
+                      <ion-input [(ngModel)]="guard.site"></ion-input>
+                    </ion-item>
+                    <ion-label *ngIf="id === 'edit'">Change to:</ion-label>
+                    <ion-item lines="none">
+                      <ionic-selectable placeHolder="Site" style="text-align: left;" [items]="sites" (onChange)="getSite($event)"
+                        itemValueField="name" itemTextField="name" [canSearch]="true">
+                      </ionic-selectable>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
-                </ion-item>
+                <ion-col size="12" *ngIf="thompsons">
+                  <div class="input-item">
+                    <ion-label>Learnership Number</ion-label>
+                    <ion-item lines="none">
+                      <ion-input type="number" [(ngModel)]="guard.learnershipNo"></ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
-                <ion-item *ngIf="thompsons">
-                  <ion-label position="floating">Learnership Number</ion-label>
-                  <ion-input type="number" [(ngModel)]="guard.learnershipNo"></ion-input>
-                </ion-item>
-
-                <ion-item *ngIf="thompsons">
-                  <ion-label position="floating">Learnership Start Date</ion-label>
-                  <ion-datetime [(ngModel)]="guard.learnershipDate" displayFormat="YYYY/MM/DD">
-                  </ion-datetime>
-                </ion-item>
+                <ion-col size="12" *ngIf="thompsons">
+                  <div class="input-item">
+                    <ion-label>Learnership Start Date</ion-label>
+                    <ion-item lines="none">
+                      <ion-datetime [(ngModel)]="guard.learnershipDate" displayFormat="YYYY/MM/DD">
+                      </ion-datetime>
+                    </ion-item>
+                  </div>
+                </ion-col>
 
                 <p *ngIf="!photoValid" style="color: red" text-center>Please Take Staff Profile Photo!</p>
 
-                <ion-row *ngIf="isApp">
-                  <ion-col text-center>
-                    <ion-button ion-button (click)="takePhoto()" icon-left class="photo">
-                      <ion-icon name="camera"></ion-icon>Staff Photo
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
+                <ion-col size="12" *ngIf="isApp">
+                  <ion-button ion-button (click)="takePhoto()" icon-left class="photo">
+                    <ion-icon name="camera"></ion-icon>Staff Photo
+                  </ion-button>
+                </ion-col>
 
-                <ion-row *ngIf="!isApp">
-                  <ion-col text-center>
-                    <ion-button ion-button (click)="picture.click()" icon-left>
-                      <ion-icon name="camera"></ion-icon>Staff Photo
-                    </ion-button>
-                    <input #picture style="display:none;" type="file" accept="image/*" capture="camera"
-                      (change)="selectImage($event)">
-                  </ion-col>
-                </ion-row>
+                <ion-col size="12" *ngIf="!isApp">
+                  <ion-button ion-button (click)="picture.click()" icon-left>
+                    <ion-icon name="camera"></ion-icon>Staff Photo
+                  </ion-button>
+                  <input #picture style="display:none;" type="file" accept="image/*" capture="camera"
+                    (change)="selectImage($event)">
+                </ion-col>
 
                 <img *ngIf="guard.photo" [src]="guard.photo" class="thumb">
 
+              </ion-row>
+
+              <div class="btn-holder ion-padding-top">
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75" offsetXs="0"
+                    offsetSm="0.5" offsetMd="0.5" offsetLg="0.5" offsetXl="0.5">
+                    <ion-button *ngIf="!edit" color="primary" [disabled]="guardExists" expand="block"
+                      (click)="add(guard)">
+                      Save Staff Member</ion-button>
+                    <ion-button *ngIf="edit" color="primary" [disabled]="guardExists" expand="block" (click)="update()">
+                      Update Staff Member</ion-button>
+                  </ion-col>
+                </ion-row>
               </div>
+
             </div>
           </div>
+
+
         </div>
-      </div>
-    </div>
-  </section>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>
 
-<ion-footer>
-  <ion-toolbar  mode="ios">
+<!-- <ion-footer>
+  <ion-toolbar mode="ios">
     <ion-button *ngIf="!edit" color="primary" [disabled]="guardExists" expand="block" (click)="add(guard)">
       Save Staff Member</ion-button>
     <ion-button *ngIf="edit" color="primary" [disabled]="guardExists" expand="block" (click)="update()">
       Update Staff Member</ion-button>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

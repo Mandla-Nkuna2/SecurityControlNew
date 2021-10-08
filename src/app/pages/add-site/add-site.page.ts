@@ -147,6 +147,7 @@ export class AddSitePage implements OnInit {
             content_type: 'ButtonClick',
             item_id: 'addSite'
           });
+          this.afs.collection(`users/${this.user.key}/sites`).doc(this.site.key).set(this.site);
           this.router.navigate(['all-sites']).then(() => {
             this.loading.dismiss();
           });
