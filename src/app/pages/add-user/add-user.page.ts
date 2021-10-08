@@ -110,8 +110,8 @@ export class AddUserPage implements OnInit {
                   this.currentSites.push({ name: site.data().name, key: site.data().key, selected: true })
                 })
                 console.log(this.currentSites)
-                for (var i=0; i < this.siteList.length; i++) {
-                  for (var j=0; j < this.currentSites.length; j ++) {
+                for (var i = 0; i < this.siteList.length; i++) {
+                  for (var j = 0; j < this.currentSites.length; j++) {
                     if (this.siteList[i].name === this.currentSites[j].name) {
                       console.log(this.siteList[i].name)
                       this.siteList.splice(i, 1);
@@ -121,9 +121,9 @@ export class AddUserPage implements OnInit {
                 setTimeout(() => {
                   this.currentSites.forEach(site => {
                     this.siteList.push(site);
-                  })  
+                  })
                 }, 2000);
-                
+
               })
             })
           }
@@ -215,9 +215,11 @@ export class AddUserPage implements OnInit {
             content_type: 'ButtonClick',
             item_id: 'addUser'
           });
-          this.router.navigate(['users']).then(() => {
-            this.loading.dismiss();
-          });
+          this.addToCompany().then(() => {
+            this.router.navigate(['users']).then(() => {
+              this.loading.dismiss();
+            });
+          })
         });
       });
     } else if (this.edit === true) {
@@ -237,6 +239,19 @@ export class AddUserPage implements OnInit {
         });
       });
     }
+  }
+
+  addToCompany() {
+    return this.afs.collection('companies').doc(this.user.companyId).ref.get().then(comp => {
+      var company: any = comp.data();
+      var count;
+      if (company.userCount) {
+        count = company.userCount + 1;
+      } else {
+        count = 1;
+      }
+      return this.afs.collection('companies').doc(this.user.companyId).update({ userCount: count });
+    })
   }
 
   ionViewWillEnter() {

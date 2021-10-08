@@ -34,6 +34,8 @@ export class UsersPage implements OnInit {
   info;
 
   permission: boolean = false;
+  userCount;
+  accessType;
 
   constructor(private platform: Platform, public loadingCtrl: LoadingController, public toast: ToastService,
     public alertCtrl: AlertController, private afs: AngularFirestore, public modalCtrl: ModalController,
@@ -52,13 +54,30 @@ export class UsersPage implements OnInit {
           if (this.user.type === 'Owner' || this.user.type === 'Account Admin') {
             this.permission = true;
           }
+          this.getCompany(user);
         }
       });
     });
   }
 
+  getCompany(user) {
+    this.afs.collection('companies').doc(user.companyId).ref.get().then(comp => {
+      var company: any = comp.data();
+      this.accessType = company.accessType;
+      this.userCount = company.userCount;
+    })
+  }
+
   add() {
-    this.router.navigate(['/add-user/new']);
+    if (this.accessType === 'Basic' && this.userCount < 6) {
+      this.router.navigate(['/add-user/new']);
+    } else if (this.accessType === 'Premium' && this.userCount < 11) {
+      this.router.navigate(['/add-user/new']);
+    } else if (this.accessType === 'Enterprise') {
+      this.router.navigate(['/add-user/new']);
+    } else {
+      this.noAccessAlert();
+    }
   }
 
   view(user) {
@@ -100,6 +119,27 @@ export class UsersPage implements OnInit {
               this.toast.show(`User ${user.name} Successfully Deleted!`);
               this.loading.dismiss();
             });
+          }
+        }
+      ]
+    });
+    prompt.present();
+  }
+
+  async noAccessAlert() {
+    let prompt = await this.alertCtrl.create({
+      header: 'User Limit Reached',
+      message: 'You have reached your user limit. Please upgrade your membership to add more users',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+          }
+        },
+        {
+          text: 'UPGRADE',
+          handler: data => {
+            this.router.navigate(['/memberships']);
           }
         }
       ]

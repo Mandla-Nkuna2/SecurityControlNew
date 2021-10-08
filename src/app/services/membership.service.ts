@@ -210,7 +210,8 @@ export class MembershipService {
           accessType: updateData.accessType,
           access: true,
           email: user.email,
-          rep: user.name
+          rep: user.name,
+          userCount: 1
         }
         this.firestore.collection('companies').doc(company.key).set(company).then(() => {
           this.firestore.collection('default-forms').ref.get().then(forms => {
