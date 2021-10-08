@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import moment from 'moment';
+import { FormServiceService } from 'src/app/services/form-service.service';
+import { LoadingService } from 'src/app/services/loading.service';
 import { MembershipService } from 'src/app/services/membership.service';
 import { PurchasesService } from 'src/app/services/purchases.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -36,15 +38,19 @@ export class MembershipsAppPage implements OnInit {
     private toast: ToastService,
     private navController: NavController,
     private firestore: AngularFirestore,
+    private loading: LoadingService,
+    private formsService: FormServiceService
   ) { }
 
   ngOnInit() {
+    this.products = []; 
     this.storage.get('user').then(user => {
       this.user = user;
       this.getCompany(user);
-      console.log(this.user.openedSubscription);
+      this.products = []; 
       this.purchaseService.register(this.productIDs).then(() => {
         this.purchaseService.getProducts().then(products => {
+          this.products = []; 
           this.products = products;
           console.log('Products: ', this.products);
           this.products.forEach(prod => {
@@ -58,9 +64,13 @@ export class MembershipsAppPage implements OnInit {
 
   getCompany(user) {
     this.membershipService.getCompany(user.companyId).then((comp: any) => {
-      this.company = comp;
-      if (comp.accessType && comp.accessType !== '') {
-        this.accessType = comp.accessType;
+      if (comp) {
+        this.company = comp;
+        if (comp.accessType && comp.accessType !== '') {
+          this.accessType = comp.accessType;
+        } else {
+          this.accessType = '';
+        }
       } else {
         this.accessType = '';
       }
@@ -90,19 +100,21 @@ export class MembershipsAppPage implements OnInit {
           date: moment(new Date()).format('YYYY/MM/DD'),
           companyId: newUser.companyId,
           number: 1,
+          type: 'App',
           transaction: Object.assign({}, newObj)
         });
-        //this.membershipService.setAppSubscriptions(newUser.companyId, sub).then(() => {
         this.membershipService.updateCompany(user, {
           accessType: this.chosenItem.title,
           access: true
         }).then(() => {
-          newUser.premium = true;
-          this.navController.navigateRoot('').then(() => {
-            this.navController.navigateRoot('menu/form-menu');
+          this.formsService.retrieveForms(newUser.companyId).then(() => {
+            newUser.premium = true;
+            this.loading.dismiss();
+            this.navController.navigateRoot('').then(() => {
+              this.navController.navigateRoot('menu/form-menu');
+            })
           })
         })
-        //})
       })
     });
   }
@@ -200,6 +212,10 @@ export class MembershipsAppPage implements OnInit {
       ]
     })
     return alert.present();
+  }
+
+  goDesktop() {
+    window.open('https://app.securitycontrol.co.za')
   }
 
 }

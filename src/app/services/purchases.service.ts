@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { InAppPurchase2, IAPProduct } from '@ionic-native/in-app-purchase-2/ngx';
 import { AlertController } from '@ionic/angular';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class PurchasesService {
   trans;
 
   constructor(private store: InAppPurchase2, private alertCtrl: AlertController,
-    private functions: AngularFireFunctions) {
+    private functions: AngularFireFunctions, private loading: LoadingService) {
     this.transaction = new EventEmitter()
   }
 
@@ -86,18 +87,19 @@ export class PurchasesService {
 
   verify(p) {
     return new Promise<any>((resolve, reject) => {
-      console.log(p)
-      const callable = this.functions.httpsCallable('validatePurchase');
-      const obs = callable(p);
-      obs.subscribe(async res => {
-        console.log('Resp: ' , res);
-        if (res == true) {
-          resolve('complete')
-        }
-        else {
-          reject(res);
-        }
-      });
+      this.loading.present('Validating, Please Wait...').then(() => {
+        const callable = this.functions.httpsCallable('validatePurchase');
+        const obs = callable(p);
+        obs.subscribe(async res => {
+          console.log('Resp: ' , res);
+          if (res == true) {
+            resolve('complete')
+          }
+          else {
+            reject(res);
+          }
+        });
+      })
     })
   }
 
@@ -121,54 +123,3 @@ export class PurchasesService {
     let order = await this.store.order(prod.id);
   }
 }
-
-// var newObj: any = {};
-      // console.log('Trans: ', p)
-      // newObj = p;
-      // newObj.deferred = 'undefined';
-      // newObj.transaction.developerPayload = 'undefined'
-      // var trans = {
-      //   acknowledged: true,
-      //   additionalData: { applicationUsername: '' },
-      //   alias: "standard_membership",
-      //   billingPeriod: 1,
-      //   billingPeriodUnit: "Month",
-      //   canPurchase: false,
-      //   countryCode: null,
-      //   currency: "ZAR",
-      //   deferred: false,
-      //   description: "Get the standard access to Security Control",
-      //   discounts: [],
-      //   downloaded: false,
-      //   downloading: false,
-      //   group: "default",
-      //   id: "standard_membership",
-      //   ineligibleForIntroPrice: null,
-      //   introPrice: "",
-      //   introPriceMicros: "",
-      //   introPriceNumberOfPeriods: 2,
-      //   introPricePaymentMode: "FreeTrial",
-      //   introPricePeriod: 2,
-      //   introPricePeriodUnit: "Week",
-      //   introPriceSubscriptionPeriod: "Week",
-      //   loaded: true,
-      //   owned: true,
-      //   price: "R 4,59",
-      //   priceMicros: 4590000,
-      //   renewalIntent: "Renew",
-      //   state: "owned",
-      //   title: "Standard Membership",
-      //   transaction: {
-      //     developerPayload: "undefined",
-      //     id: "GPA.3357-8223-4720-16451",
-      //     purchaseState: 0,
-      //     purchaseToken: "knojhcmadgabnnlelogflcdn.AO-J1OxryMesUpK3jpdhRhCqtsgcR3pAa2KZsxYtSh-cdhvZvFH27iV4FfBrsf2H0rO3CRmZxQq9dHqBV5vq7WidAZW4l5ZeHxQw8z_yMgareh5uqJNKOaQ",
-      //     receipt: "{\"orderId\":\"GPA.3357-8223-4720-16451\",\"packageName\":\"com.innovativethinking.adminforms\",\"productId\":\"standard_membership\",\"purchaseTime\":1632923404016,\"purchaseState\":0,\"purchaseToken\":\"knojhcmadgabnnlelogflcdn.AO-J1OxryMesUpK3jpdhRhCqtsgcR3pAa2KZsxYtSh-cdhvZvFH27iV4FfBrsf2H0rO3CRmZxQq9dHqBV5vq7WidAZW4l5ZeHxQw8z_yMgareh5uqJNKOaQ\",\"autoRenewing\":true,\"acknowledged\":false}",
-      //     signature: "W6BQXGTusj/pW/+Mkc2Jl9hwu6BtNTOhM4io2V3UgDoXQax+5n56h+0sy9yDvi9iRn7M4SXkzBorhIUi25X4JZP7wQN3EOOeCAOVA1Zp0dX4yXbVx3p1Mdy6BOJnlpBoyNVBZREL3VmmuXQlxjf3ejrqgj1MT8EBrLICsMD46E0A28lGTPYtkumOugK1NGKgiq0vmuI8lBh7EtAb1tFicl444CUamcCQjMTTPDyXMv51guDG+A21RHPlzSZqZAmFkpfsmsBLZJc9dpeZos/nPuhuT0LCBm33G0jgSRbAtb95mH1x6Zo+d8FIftG+h1mrXHpk5dVkiSYHlxyUk0GWTw==",
-      //     type: "android-playstore"
-      //   },
-      //   trialPeriod: null,
-      //   trialPeriodUnit: null,
-      //   type: "paid subscription",
-      //   valid: true
-      // };

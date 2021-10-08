@@ -75,15 +75,17 @@ export class MyAccountPage implements OnInit {
       }
       this.user = user;
       this.afs.collection('companies').doc(this.user.companyId).ref.get().then((company: any) => {
-        if (company.data().lat === undefined || company.data().lat === 0) {
-          return this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }).then((position) => {
-            console.log(position.coords.accuracy);
-            const update = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            }
-            this.afs.collection('companies').doc(this.user.companyId).update(update);
-          })
+        if (company.data()) {
+          if (company.data().lat === undefined || company.data().lat === 0) {
+            return this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }).then((position) => {
+              console.log(position.coords.accuracy);
+              const update = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              }
+              this.afs.collection('companies').doc(this.user.companyId).update(update);
+            })
+          }
         }
       })
     })

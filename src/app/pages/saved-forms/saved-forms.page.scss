@@ -1,3 +1,28 @@
+.mbar
+{
+    --background: #100F10;
+
+
+    ion-buttons
+    {
+
+        ion-menu-button
+        {
+            --color: white !important;
+        }
+        
+        ion-button
+        {
+            --color: white !important;
+        }
+    }
+
+
+    ion-title
+    {
+        color: white !important;
+    }
+}
 .mtool
 {
     --background: #1B1C1D;

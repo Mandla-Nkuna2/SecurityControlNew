@@ -1,35 +1,11 @@
-<!-- <ion-header class="ion-no-border desktop">
-  <ion-toolbar class="dbar ion-padding-horizontal">
-    <ion-buttons slot="start">
-      <ion-button class="support-btn">
-        Support
-      </ion-button>
-    </ion-buttons>
-    <ion-item lines="none" slot="end" (click)="goMyaccount()">
-      <ion-avatar slot="end">
-        <img src="assets/imgs/user.jpeg" alt="">
-      </ion-avatar>
-      <ion-label>
-        <select name="cars" id="cars">
-          <option value="volvo">Lamu Dlamini</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
-        <p>Admin</p>
-      </ion-label>
-    </ion-item>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-header class="ion-no-border mobile">
-  <ion-toolbar class="mtool">
+  <ion-toolbar class="mbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="sites" text="My Account"></ion-back-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-title>Account</ion-title>
   </ion-toolbar>
 </ion-header>
-
 
 <ion-content class="ion-padding-horizontal">
   <div class="top-holder desktop flex al-center jc-between">
@@ -49,6 +25,7 @@
           <div class="the-header">
             <h2>Account Details</h2>
           </div>
+
 
           <div class="the-content">
             <ion-item class="header-item" lines="none" slot="end">
@@ -165,9 +142,7 @@
           <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
             capture="camera">              -->
               </ion-avatar>
-  
-        <h2>Lamu Dlamini</h2>
-  
+    
         <div class="form">
   
           <div class="input-item flex al-center jc-between">

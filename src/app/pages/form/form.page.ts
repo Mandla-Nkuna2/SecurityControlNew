@@ -28,8 +28,6 @@ export class Form implements OnInit {
   rawInputes
   showForm = false;
   staticFields: any = {
-    id: 'qwerty123',
-    key: 'testtes'
   }
   formName = '';
   constructor(
@@ -85,15 +83,18 @@ export class Form implements OnInit {
         })
       }
     })
+    this.formsService.getAssessmentEmails().then((emails: any) => {
+      this.staticFields = { ...emails, ...{ userEmail: this.user.email } };
+    })
     this.showForm = true;
   }
 
-  getPlanCode(tier){
-    let codes = [{ name: "standard", code:"PLN_2nn719ok2gtr1dx", price: 50000 },{ name: "pro", code:"PLN_ikf22antkej1wsd", price: 100000 }]//will be in DB once tiers finalized
-    let chosenCode=''
-    codes.forEach((code)=>{
-      if(code.name == tier){
-        chosenCode=code.code;
+  getPlanCode(tier) {
+    let codes = [{ name: "standard", code: "PLN_2nn719ok2gtr1dx", price: 50000 }, { name: "pro", code: "PLN_ikf22antkej1wsd", price: 100000 }]//will be in DB once tiers finalized
+    let chosenCode = ''
+    codes.forEach((code) => {
+      if (code.name == tier) {
+        chosenCode = code.code;
       }
     })
     return chosenCode;
