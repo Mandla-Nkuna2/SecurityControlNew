@@ -367,6 +367,7 @@ export class MenuPage implements OnInit {
     })
   }
 
+
   getSalesCount(user) {
     this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {
       this.salesCount = res;
