@@ -1,4 +1,5 @@
 
+
 'use strict';
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
@@ -139,7 +140,7 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
     let price = body.price;
     let isDowngrade = body.isDowngrade;
     let diff = moment().diff(moment(body.nextPaymentDate), 'days');
-    let discount=0, discountedCharge=0;
+    let discount=0;
     if(diff>0) {
       discount = (price/30)*diff;
       return admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
@@ -150,7 +151,8 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
         customerCode: body.customerCode,
         email: body.email,
         authCode: body.authCode,
-        planCode: body.planCode
+        planCode: body.planCode,
+        emailToken: body.emailToken
       }).then(()=>{
         admin.firestore().collection('companies').doc(body.companyKey).update({
           accessType: body.tier
@@ -187,6 +189,7 @@ exports.monitorSubscriptions = functions.pubsub.schedule('59 23 * * *').timeZone
             kickedOffSubscription: true
           }).then(()=>{
             admin.firestore().collection('memberships').doc(doc.companyKey).delete().then(()=>{
+              functions.logger.info("access revoked for : " + doc.companyKey)
               functions.logger.log("Subscription flagged")
             }).catch((onError)=>functions.logger.error(onError))
           }).catch((onError)=>functions.logger.error(onError))
@@ -242,10 +245,8 @@ exports.monitorPendingUpgrades = functions.pubsub.schedule('59 23 * * *').timeZo
                 })
               }else{
                 functions.logger.info("Subscription upgrade failed for: " + doc.companyKey)
-                removeAccess(doc.companyKey).then(()=>{
-                  return admin.firestore().collection('memberships').doc(doc.companyKey).delete().then(()=>{
-                    functions.logger.info("Access revoked for: " + doc.companyKey)
-                  }).catch(onError=>functions.logger.error(onError))
+                cancelSubscription(doc.companyKey, doc.emailToken).then(()=>{
+                  functions.logger.info("Subscription cancelled: " + doc.companyKey)
                 })
               }
           }).catch(onError=>functions.logger.error(onError))
@@ -402,11 +403,6 @@ exports.cancelSubscription = functions.https.onRequest((request, response)=>{
     let body= request.body;
 
     cancelSubscription(body.code, body.emailToken).then((cancellationRes)=>{
-      removeAccess(body.companyKey).then(()=>{
-        admin.firestore().collection('memberships').doc(body.companyKey).delete().then(()=>{
-          response.status(200).send({ text:"DONE"})
-        }).catch(onError=>functions.logger.error(onError))
-      }).catch(onError=>functions.logger.error(onError))
       functions.logger.info(cancellationRes)
       response.status(200).send({ text: "DONE"})
     }).catch((onError)=>functions.logger.error(onError))
