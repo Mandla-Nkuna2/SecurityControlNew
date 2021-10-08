@@ -3,7 +3,7 @@
     <name>Security Control</name>
     <description>Security Admin Forms App</description>
     <author email="support@securitycontrol.co.za" href="https://securitycontrol.co.za/">Innovative Thinking (Pty) Ltd</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://localhost:8101" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -110,4 +110,5 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <allow-navigation href="http://localhost:8101" sessionid="12b24065" />
 </widget>
