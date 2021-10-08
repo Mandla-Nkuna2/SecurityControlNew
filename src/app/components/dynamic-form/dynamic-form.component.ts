@@ -8,6 +8,7 @@ import { DynamicInput } from 'src/app/models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service'
 import { pdfService2 } from 'src/app/services/pdf-service2.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -43,7 +44,8 @@ export class DynamicFormComponent implements OnInit {
     private navController: NavController,
     private errorHandlingService: DynamicFormErrorHandlerService,
     private pdfService: pdfService2,
-    public geolocation: Geolocation
+    public geolocation: Geolocation,
+    private androidPermissions: AndroidPermissions
 
   ) {
     this.formObject = new EventEmitter();
@@ -75,13 +77,14 @@ export class DynamicFormComponent implements OnInit {
     })
   }
   async setLoaction() {
-    return this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }).then((position) => {
+    this.geolocation.getCurrentPosition({ enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }).then((position) => {
       if (position.coords.latitude !== undefined) {
         this.newFormObj['lat'] = position.coords.latitude;
         this.newFormObj['lng'] = position.coords.longitude;
         this.newFormObj['acc'] = position.coords.accuracy;
       }
-    }).catch(err => 'Error: ' + err);
+    }).catch(err => console.log(err));
+
   }
 
   convertTitleToAlias() {
