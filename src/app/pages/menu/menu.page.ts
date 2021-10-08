@@ -1,16 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { UiService } from './../../services/ui.service';
 import { MembershipService } from './../../services/membership.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { Observable, Subscription } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PushNotificationsService } from 'src/app/services/push-notifications.service';
 import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import moment from 'moment';
+import { FormServiceService } from 'src/app/services/form-service.service';
 
 @Component({
   selector: 'app-menu',
@@ -311,7 +309,7 @@ export class MenuPage implements OnInit {
 
   constructor(private router: Router, private storage: Storage, public loading: LoadingService,
     private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService,
-    private member: MembershipService) {
+    private formsService: FormServiceService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
@@ -344,6 +342,7 @@ export class MenuPage implements OnInit {
           this.getToken();
         }
         this.storage.get('user').then((user) => {
+          this.formsUpdate(user);
           this.getSalesCount(user);
           this.getSupportCount(user);
           this.user.photo = user.photo;
@@ -365,6 +364,10 @@ export class MenuPage implements OnInit {
         })
       }
     })
+  }
+
+  formsUpdate(user) {
+    this.formsService.checkForUpdates(user.companyId);
   }
 
 
