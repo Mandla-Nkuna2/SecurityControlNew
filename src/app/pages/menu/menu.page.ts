@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { UiService } from './../../services/ui.service';
 import { MembershipService } from './../../services/membership.service';
 import { Component, OnInit } from '@angular/core';
@@ -9,6 +10,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { PushNotificationsService } from 'src/app/services/push-notifications.service';
 import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import moment from 'moment';
 
 @Component({
   selector: 'app-menu',
@@ -303,7 +305,8 @@ export class MenuPage implements OnInit {
   access = true;
 
   constructor(private router: Router, private storage: Storage, public loading: LoadingService,
-    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService) {
+    private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService,
+    private member: MembershipService) {
     this.router.events.subscribe((event: RouterEvent) => {
       this.selectedPath = event.url;
     });
