@@ -367,9 +367,6 @@ export class MenuPage implements OnInit {
     })
   }
 
-  onClick(){
-    this.router.navigate(['memberships'])
-  }
 
   getSalesCount(user) {
     this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {
