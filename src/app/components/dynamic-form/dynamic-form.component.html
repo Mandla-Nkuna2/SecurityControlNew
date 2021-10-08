@@ -1,22 +1,31 @@
 <ion-header>
   <ion-toolbar mode="ios">
     <ion-buttons slot="start">
-      <ion-button *ngIf="noOfSlides>=1 && slideIndex>0" (click)="prevSlide()">Prev <ion-icon name="arrow-back"
+      <ion-button *ngIf="noOfSlides>=1 && slideIndex>0 && !app" (click)="prevSlide()">Prev <ion-icon name="arrow-back"
           slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button (click)="onExit()"><ion-icon name="close" slot="icon-only"></ion-icon>
+      <ion-button *ngIf="noOfSlides>=1 && slideIndex>0 && app" (click)="prevSlide()"><ion-icon name="arrow-back"
+        slot="icon-only"></ion-icon>
+    </ion-button>
+      <ion-button  *ngIf="slideIndex==0 && !app" (click)="onExit()">Exit <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="slideIndex==0 && app" (click)="onExit()"><ion-icon name="close" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ formTitle }}</ion-title>
-    <ion-button (click)="downloadPdf()" fill="clear"
+    <ion-title [ngStyle]="{'font-size': app === true ? 'smaller' : '' }">{{ formTitle }}</ion-title>
+    <!-- <ion-button (click)="downloadPdf()" fill="clear"
       *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
       <ion-icon name="download-outline"></ion-icon>
-    </ion-button>
+    </ion-button> -->
     <ion-buttons slot="end">
-      <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides " (click)="nextSlide()">Next <ion-icon
+      <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides && !app" (click)="nextSlide()">Next <ion-icon
           name="arrow-forward" slot="icon-only">
         </ion-icon>
       </ion-button>
+      <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides && app" (click)="nextSlide()"><ion-icon
+        name="arrow-forward" slot="icon-only">
+      </ion-icon>
+    </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -27,7 +36,7 @@
       <div formArrayName="inputs" *ngFor="let input of dynamicInputs; let i =index">
         <ion-item *ngIf="input.controlType =='select' && determineCondition(input.condition)">
 
-          <ion-label position="stacked">{{input.label}}</ion-label>
+          <ion-label style="white-space: initial;" position="stacked">{{input.label}}</ion-label>
           <ion-select interface="popover" [formControlName]="lastIndex + i" *ngIf="input.itemIsObject"
             (ionChange)="populateQuestionItems(input.populateQuestionItems)" [(ngModel)]="newFormObj[input.fieldName]">
             <ion-select-option *ngFor="let item of input.items" value="{{ item[input.itemsSaveVal] }}">{{
@@ -45,7 +54,7 @@
         </ion-item>
         <ion-item *ngIf="input.controlType =='normal'  &&  determineCondition(input.condition)">
 
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+          <ion-label style="white-space: initial;" position="stacked">{{ input.label }}</ion-label>
           <ion-input [type]="input.inputType" [formControlName]="lastIndex+ i" [placeholder]="input.value"
             [readonly]="input.disabled" [inputmode]="input.inputType" [(ngModel)]="newFormObj[input.fieldName]">
           </ion-input>
@@ -54,7 +63,7 @@
           </ion-text>
         </ion-item>
         <ion-item *ngIf="input.controlType == 'camera'  && determineCondition(input.condition)">
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+          <ion-label style="white-space: initial;" position="stacked">{{ input.label }}</ion-label>
           <app-camera (imageString)="onImageEvent($event, input.fieldName)" *ngIf="!newFormObj[input.fieldName]">
           </app-camera>
           <ion-row *ngIf="newFormObj[input.fieldName]">
@@ -72,7 +81,7 @@
         </ion-item>
         <ion-item *ngIf="input.controlType == 'signaturePad' && determineCondition(input.condition)">
 
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+          <ion-label style="white-space: initial;" position="stacked">{{ input.label }}</ion-label>
           <ion-button (click)="onSign(input.fieldName)" expand="block" fill="clear" shape="round"
             *ngIf="!newFormObj[input.fieldName]">
             Signature
@@ -91,7 +100,7 @@
           </ion-row>
         </ion-item>
         <ion-item *ngIf="input.controlType == 'date' && determineCondition(input.condition)">
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+          <ion-label style="white-space: initial;" position="stacked">{{ input.label }}</ion-label>
           <ion-datetime [readonly]="input.disabled" displayFormat="YYYY/MM/DD" [(ngModel)]="newFormObj[input.fieldName]"
             [formControlName]="lastIndex+ i"></ion-datetime>
           <ion-text *ngIf="hasErrors(i)" color="danger">
@@ -99,7 +108,7 @@
           </ion-text>
         </ion-item>
         <ion-item *ngIf="input.controlType == 'time && determineCondition(input.condition)'">
-          <ion-label position="stacked">{{ input.label }}</ion-label>
+          <ion-label style="white-space: initial;" position="stacked">{{ input.label }}</ion-label>
           <ion-datetime [readonly]="input.disabled" [formControlName]="lastIndex + i" displayFormat="HH:mm"
             [(ngModel)]="newFormObj[input.fieldName]">
           </ion-datetime>
