@@ -1,5 +1,6 @@
 import { DynamicInput } from './../models/dynamic-input.model';
 import { Injectable } from '@angular/core';
+import { proxyInputs } from '@ionic/angular/directives/proxies-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -50,9 +51,11 @@ export class DynamicFormErrorHandlerService {
             match= true;
           }
         })
-        if(input.controlType == "select" && !input.items){
-          valid = false;
-          reject("Items are required if you use a 'select' control type \n Dynamic input at index : " + index)
+        if(input.controlType == "select"){
+          if(!input.items && !input.link){
+            valid = false;
+            reject("Items or a link are required if you use a 'select' control type \n Dynamic input at index : " + index)
+          }
         }
         if(!match){
           valid = false;
@@ -74,7 +77,7 @@ export class DynamicFormErrorHandlerService {
             valid = false;
             reject("Items should only be assigned to a 'select' control type, your type is : " + input.controlType + "\n Dynamic Input at index : " + index)
           }
-          if(input.itemIsObject == undefined){ //falsey would be too vague in this case
+          if(input.itemIsObject == undefined){//falsey would be too vague in this case
             valid = false;
             reject("itemIsObject property is required when using a 'select' control type" + "\n Dynamic Input at index : " + index)
           }
