@@ -85,6 +85,10 @@ export class DynamicFormComponent implements OnInit {
   }
   getSavedForm() {
     this.formAlias = this.convertTitleToAlias();
+    if (this.formTitle.indexOf('@') > -1) {
+      this.formAlias = this.formTitle
+    }
+
     this.storage.get(this.formAlias).then((newFormObject) => {
       if (newFormObject) {
         this.newFormObj = newFormObject;
@@ -106,15 +110,17 @@ export class DynamicFormComponent implements OnInit {
 
   convertTitleToAlias() {
     let alias = this.formTitle;
-    return alias.replace(/ +/g, "").replace(alias[0], alias[0].toLowerCase());
+    return alias.replace(/ +/g, "");
   }
 
   onExit() {
     this.uiService.openConfirmationAlert("Save this form to complete later?", "Yes", "No").then((shouldSave) => {
       if (shouldSave) {
-        this.storage.set(this.formAlias, this.newFormObj).then(() => {
-          this.navController.navigateRoot('form-menu')
-        }).catch(error => console.log(error))
+        this.formService.saveFormRefToStorage(this.formAlias, this.allInputs).then((formAlias: string) => {
+          this.storage.set(formAlias, this.newFormObj).then(() => {
+            this.navController.navigateRoot('form-menu')
+          }).catch(error => console.log(error))
+        })
       } else {
         this.navController.navigateRoot('form-menu')
       }

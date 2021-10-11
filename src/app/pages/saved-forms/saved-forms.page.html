@@ -18,25 +18,29 @@
     </div>
   </div>
 
-  <div *ngIf="items.length == 0" class="holder ion-text-center">
+  <div *ngIf="noForms" class="holder ion-text-center">
     <img src="assets/imgs/sick.svg" alt="">
     <h1 style="color: white;">No Saved Forms <br>
       Available</h1>
   </div>
 
-  <ion-row>
-    <ion-col style="padding-left: 40px; padding-right: 40px;">
-      <div scrollY="true" id="myFixZone">
-        <ion-button (click)="open(item)" style='--highlight-color-invalid: var(--ion-color-danger, #eb445a);
-        ' class="upper" routeDirection="forward"
-          expand="block" *ngFor="let item of items" style="font-size: 0.6em;">
-          <ion-icon name="build" slot="start"></ion-icon>
-          {{item.report}}-{{item.date}}
+  <ion-card *ngFor="let ref of formRefs ;let i = index">
+    <ion-row style="width: 100%;">
+      <ion-col size="6">
+        {{ref.name}}
+      </ion-col>
+      <ion-col>
+        <ion-button fill="clear" (click)="open(ref)">
+          <ion-icon name="create-outline"></ion-icon>
         </ion-button>
-      </div>
-    </ion-col>
-  </ion-row>
-
+      </ion-col>
+      <ion-col>
+        <ion-button fill="clear" (click)="deleteForm(ref.name, i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 
   <ion-grid style="height: 100%">
     <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
