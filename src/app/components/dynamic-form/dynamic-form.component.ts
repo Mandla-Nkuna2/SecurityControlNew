@@ -57,16 +57,28 @@ export class DynamicFormComponent implements OnInit {
     this.dynamicForm = new FormGroup({
       inputs: this.formArray
     });
-    this.formService.checkValues(this.dynamicInputs).then((data: any) => {
-      this.dynamicInputs = data.questions;
-      this.allInputs = Array.from(this.dynamicInputs);
-      this.checkSlides().then(() => {
-        this.createInputs();
-        this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
-        this.newFormObj = { ...this.staticFields, ...data.saveObjects };
-        this.show = true;
+    this.processInitData().then(() => {
+      this.getSavedForm();
+    })
+  }
+
+  processInitData() {
+    return new Promise((resolve, reject) => {
+      this.formService.checkValues(this.dynamicInputs).then((data: any) => {
+        this.dynamicInputs = data.questions;
+        this.allInputs = Array.from(this.dynamicInputs);
+        this.checkSlides().then(() => {
+          this.createInputs();
+          this.dynamicInputs = this.dynamicInputsSlides[this.slideIndex];
+          this.newFormObj = { ...this.staticFields, ...data.saveObjects };
+          this.show = true;
+          resolve('complete')
+        })
       })
     })
+
+  }
+  getSavedForm() {
     this.formAlias = this.convertTitleToAlias();
     this.storage.get(this.formAlias).then((newFormObject) => {
       if (newFormObject) {
