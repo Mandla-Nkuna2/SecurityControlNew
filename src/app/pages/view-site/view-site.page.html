@@ -167,7 +167,7 @@
                 </ion-col>
 
                 <ion-col size="3">
-                  <h4>Manager/Supervisor</h4>
+                  <h4>Manager/ Supervisor</h4>
                 </ion-col> 
                 
                 <ion-col size="3">
@@ -182,11 +182,11 @@
 
               <ion-row *ngFor="let report of reports | async" class="values">
                 <ion-col size="2" class="flex al-center">
-                  <h5>{{report.date}}</h5>
+                  <h5>{{report.date | date:"MMM d, yy"}}</h5>
                 </ion-col>
 
                 <ion-col size="2" class="flex al-center">
-                  <h5>{{report.time}}</h5>
+                  <h5>{{report.time}} </h5>
                 </ion-col>
 
                 <ion-col size="3" class="flex al-center">
@@ -229,7 +229,7 @@
                 </ion-col>
 
                 <ion-col size="3">
-                  <h4>Manager/Supervisor</h4>
+                  <h4>Manager/ Supervisor</h4>
                 </ion-col> 
                 
                 <ion-col size="3">
@@ -244,7 +244,7 @@
 
               <ion-row *ngFor="let report of reports | async" class="values">
                 <ion-col size="2" class="flex al-center">
-                  <h5>{{report.date}}</h5>
+                  <h5>{{report.date | date:"MMM d, yy"}}</h5>
                 </ion-col>
 
                 <ion-col size="2" class="flex al-center">
@@ -432,7 +432,7 @@
 
               <ion-row *ngFor="let report of reports | async" class="values">
                 <ion-col size="2" class="flex al-center">
-                  <h5>{{report.date}}</h5>
+                  <h5>{{report.date | date:"MMM d, yy"}}</h5>
                 </ion-col>
 
                 <ion-col size="2" class="flex al-center">
