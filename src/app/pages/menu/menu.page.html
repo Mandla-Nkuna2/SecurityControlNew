@@ -20,19 +20,11 @@
                 style="color: red; border-radius: 40%; border: 1px solid red;">{{supportCount}}</div>
             </ion-item>
           </div>
-          <ion-button (click)="onClick()" expand="block" fill="clear" shape="round">
-            Click me
-          </ion-button>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
     <ion-footer style="  --background: #100F10;  ">
       <ion-menu-toggle auto-hide="false">
-        <!-- <ion-item class="ion-text-center" *ngIf="!account">
-          <ion-button color="success" (click)="upgrade()" expand="block" fill="clear" style="margin: auto;">
-            <ion-icon name="trophy" slot="start"></ion-icon>UPGRADE TO PREMIUM
-          </ion-button>
-        </ion-item> -->
         <ion-item style="  --background: #100F10;  " routerLink="/my-account" icon-left routerDirection="root"
           [class.active-item]="selectedPath === '/my-account'">
           <ion-label style="text-align: center;" style='color:grey; text-align: center;'

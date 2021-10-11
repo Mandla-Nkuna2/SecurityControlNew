@@ -131,17 +131,9 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
   return cors(request, response, ()=>{
     let body = request.body, price = body.price, isDowngrade = body.isDowngrade,
     diff = moment(body.nextPaymentDate).diff(moment(), 'days'), discount=0;
-    functions.logger.debug("body")
-    functions.logger.debug(body)
-    functions.logger.debug("date")
-    functions.logger.debug(body.nextPaymentDate)
-    if(diff>0) {
-      functions.logger.debug("diff is bigger than 0")
-      functions.logger.debug(diff)
+
+    if(diff>0) {  
       discount = (price/30)*diff;
-      functions.logger.debug(discount)
-      functions.logger.debug("price")
-      functions.logger.debug(price)
       admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
         discountedCharge: isDowngrade ? price + discount : price - discount,companyKey: body.companyKey,
         nextPaymentDate: body.nextPaymentDate, tier: body.tier,
@@ -156,16 +148,11 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
         }).catch(onError=>functions.logger.error(onError))
       }).catch(onError=>functions.logger.error(onError))
     }else{
-      functions.logger.debug("diff is smaller")
-      functions.logger.debug(diff)
       return cancelSubscription(body.subCode, body.emailToken).then((cancellationResponse)=>{
-        functions.logger.debug("cancelled sucess")
         triggerSubscription(body.customerCode, body.authCode, body.planCode, body.price, body.email, body.companyKey, body.tier).then((subResponse)=>{
-          functions.logger.debug("subresponse")
           functions.logger.debug(subResponse)
           if(subResponse){
             admin.firestore().collection('companies').doc(body.companyKey).update({ accessType: body.tier }).then(()=>{
-              functions.logger.debug("upgraded")
               response.status(200).send({ text: "Upgraded"})
             }).catch(onError=>functions.logger.error(onError))
           }
@@ -226,10 +213,7 @@ exports.monitorPendingUpgrades = functions.pubsub.schedule('59 23 * * *').timeZo
     if(!onFulfilled.empty){
       onFulfilled.docs.forEach((item)=>{
         let doc = item.data();
-        functions.logger.info("dates")
-        functions.logger.info(moment().format("YYYY/MM/DD HH:mm:ss"))
-        functions.logger.info(moment(doc.nextPaymentDate).format("YYYY/MM/DD HH:mm:ss"))
-        if(moment().isSameOrAfter(doc.nextPaymentDate)){//should cancel then start new sub
+        if(moment().isSameOrAfter(doc.nextPaymentDate)){
           cancelSubscription(doc.subscriptionCode, doc.emailToken).then(()=>{
             triggerSubscription(
               doc.customerCode, doc.authCode, doc.planCode, doc.discountedCharge, 
@@ -259,7 +243,7 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
       onFulfilled.docs.forEach((item) => {
         let doc = item.data();
         if (doc.trialStartDate && !doc.trialEndDate) {
-          if (moment().diff(moment(doc.trialStartDate), 'minutes') >= 10) { //for testing
+          if (moment().diff(moment(doc.trialStartDate), 'days') >= 14) {
             return admin.firestore().collection('trials').doc(doc.companyKey).update({
               trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
             }).then(() => {
