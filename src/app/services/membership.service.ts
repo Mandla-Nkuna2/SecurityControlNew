@@ -239,7 +239,7 @@ export class MembershipService {
 
   upgradeOrDowngrade(chosenTier, isDowngrade, price, companyKey, nextPaymentDate, cusCode, authCode, emailToken, email, planCode){
     return new Promise((resolve, reject) => {
-      this.http.post(FUNCTIONS_HOST+'upgradeSubscription', { 
+      this.http.post(FUNCTIONS_HOST+'upgradeSubscription', {
         price: price,
         isDowngrade: isDowngrade,
         nextPaymentDate: nextPaymentDate,
@@ -248,7 +248,8 @@ export class MembershipService {
         authCode: authCode,
         planCode: planCode,
         emailToken: emailToken,
-        tier: chosenTier
+        tier: chosenTier,
+        email: email
       }).subscribe((onResponse)=>{
         resolve(onResponse)
       }, (onError)=>{
