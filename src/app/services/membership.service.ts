@@ -37,7 +37,7 @@ export class MembershipService {
     })
   }
 
-  startTrial(companyKey, customerCode, authCode, firstCharge, planCode, tier) {
+  startTrial(companyKey, customerCode, authCode, firstCharge, planCode, tier, email) {
     return new Promise((resolve, reject) => {
       console.log(`${companyKey} ${customerCode} ${authCode} ${firstCharge} ${planCode} ${tier} `)
       this.http.post(FUNCTIONS_HOST + 'startTrial', {
@@ -46,7 +46,8 @@ export class MembershipService {
         firstCharge: firstCharge,
         authCode: authCode,
         planCode: planCode,
-        tier: tier
+        tier: tier,
+        email: email
       }).pipe(take(1)).subscribe((onResponse) => {
         resolve(onResponse)
       }, onError => {
@@ -237,7 +238,7 @@ export class MembershipService {
     });
   }
 
-  upgradeOrDowngrade(chosenTier, isDowngrade, price, companyKey, nextPaymentDate, cusCode, authCode, emailToken, email, planCode){
+  upgradeOrDowngrade(chosenTier, isDowngrade, price, companyKey, nextPaymentDate, cusCode, authCode, emailToken, email, planCode, subCode){
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST+'upgradeSubscription', {
         price: price,
@@ -249,7 +250,8 @@ export class MembershipService {
         planCode: planCode,
         emailToken: emailToken,
         tier: chosenTier,
-        email: email
+        email: email,
+        subCode: subCode
       }).subscribe((onResponse)=>{
         resolve(onResponse)
       }, (onError)=>{

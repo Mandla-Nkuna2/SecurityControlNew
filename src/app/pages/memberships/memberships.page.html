@@ -38,12 +38,12 @@
         <ion-button expand="block" *ngIf="accessType === 'Basic'">
           Current Plan
         </ion-button>
-        <ion-button (click)="onSelect('Basic')" expand="block" *ngIf="accessType === ''" id="selected">
+        <ion-button (click)="onSelect('Basic')" expand="block" id="selected"> 
           Select
         </ion-button>
-        <ion-button expand="block" *ngIf="accessType !== 'Basic' && accessType !== ''">
+        <!-- *ngIf="accessType === ''" <ion-button expand="block" *ngIf="accessType !== 'Basic' && accessType !== ''">
           Unavailable
-        </ion-button>
+        </ion-button> -->
       </ion-col>
       <ion-col sizeXs="12" sizeSm="12" sizeMd="2.1" sizeLg="2.1" sizeXl="2.1" offsetXs="0" offsetSm="0.25"
         offsetMd="0.25" offsetLg="0.25" offsetXl="0.25" class="ion-text-center">

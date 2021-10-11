@@ -370,6 +370,10 @@ export class MenuPage implements OnInit {
     this.formsService.checkForUpdates(user.companyId);
   }
 
+  onClick(){
+    this.router.navigate(['memberships'])
+  }
+
 
   getSalesCount(user) {
     this.salesCountSub = this.chatService.getSalesCount(user).subscribe((res: any) => {

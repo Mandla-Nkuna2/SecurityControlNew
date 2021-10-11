@@ -61,7 +61,7 @@ exports.startTrial = functions.https.onRequest((request, response) => {
     admin.firestore().collection('trials').doc(body.companyKey).set({
       companyKey: body.companyKey, customerCode: body.customerCode, firstChargeAmount: body.firstCharge,
       authCode: body.authCode, planCode: body.planCode, trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-      tier: body.tier
+      tier: body.tier, email: body.email
     }).then(() => {
       admin.firestore().collection('companies').doc(body.companyKey).update({
         access: true, accessType: body.tier
@@ -130,26 +130,42 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
   return cors(request, response, ()=>{
     let body = request.body, price = body.price, isDowngrade = body.isDowngrade,
-    diff = moment().diff(moment(body.nextPaymentDate), 'days'), discount=0;
+    diff = moment(body.nextPaymentDate).diff(moment(), 'days'), discount=0;
+    functions.logger.debug("body")
+    functions.logger.debug(body)
+    functions.logger.debug("date")
+    functions.logger.debug(body.nextPaymentDate)
     if(diff>0) {
+      functions.logger.debug("diff is bigger than 0")
+      functions.logger.debug(diff)
       discount = (price/30)*diff;
-      return admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
+      functions.logger.debug(discount)
+      functions.logger.debug("price")
+      functions.logger.debug(price)
+      admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
         discountedCharge: isDowngrade ? price + discount : price - discount,companyKey: body.companyKey,
         nextPaymentDate: body.nextPaymentDate, tier: body.tier,
         customerCode: body.customerCode, email: body.email, authCode: body.authCode,
-        planCode: body.planCode, emailToken: body.emailToken
+        planCode: body.planCode, emailToken: body.emailToken, subscriptionCode: body.subCode
       }).then(()=>{
         admin.firestore().collection('companies').doc(body.companyKey).update({
           accessType: body.tier
         }).then(()=>{
+          functions.logger.debug("upgraded")
             response.status(200).send({ text: "Upgraded"})
         }).catch(onError=>functions.logger.error(onError))
       }).catch(onError=>functions.logger.error(onError))
     }else{
+      functions.logger.debug("diff is smaller")
+      functions.logger.debug(diff)
       return cancelSubscription(body.subCode, body.emailToken).then((cancellationResponse)=>{
+        functions.logger.debug("cancelled sucess")
         triggerSubscription(body.customerCode, body.authCode, body.planCode, body.price, body.email, body.companyKey, body.tier).then((subResponse)=>{
+          functions.logger.debug("subresponse")
+          functions.logger.debug(subResponse)
           if(subResponse){
             admin.firestore().collection('companies').doc(body.companyKey).update({ accessType: body.tier }).then(()=>{
+              functions.logger.debug("upgraded")
               response.status(200).send({ text: "Upgraded"})
             }).catch(onError=>functions.logger.error(onError))
           }
@@ -158,7 +174,7 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
             response.status(500).send({text: "failed to upgrade"})
           }
         }).catch((onError)=>functions.logger.error(onError))
-      })
+      }).catch((onError)=>functions.logger.error(onError))
     }
   })
 })
@@ -210,21 +226,26 @@ exports.monitorPendingUpgrades = functions.pubsub.schedule('59 23 * * *').timeZo
     if(!onFulfilled.empty){
       onFulfilled.docs.forEach((item)=>{
         let doc = item.data();
-        if(moment().isSameOrAfter(doc.nextPaymentDate)){
-          triggerSubscription(
-            doc.customerCode, doc.authCode, doc.planCode, doc.discountedCharge, 
-            doc.email, doc.companyKey, doc.tier
-            ).then((subResponse)=>{
-              if(subResponse){
-                return admin.firestore().collection('pendingUpgrades').doc(doc.companyKey).delete().then(()=>{
-                  functions.logger.info("Subscription created/upgraded for: " + doc.companyKey)
-                })
-              }else{
-                functions.logger.info("Subscription upgrade failed for: " + doc.companyKey)
-                cancelSubscription(doc.companyKey, doc.emailToken).then(()=>{
-                  functions.logger.info("Subscription cancelled: " + doc.companyKey)
-                })
-              }
+        functions.logger.info("dates")
+        functions.logger.info(moment().format("YYYY/MM/DD HH:mm:ss"))
+        functions.logger.info(moment(doc.nextPaymentDate).format("YYYY/MM/DD HH:mm:ss"))
+        if(moment().isSameOrAfter(doc.nextPaymentDate)){//should cancel then start new sub
+          cancelSubscription(doc.subscriptionCode, doc.emailToken).then(()=>{
+            triggerSubscription(
+              doc.customerCode, doc.authCode, doc.planCode, doc.discountedCharge, 
+              doc.email, doc.companyKey, doc.tier
+              ).then((subResponse)=>{
+                if(subResponse){
+                  return admin.firestore().collection('pendingUpgrades').doc(doc.companyKey).delete().then(()=>{
+                    functions.logger.info("Subscription created/upgraded for: " + doc.companyKey)
+                  }).catch((onError)=>functions.logger.error(onError))
+                }else{
+                  functions.logger.error("Subscription upgrade failed for: " + doc.companyKey)
+                  cancelSubscription(subResponse.data.subscription_code, subResponse.data.email_token).then(()=>{
+                    functions.logger.info("Subscription cancelled: " + doc.companyKey)
+                  }).catch((onError)=>functions.logger.error(onError))
+                }
+            }).catch(onError=>functions.logger.error(onError))
           }).catch(onError=>functions.logger.error(onError))
         }
       })
@@ -237,14 +258,14 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
     if (!onFulfilled.empty) {
       onFulfilled.docs.forEach((item) => {
         let doc = item.data();
-        if (doc.trialStartDate) {
-          if (moment().diff(moment(doc.trialStartDate), 'days') >= 14) {
+        if (doc.trialStartDate && !doc.trialEndDate) {
+          if (moment().diff(moment(doc.trialStartDate), 'minutes') >= 10) { //for testing
             return admin.firestore().collection('trials').doc(doc.companyKey).update({
               trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
             }).then(() => {
               return triggerSubscription(
                 doc.customerCode, doc.authCode, doc.planCode,
-                doc.firstCharge, doc.email, doc.companyKey, doc.tier
+                doc.firstChargeAmount, doc.email, doc.companyKey, doc.tier
               ).then((onResponse) => {
                 if (!onResponse) {
                   removeAccess(doc.companyKey).then(() => {
@@ -305,7 +326,7 @@ function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount
               startDate: moment().format("YYYY/MM/DD HH:mm:ss"), lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
               tier: tier, planCode: planCode, subscriptionCode: onResponse.data.data.subscription_code,
               active: true, emailToken: onResponse.data.data.email_token, lastPaymentRef: chargeResponse.data.data.reference,
-              nextPaymentDate: moment().add(1,'month').format("YYYY/MM/DD HH:mm:ss")
+              nextPaymentDate: moment().add(1,'month').format("YYYY/MM/DD HH:mm:ss"), authCode: authCode
             }).then(() => {
               functions.logger.debug(onResponse.data);
               resolve(onResponse.data)
@@ -362,7 +383,7 @@ exports.cancelSubscription = functions.https.onRequest((request, response)=>{
   })
 })
 
-function cancelSubscription(code, emailToken) {
+function cancelSubscription(code, emailToken, companyKey) {
   return new Promise((resolve, reject) => {
     axios.post(`${PAYSTACK_HOST}subscription/disable`, {
       code: code, token: emailToken
