@@ -28,8 +28,6 @@ const functionsOauthClient = new auth.OAuth2(CONFIG_CLIENT_ID, CONFIG_CLIENT_SEC
 const PAYSTACK_SECRET_KEY = functions.config().paystack.secret;
 const PAYSTACK_HOST = "https://api.paystack.co/";
 let oauthTokens = null;
-const stringify = require('json-stringify-safe');
-
 
 const gmailEmail = 'support@securitycontrol.co.za';
 const gmailPassword = 'S29217352';
@@ -61,17 +59,12 @@ exports.startTrial = functions.https.onRequest((request, response) => {
   return cors(request, response, () => {
     let body = request.body;
     admin.firestore().collection('trials').doc(body.companyKey).set({
-      companyKey: body.companyKey,
-      customerCode: body.customerCode,
-      firstChargeAmount: body.firstCharge,
-      authCode: body.authCode,
-      planCode: body.planCode,
-      trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+      companyKey: body.companyKey, customerCode: body.customerCode, firstChargeAmount: body.firstCharge,
+      authCode: body.authCode, planCode: body.planCode, trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
       tier: body.tier
     }).then(() => {
       admin.firestore().collection('companies').doc(body.companyKey).update({
-        access: true,
-        accessType: body.tier
+        access: true, accessType: body.tier
       }).then(() => {
         response.status(200).send({ text: "DONE" });
       }).catch((onError) => {
@@ -136,23 +129,15 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 
 exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
   return cors(request, response, ()=>{
-    let body = request.body;
-    let price = body.price;
-    let isDowngrade = body.isDowngrade;
-    let diff = moment().diff(moment(body.nextPaymentDate), 'days');
-    let discount=0;
+    let body = request.body, price = body.price, isDowngrade = body.isDowngrade,
+    diff = moment().diff(moment(body.nextPaymentDate), 'days'), discount=0;
     if(diff>0) {
       discount = (price/30)*diff;
       return admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
-        discountedCharge: isDowngrade ? price + discount : price - discount,
-        companyKey: body.companyKey,
-        nextPaymentDate: body.nextPaymentDate,
-        tier: body.tier,
-        customerCode: body.customerCode,
-        email: body.email,
-        authCode: body.authCode,
-        planCode: body.planCode,
-        emailToken: body.emailToken
+        discountedCharge: isDowngrade ? price + discount : price - discount,companyKey: body.companyKey,
+        nextPaymentDate: body.nextPaymentDate, tier: body.tier,
+        customerCode: body.customerCode, email: body.email, authCode: body.authCode,
+        planCode: body.planCode, emailToken: body.emailToken
       }).then(()=>{
         admin.firestore().collection('companies').doc(body.companyKey).update({
           accessType: body.tier
@@ -184,9 +169,7 @@ exports.monitorSubscriptions = functions.pubsub.schedule('59 23 * * *').timeZone
         let nextPaymentDate = doc.data().nextPaymentDate;
         if(moment().diff(nextPaymentDate, 'days') >= 1){//meaning the payment has failed
           admin.firestore().collection('companies').doc(doc.companyKey).update({
-            access: false,
-            accessType: '',
-            kickedOffSubscription: true
+            access: false, accessType: '', kickedOffSubscription: true
           }).then(()=>{
             admin.firestore().collection('memberships').doc(doc.companyKey).delete().then(()=>{
               functions.logger.info("access revoked for : " + doc.companyKey)
@@ -208,10 +191,8 @@ exports.monitorPaymentEvents = functions.firestore.document('paymentEvents/{uid}
       if(!onResponse.empty){
         let doc = onResponse.docs[0].data();
         return admin.firestore().collection('memberships').doc(doc.id).update({
-          lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-          active: true,
-          lastPaymentRef: event.data.reference,
-          nextPaymentDate: moment().add(1, 'month').format("YYYY/MM/DD HH:mm:ss")
+          lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"), active: true,
+          lastPaymentRef: event.data.reference, nextPaymentDate: moment().add(1, 'month').format("YYYY/MM/DD HH:mm:ss")
         }).then(()=>{
           functions.logger.info("updated membership: "+ doc.id)
         }).catch(onError=>functions.logger.error(onError))
@@ -231,13 +212,8 @@ exports.monitorPendingUpgrades = functions.pubsub.schedule('59 23 * * *').timeZo
         let doc = item.data();
         if(moment().isSameOrAfter(doc.nextPaymentDate)){
           triggerSubscription(
-            doc.customerCode,
-            doc.authCode, 
-            doc.planCode, 
-            doc.discountedCharge, 
-            doc.email, 
-            doc.companyKey, 
-            doc.tier
+            doc.customerCode, doc.authCode, doc.planCode, doc.discountedCharge, 
+            doc.email, doc.companyKey, doc.tier
             ).then((subResponse)=>{
               if(subResponse){
                 return admin.firestore().collection('pendingUpgrades').doc(doc.companyKey).delete().then(()=>{
@@ -267,13 +243,8 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
               trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
             }).then(() => {
               return triggerSubscription(
-                doc.customerCode,
-                doc.authCode,
-                doc.planCode,
-                doc.firstCharge,
-                doc.email,
-                doc.companyKey,
-                doc.tier
+                doc.customerCode, doc.authCode, doc.planCode,
+                doc.firstCharge, doc.email, doc.companyKey, doc.tier
               ).then((onResponse) => {
                 if (!onResponse) {
                   removeAccess(doc.companyKey).then(() => {
@@ -298,8 +269,7 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
 function removeAccess(companyKey) {
   return new Promise((resolve, reject) => {
     admin.firestore().collection('companies').doc(companyKey).update({
-      access: false,
-      accessType: ''
+      access: false, accessType: ''
     }).then(() => {
       resolve("DONE")
     }).catch((onError) => {
@@ -314,9 +284,7 @@ function removeAccess(companyKey) {
 function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount, email, companyKey, tier) {
   return new Promise((resolve, reject) => {
     axios.post(PAYSTACK_HOST + 'subscription', {
-      customer: customerCode,
-      plan: planCode,
-      authorization: authCode
+      customer: customerCode, plan: planCode, authorization: authCode
     }, {
       headers: {
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
@@ -325,9 +293,7 @@ function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount
       if (onResponse.data.message == "Subscription successfully created") {
         functions.logger.log("successfulyy")
         axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
-          amount: firstChargeAmount,
-          email: email,
-          authorization_code: authCode
+          amount: firstChargeAmount, email: email, authorization_code: authCode
         }, {
           headers: {
             'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
@@ -335,17 +301,10 @@ function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount
         }).then((chargeResponse) => {
           if (chargeResponse.data.data.gateway_response == "Approved") {
             admin.firestore().collection('memberships').doc(companyKey).set({
-              companyKey: companyKey,
-              email: email,
-              customerCode: customerCode,
-              startDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-              lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-              tier: tier,
-              planCode: planCode,
-              subscriptionCode: onResponse.data.data.subscription_code,
-              active: true,
-              emailToken: onResponse.data.data.email_token,
-              lastPaymentRef: chargeResponse.data.data.reference,
+              companyKey: companyKey, email: email, customerCode: customerCode,
+              startDate: moment().format("YYYY/MM/DD HH:mm:ss"), lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
+              tier: tier, planCode: planCode, subscriptionCode: onResponse.data.data.subscription_code,
+              active: true, emailToken: onResponse.data.data.email_token, lastPaymentRef: chargeResponse.data.data.reference,
               nextPaymentDate: moment().add(1,'month').format("YYYY/MM/DD HH:mm:ss")
             }).then(() => {
               functions.logger.debug(onResponse.data);
@@ -377,13 +336,8 @@ exports.startSubscription = functions.https.onRequest((request, response) => {
   return cors(request, response, () => {
     let body = request.body;
     triggerSubscription(
-      body.customerCode,
-      body.authCode,
-      body.planCode,
-      body.firstChargeAmount,
-      body.email,
-      body.companyKey,
-      body.tier
+      body.customerCode, body.authCode, body.planCode,
+      body.firstChargeAmount, body.email, body.companyKey, body.tier
     ).then((onResponse) => {
       if (onResponse) {
         response.status(200).send({text: "DONE"})
@@ -401,7 +355,6 @@ exports.startSubscription = functions.https.onRequest((request, response) => {
 exports.cancelSubscription = functions.https.onRequest((request, response)=>{
   return cors(request, response, ()=>{
     let body= request.body;
-
     cancelSubscription(body.code, body.emailToken).then((cancellationRes)=>{
       functions.logger.info(cancellationRes)
       response.status(200).send({ text: "DONE"})
@@ -412,8 +365,7 @@ exports.cancelSubscription = functions.https.onRequest((request, response)=>{
 function cancelSubscription(code, emailToken) {
   return new Promise((resolve, reject) => {
     axios.post(`${PAYSTACK_HOST}subscription/disable`, {
-      code: code,
-      token: emailToken
+      code: code, token: emailToken
     }, {
       headers: {
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
@@ -428,9 +380,7 @@ exports.createCustomer = functions.https.onRequest((request, response) => {
   return cors(request, response, () => {
     let body = request.body;
     axios.post(PAYSTACK_HOST + 'customer', {
-      email: body.email,
-      first_name: body.firstName,
-      last_name: body.lastName
+      email: body.email, first_name: body.firstName, last_name: body.lastName
     }, {
       headers: {
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
@@ -467,9 +417,7 @@ exports.transactionWebhook = functions.https.onRequest((request, response) => {
 exports.chargeAuthorization = functions.runWith(runtimeOpts).https.onRequest((request, response) => {
   return cors(request, response, () => {
     axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
-      amount: body.amount,
-      email: body.email,
-      authorization_code: body.authCode
+      amount: body.amount, email: body.email, authorization_code: body.authCode
     }, {
       headers: {
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
@@ -498,9 +446,7 @@ exports.saveCardAuth = functions.https.onRequest((request, response) => {
 exports.initializePayment = functions.https.onRequest((request, response) => {
   return cors(request, response, () => {
     axios.post(`${PAYSTACK_HOST}transaction/initialize`, {
-      email: request.body.email,
-      amount: request.body.amount,
-      currency: request.body.currency
+      email: request.body.email, amount: request.body.amount, currency: request.body.currency
     }, {
       headers: {
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
