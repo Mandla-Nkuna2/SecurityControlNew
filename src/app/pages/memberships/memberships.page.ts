@@ -90,10 +90,9 @@ export class MembershipsPage implements OnInit {
   }
 
   upgradeOrDowngrade(chosenTier){
-    let chosenPlan = this.packages.find(x => x.title == chosenTier), isDowngrade=false;
-    if(chosenPlan.rank<chosenPlan.rank){
-      isDowngrade=false;
-    }else{
+    let chosenPlan = this.packages.find(x => x.title == chosenTier), isDowngrade=false,
+    currentPlan = this.packages.find(x => x.title == this.accessType);
+    if(chosenPlan.rank < currentPlan.rank){
       isDowngrade=true;
     }
     this.uiService.openConfirmationAlert(
