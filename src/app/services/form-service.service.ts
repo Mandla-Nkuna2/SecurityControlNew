@@ -6,7 +6,6 @@ import * as moment from 'moment';
 import { ActionSheetController } from '@ionic/angular';
 import { PdfService } from './pdf.service';
 import { UUID } from 'angular2-uuid';
-import { setInterval } from 'timers';
 @Injectable({
   providedIn: 'root'
 })
