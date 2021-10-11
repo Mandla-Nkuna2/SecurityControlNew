@@ -1,24 +1,144 @@
-<ion-header>
-  <ion-toolbar  mode="ios">
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title *ngIf="new" class="title-font">ADD USER</ion-title>
-    <ion-title *ngIf="edit" class="title-font">EDIT: {{ user.name }}</ion-title>
-    <ion-title *ngIf="view" class="title-font">VIEW: {{ user.name }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <section class="common-img-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-            <div class="md-float-material">
-              <div class="auth-box">
+  <div class="top-holder desktop flex al-center jc-between">
+    <div class="left">
+      <h1 *ngIf="!new">Edit User</h1>
+      <h1 *ngIf="new">Add New User</h1>
+    </div>
+    <div class="right path-holder">
+      <h4>Home/Users/<span>&nbsp;Users</span> </h4>
+    </div>
+  </div>
 
-                <ion-item>
+  <ion-grid class="main-grid" fixed>
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <ion-col sizeXs="12" sizeSm="12" sizeMd="10" sizeLg="10" sizeXl="10">
+        <div class="holder left">
+          <div class="the-header">
+            <h2> Users</h2>
+          </div>
+          <div class="the-content">
+            <div class="the-form">
+              <ion-row>
+
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="nameValue">User Name *</ion-label>
+                    <ion-label *ngIf="!nameValue" style="color: red !important">User Name *</ion-label>
+                    <ion-item lines="none">
+                      <ion-input [readonly]="view" [(ngModel)]="user.name"
+                        (ngModelChange)="user.name = $event.toLocaleUpperCase()">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
+
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="typeValue">User Type *</ion-label>
+                    <ion-label *ngIf="!typeValue" style="color: red !important">User Type *</ion-label>
+                    <ion-item lines="none">
+                      <ion-select interface="popover" *ngIf="new" [(ngModel)]="user.type">
+                        <ion-select-option>Account Admin</ion-select-option>
+                        <ion-select-option>Manager</ion-select-option>
+                        <ion-select-option>Fleet Manager</ion-select-option>
+                        <ion-select-option>Supervisor</ion-select-option>
+                        <ion-select-option>Response Officer</ion-select-option>
+                        <ion-select-option *ngIf="thompsons">Technician</ion-select-option>
+                      </ion-select>
+                      <ion-input *ngIf="!New" [readonly]="view" [(ngModel)]="user.type">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
+
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label>User Contact</ion-label>
+                    <ion-item lines="none">
+                      <ion-input [readonly]="view" [(ngModel)]="user.contact">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
+
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="emailValue">User Email *</ion-label>
+                    <ion-label *ngIf="!emailValue" style="color: red !important">User Email *</ion-label>
+                    <ion-item lines="none">
+                      <ion-input [readonly]="view || edit" [(ngModel)]="user.email">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
+
+                <ion-col size="12">
+                  <div class="input-item">
+                    <ion-label *ngIf="passwordValue">User Password *</ion-label>
+                    <ion-label *ngIf="!passwordValue" style="color: red !important">User Password *</ion-label>
+                    <ion-item lines="none">
+                      <ion-input [readonly]="view || edit" [(ngModel)]="user.password">
+                      </ion-input>
+                    </ion-item>
+                  </div>
+                </ion-col>
+
+                <ion-col size="12">
+
+                  <div *ngIf="!view">
+                    <ion-row style="border-top-left-radius:25px; border-top-right-radius:25px;" class="grid-header">
+                      <ion-col size="8" class="grid-header-row"></ion-col>
+                      <ion-col size="2"></ion-col>
+                    </ion-row>
+                    <ion-row class="grid-row"
+                      style="background: radial-gradient(circle at center, #201f1f 0%, #171717 100%);"
+                      *ngFor="let site of siteList | orderBy: order">
+                      <ion-col style="padding-left: 2em; color: white;" class="grid-row-item" size="8">
+                        {{site.name}}
+                      </ion-col>
+                      <ion-col class="grid-row-item" size="2">
+                        <ion-checkbox [(ngModel)]="site.selected" (click)="addToList(site)">
+                        </ion-checkbox>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+
+                  <div *ngIf="view">
+                    <ion-row style=" border-top-left-radius:25px; border-top-right-radius:25px" class="grid-header">
+                      <ion-col size="8" class="grid-header-row"></ion-col>
+                      <ion-col></ion-col>
+                    </ion-row>
+                    <ion-row *ngFor="let site of userSite | async">
+                      <ion-col class="grid-row-item" size="8">
+                        {{site.name}}
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+
+
+              </ion-row>
+              <div class="btn-holder ion-padding-top">
+                <ion-row>
+                  <ion-col sizeXs="12" sizeSm="5.75" sizeMd="5.75" sizeLg="5.75" sizeXl="5.75" offsetXs="0"
+                    offsetSm="0.5" offsetMd="0.5" offsetLg="0.5" offsetXl="0.5">
+                    <ion-button expand="block" (click)="check()">
+                      <ion-icon name="checkmark"></ion-icon>Save User
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+
+<!--
+                   <ion-item>
                   <ion-label *ngIf="nameValue" position="floating">User Name *</ion-label>
                   <ion-label *ngIf="!nameValue" position="floating" style="color: red !important">User Name *
                   </ion-label>
@@ -115,4 +235,4 @@
       <ion-icon name="checkmark"></ion-icon>Save User
     </ion-button>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

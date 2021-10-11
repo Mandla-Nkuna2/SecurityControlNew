@@ -19,6 +19,7 @@ export class MembershipsPage implements OnInit {
   enterprise = { title: '', price: '', access: [], id: '' };
   user;
   company;
+  membership;
   packages =[];
 
   constructor(
@@ -44,14 +45,17 @@ export class MembershipsPage implements OnInit {
       })
       this.storage.get('user').then(user => {
         this.user = user;
-        this.membershipService.getCompany(user.companyId).then((comp: any) => {
-          this.company = comp;
-          console.log(this.company.accessType)
-          if (comp.accessType && comp.accessType !== '') {
-            this.accessType = comp.accessType;
-          } else {
-            this.accessType = '';
-          }
+        this.membershipService.getMembershipDetails(user.companyId).then((membership)=>{
+          this.membership = membership;
+          this.membershipService.getCompany(user.companyId).then((comp: any) => {
+            this.company = comp;
+            console.log(this.company.accessType)
+            if (comp.accessType && comp.accessType !== '') {
+              this.accessType = comp.accessType;
+            } else {
+              this.accessType = '';
+            }
+          })
         })
       })
     })
@@ -70,7 +74,14 @@ export class MembershipsPage implements OnInit {
         {
           text: 'CANCEL SUBSCRIPTION',
           handler: data => {
-            this.membershipService.cancelSubscription(this.user, this.company);
+            this.uiService.showLoading("Please wait..")
+            this.membershipService.cancelSubscription(this.membership.subscriptionCode, this.membership.emailToken).then(()=>{
+              this.uiService.dismissLoading();
+              this.uiService.showToaster("Subscription Cancelled", "success", 3000)
+            }).catch((onError)=>{
+              console.log(onError)
+              this.uiService.showToaster("Something went wrong", "danger", 2000)
+            })
           }
         }
       ]
@@ -78,55 +89,84 @@ export class MembershipsPage implements OnInit {
     return alert.present();
   }
 
-  //to be refactored
+  upgradeOrDowngrade(chosenTier){
+    let chosenPlan = this.packages.find(x => x.title == chosenTier), isDowngrade=false;
+    if(chosenPlan.rank<chosenPlan.rank){
+      isDowngrade=false;
+    }else{
+      isDowngrade=true;
+    }
+    this.uiService.openConfirmationAlert(
+      `You are about to ${isDowngrade ? 'downgrade' : 'upgrade'} to the ${chosenTier} plan, are you sure?`, 'Yes', 'No'
+    ).then((confirmed) => {
+      if (confirmed) {
+        this.uiService.showLoading("Please wait ...")
+        this.membershipService.upgradeOrDowngrade(
+          chosenPlan.title, isDowngrade, chosenPlan.price, this.membership.companyKey,
+          this.membership.nextPaymentDate, this.membership.customerCode,
+          this.membership.authCode, this.membership.emailToken, this.user.email, chosenPlan.planCode
+        ).then(() => {
+          this.uiService.dismissLoading();
+          this.uiService.showToaster("Subscription changed successfully", "success", 2000)
+        }).catch((onError) => {
+          this.uiService.showToaster("Something went wrong", "danger", 2000)
+          this.uiService.dismissLoading();
+          console.log(onError)
+        })
+      }
+    })
+    
+  }
+
   onSelect(plan){
-    let chosenPlan = this.packages.find(x => x.title == plan);
-    this.uiService.openConfirmationAlert(`You are about to get the ${plan} membership which comes with a free 14-day trial, are you sure?`,"Yes", "No").then((confirmed)=>{
+    if(this.accessType){
+      return this.upgradeOrDowngrade(plan);
+    }
+    let chosenPlan = this.packages.find(x => x.title == plan)
+    this.uiService.openConfirmationAlert(`You are about to get the ${chosenPlan.title} membership which comes with a free 14-day trial, are you sure?`,"Yes", "No").then((confirmed)=>{
       if(confirmed){
         this.uiService.showLoading("Please wait...")
         this.membershipService.checkForCardAuth(this.user.key).then((cardAuth: any)=>{
           if(cardAuth){
             this.membershipService.startTrial(
-              this.user.companyId, 
-              this.user.customerCode, 
-              cardAuth.authorization_code, 
-              chosenPlan.price*100, //paystack uses cents , so * 100
-              chosenPlan.planCode, 
-              plan
+              this.user.companyId, this.user.customerCode, cardAuth.authorization_code, 
+              chosenPlan.price*100, chosenPlan.planCode, chosenPlan.title
               ).then(()=>{
-                this.uiService.dismissLoading();
-                this.navCtrl.navigateRoot('welcome');
-                this.uiService.showToaster("Subscribed successfully!", "success", 3000);
+                this.handleComplete("Subscribed successfully!","success", true)
               })
           }else{
             this.uiService.dismissLoading();
-            this.uiService.showToaster("Add a card to complete the subscription", "primary", 4000)
-            this.uiService.openPaymentModal(this.user).then(()=>{
-              this.uiService.modalDismissal().then((items)=>{
-                if(items.data.authCode){
-                  this.uiService.showLoading("Please wait...")
-                  this.membershipService.startTrial(
-                    this.user.companyId, 
-                    this.user.customerCode, 
-                    items.data.authCode,
-                    (chosenPlan.price*100) - 300, 
-                    chosenPlan.planCode, 
-                    plan
-                    ).then(()=>{
-                      this.uiService.dismissLoading();
-                      this.navCtrl.navigateRoot('welcome');
-                      this.uiService.showToaster("Subscribed successfully!", "success", 3000);
-                    })
-                }else if(items.data=="FAILED"){
-                  this.navCtrl.navigateRoot('welcome');
-                  this.uiService.showToaster("Something went wrong", "danger", 3000);
-                }
-              })
-            })
+            this.startCardProcess(chosenPlan)
           }
         })
       }
     })
+  }
+
+  startCardProcess(chosenPlan){
+    this.uiService.openPaymentModal(this.user).then(()=>{
+      this.uiService.modalDismissal().then((items)=>{
+        if(items.data.authCode){
+          this.uiService.showLoading("Please wait...")
+          this.membershipService.startTrial(
+            this.user.companyId, this.user.customerCode, items.data.authCode,
+            (chosenPlan.price*100) - 300, chosenPlan.planCode, chosenPlan.title
+            ).then(()=>{
+              this.handleComplete("Subscribed Successfully", "success", true)
+            })
+        }else if(items.data=="FAILED"){
+          this.handleComplete("Something went wrong", "danger", false)
+        }
+      })
+    })
+  }
+
+  handleComplete(msg, color, shouldDismiss){
+    if(shouldDismiss){
+      this.uiService.dismissLoading();
+    }
+    this.navCtrl.navigateRoot('welcome');
+    this.uiService.showToaster(msg, color, 3000);
   }
 
   async enterpriseContact() {

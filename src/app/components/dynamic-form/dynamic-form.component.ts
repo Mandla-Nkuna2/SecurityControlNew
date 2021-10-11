@@ -35,7 +35,7 @@ export class DynamicFormComponent implements OnInit {
   signature;
   lastIndex = 0;
   show = false;
-
+  app = false;
   constructor(
     private formBuilder: FormBuilder,
     private uiService: UiService,
@@ -52,6 +52,11 @@ export class DynamicFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (window.innerWidth > 1024) {
+      this.app = false;
+    } else {
+      this.app = true;
+    }
     this.errorHandlingService.validateInputs(this.dynamicInputs);
     this.formArray = this.formBuilder.array([]);
     this.dynamicForm = new FormGroup({

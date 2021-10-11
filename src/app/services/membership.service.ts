@@ -18,7 +18,7 @@ export class MembershipService {
     private storage: Storage
   ) { }
 
-  startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email) {
+  startMembership(companyKey, chosenTier, customerCode, planCode, authCode, email, price) {
     return new Promise((resolve, reject) => {
       this.http.post(FUNCTIONS_HOST + 'startSubscription', {
         companyKey: companyKey,
@@ -26,8 +26,9 @@ export class MembershipService {
         customerCode: customerCode,
         planCode: planCode,
         authCode: authCode,
-        email: email
-      }).pipe(take(1)).subscribe((onResponse) => {
+        email: email,
+        firstChargeAmount: price*100
+      }).pipe(take(1)).subscribe((onResponse:any) => {
         resolve(onResponse)
       }, onError => {
         console.log(onError)
@@ -55,7 +56,19 @@ export class MembershipService {
     })
   }
 
-  subToPaymentEvent(reference) {
+  getMembershipDetails(companyKey){
+    return new Promise((resolve, reject) => {
+      this.firestore.collection('memberships').doc(companyKey).ref.get().then((onFulfilled)=>{
+        if(onFulfilled.exists){
+          resolve(onFulfilled.data())
+        }else{
+          resolve(null)
+        }
+      }).catch(onError=>reject(onError))
+    })
+  }
+
+  subToPaymentEvent(reference){
     return new Promise((resolve, reject) => {
       let match = null;
       let timeout = setTimeout(() => {
@@ -197,7 +210,8 @@ export class MembershipService {
           accessType: updateData.accessType,
           access: true,
           email: user.email,
-          rep: user.name
+          rep: user.name,
+          userCount: 1
         }
         this.firestore.collection('companies').doc(company.key).set(company).then(() => {
           this.firestore.collection('default-forms').ref.get().then(forms => {
@@ -222,7 +236,35 @@ export class MembershipService {
       }
     });
   }
-  public cancelSubscription(user, company) {
 
+  upgradeOrDowngrade(chosenTier, isDowngrade, price, companyKey, nextPaymentDate, cusCode, authCode, emailToken, email, planCode){
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST+'upgradeSubscription', { 
+        price: price,
+        isDowngrade: isDowngrade,
+        nextPaymentDate: nextPaymentDate,
+        companyKey: companyKey,
+        customerCode: cusCode,
+        authCode: authCode,
+        planCode: planCode,
+        emailToken: emailToken,
+        tier: chosenTier
+      }).subscribe((onResponse)=>{
+        resolve(onResponse)
+      }, (onError)=>{
+        reject(onError)
+      })
+    })
+  }
+  
+  cancelSubscription(subCode, emailToken) {
+    return new Promise((resolve, reject) => {
+      this.http.post(FUNCTIONS_HOST+'cancelSubscription', {
+        code: subCode, 
+        emailToken: emailToken
+      }).pipe(take(1)).subscribe((response)=>{
+          resolve(response);
+      }, (onError)=>reject(onError))
+    })
   }
 }
