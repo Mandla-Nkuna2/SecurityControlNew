@@ -33,12 +33,7 @@
 
   <div class="mobile flex al-center jc-beytween add-btn-mobile">
     <ion-row>
-      <ion-col size="6">
-        <ion-button (click)="staffReport()" fill="outline" id="download">
-          Download Report
-        </ion-button>
 
-   </ion-col>
       <ion-col>
         <ion-button (click)="add()">
           Add Staff
@@ -137,4 +132,24 @@
   <div class="footer desktop">
     <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
   </div>
+  <table id="staffReport" [hidden]="true">
+    <tr>
+      <th>NAME</th>
+      <th>PSIRA NUMBER</th>
+      <th>COMPANY NUMBER</th>
+      <th>ID NO</th>
+      <th>SITE ID</th>
+      <th>LEARNERSHIP NO</th>
+      <th>LEARNERSHIP DATE</th>
+    </tr>
+    <tr *ngFor="let guard of guards | async ">
+      <td>{{guard.name}}</td>
+      <td>{{guard.AssNo}}</td>
+      <td>{{guard.CoNo}}</td>
+      <td>{{guard.id}}</td>
+      <td>{{guard.siteId}}</td>
+      <td>{{guard.leadershipNo}}</td>
+      <td>{{guard.learnershipDate}}</td>
+    </tr>
+  </table>
 </ion-content>
