@@ -10,6 +10,7 @@ import { SigniturePadComponent } from '../components/signiture-popover/signiture
 export class UiService {
   popover;
   modal;
+  searchAlert;
   constructor(
     private toastController: ToastController,
     private actionSheetController: ActionSheetController,
@@ -102,6 +103,30 @@ export class UiService {
       })
       await alert.present();
     })
+  }
+
+  async presentAlertWithSearch(){
+    this.searchAlert = await this.alertController.create({
+      header: "Search",
+      cssClass: "text-clr",
+      inputs:[{
+        name: "searchInp",
+        label: "Search Staff",
+        value:"",
+        cssClass: "text-clr"
+      }],
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel'
+      }, {
+        text: 'Search'
+      }]
+    })
+    return await this.searchAlert.present();
+  }
+
+  onSearchAlertDismiss(){
+    return this.searchAlert.onDidDismiss();
   }
 
   async openSignaturePopover(fieldName: string) {
