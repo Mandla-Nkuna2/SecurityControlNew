@@ -41,6 +41,7 @@ export class MyAccountPage implements OnInit {
   tokens = [];
   tipStatus: boolean;
   tipsChanged: boolean = false;
+  edit = false;
 
   constructor(private geolocation: Geolocation, public alertCtrl: AlertController, private camera: Camera, public actionCtrl: ActionSheetController, public loading: LoadingService, public navCtrl: NavController, private afs: AngularFirestore, private toast: ToastService, private auth: AuthenticationService, private storage: Storage, public modalCtrl: ModalController, private platform: Platform, private analyticsService: AnalyticsService) { }
 
@@ -210,7 +211,6 @@ export class MyAccountPage implements OnInit {
   }
 
   save(user) {
-    this.user.tips = user.tips;
     if (this.user.name !== '') {
       if (this.tipsChanged == true) {
         this.changeTips(user)
@@ -293,9 +293,9 @@ export class MyAccountPage implements OnInit {
             this.getSites(comp.data().key, company).then(company => {
               console.log('Got sites')
               this.getLast(comp.data().key, company).then(company => {
-              this.analytics.push(company);
+                this.analytics.push(company);
+              })
             })
-          })
           })
         })
       })
