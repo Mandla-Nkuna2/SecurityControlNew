@@ -11,6 +11,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import * as XLSX from 'xlsx';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 
 @Component({
   selector: 'app-my-account',
@@ -42,11 +43,28 @@ export class MyAccountPage implements OnInit {
   tipStatus: boolean;
   tipsChanged: boolean = false;
   edit = false;
+  versionNumber = '';
 
-  constructor(private geolocation: Geolocation, public alertCtrl: AlertController, private camera: Camera, public actionCtrl: ActionSheetController, public loading: LoadingService, public navCtrl: NavController, private afs: AngularFirestore, private toast: ToastService, private auth: AuthenticationService, private storage: Storage, public modalCtrl: ModalController, private platform: Platform, private analyticsService: AnalyticsService) { }
+  constructor(
+    private geolocation: Geolocation,
+    public alertCtrl: AlertController,
+    private camera: Camera,
+    public actionCtrl: ActionSheetController,
+    public loading: LoadingService,
+    public navCtrl: NavController,
+    private afs: AngularFirestore,
+    private toast: ToastService,
+    private auth: AuthenticationService,
+    private storage: Storage,
+    public modalCtrl: ModalController,
+    private platform: Platform,
+    private analyticsService: AnalyticsService,
+    private appVersion: AppVersion
+  ) { }
 
   ngOnInit() {
     this.storage.get('user').then((user) => {
+      this.getAppVersionNumber();
       this.user = user;
       if (user.tips === undefined) {
         this.user.tips = true;
@@ -97,7 +115,11 @@ export class MyAccountPage implements OnInit {
       this.app = false;
     }
   }
-
+  getAppVersionNumber() {
+    this.appVersion.getVersionNumber().then((num) => {
+      this.versionNumber = num;
+    })
+  }
   companyChanged(user) {
     this.companyId = "";
     this.afs.collection('companies').doc(user.companyId).ref.get().then((company: any) => {

@@ -42,6 +42,7 @@ import { pdfService2 } from './services/pdf-service2.service'
 import { NavParams } from '@ionic/angular';
 import { InAppPurchase2 } from '@ionic-native/in-app-purchase-2/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -89,7 +90,8 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     HTTP,
     pdfService2,
     NavParams,
-    AndroidPermissions
+    AndroidPermissions,
+    AppVersion
   ],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]
