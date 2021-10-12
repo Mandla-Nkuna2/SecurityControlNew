@@ -262,4 +262,64 @@ export class FormServiceService {
       this.retrieveForms(companyId);
     }, 600000)
   }
+  public saveFormRefToStorage(formName: string, inputs: DynamicInput[]) {
+    return new Promise((resolve, reject) => {
+      let form = {
+        name: formName,
+        form: inputs,
+        date: moment().format('YYYY-MM-DDTHH:mm').toString()
+      }
+      if (formName.indexOf('@') == -1) {
+        form.name = form.name + '@' + form.date
+      }
+      this.storage.get('savedForms').then((forms: any[]) => {
+        if (forms) {
+          let copy = forms.filter(x => x.name == formName)
+          if (copy.length > 0) {
+            let index = forms.indexOf(copy[0]);
+            forms[index] = form
+          }
+          else {
+            forms.push(form);
+          }
+          this.storage.set('savedForms', forms).then(() => {
+            resolve(form.name);
+          })
+        }
+        else {
+          let newForms = [form]
+          this.storage.set('savedForms', newForms).then(() => {
+            resolve(form.name);
+          })
+        }
+      })
+    })
+  }
+  public getFormRefs() {
+    return new Promise((resolve, reject) => {
+      this.storage.get('savedForms').then((forms: any[]) => {
+        if (forms) {
+          resolve(forms);
+        }
+        else {
+          reject('no saved forms');
+        }
+      })
+    })
+  }
+  public removeFormStorage(name: string) {
+    return new Promise((resolve, reject) => {
+      this.storage.remove(name).then(() => {
+        resolve('complete')
+      })
+    })
+  }
+  setFormRefStorage(forms: any[]) {
+    return new Promise((resolve, reject) => {
+      this.storage.set('savedForms', forms).then(() => {
+        resolve('complete')
+      })
+    })
+
+  }
 }

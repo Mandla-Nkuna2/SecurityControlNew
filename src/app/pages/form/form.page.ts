@@ -111,7 +111,10 @@ export class Form implements OnInit {
   saveForm(event) {
     this.loading.present('SAVING FORMS').then(() => {
       let form = event;
-      this.formsService.saveForm(this.formName, this.user.key, this.user.companyId, form).then(() => {
+      if (this.formName.indexOf('@') > -1) {
+        this.formName = this.formName.split('@')[0];
+      }
+      this.formsService.saveForm(this.formName.replace(/ +/g, ""), this.user.key, this.user.companyId, form).then(() => {
         this.addAnalytics();
         this.loading.dismiss();
       })
