@@ -309,7 +309,7 @@ export class FormServiceService {
   }
   public removeFormStorage(name: string) {
     return new Promise((resolve, reject) => {
-      this.storage.remove('name').then(() => {
+      this.storage.remove(name).then(() => {
         resolve('complete')
       })
     })
