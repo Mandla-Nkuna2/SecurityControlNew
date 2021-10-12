@@ -1,3 +1,4 @@
+import { UiService } from './../../services/ui.service';
 import { Component, OnInit } from '@angular/core';
 import { NavController, ModalController, LoadingController, AlertController, Platform } from '@ionic/angular';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
@@ -27,7 +28,7 @@ export class StaffPage implements OnInit {
   allGuards = [];
   sub;
   searchterm: string;
-  startAt = new Subject();ls
+  startAt = new Subject();
   endAt = new Subject();
   startobs = this.startAt.asObservable();
   endobs = this.endAt.asObservable();
@@ -49,7 +50,8 @@ date;
   constructor(private platform: Platform, public loadingCtrl: LoadingController, public toast: ToastService,
     public alertCtrl: AlertController, private afs: AngularFirestore, public modalCtrl: ModalController,
     public navCtrl: NavController, public loading: LoadingService, public router: Router,
-    private storage: Storage, public activatedRoute: ActivatedRoute, private analyticsService: AnalyticsService) {
+    private storage: Storage, public activatedRoute: ActivatedRoute, private analyticsService: AnalyticsService,
+    private uiService: UiService) {
   }
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -88,6 +90,12 @@ date;
       ref.where('companyId', '==', this.companyId).orderBy('name').limit(5).startAt(start).endAt(end)).valueChanges();
   }
 
+  onSearch(text: string){
+    this.startAt.next(text.toUpperCase());
+    this.endAt.next(text.toUpperCase() +"\uf8ff");
+    this.searching=true;
+  }
+
   search($event) {
     let q = $event.target.value;
     if (q !== '') {
@@ -115,6 +123,18 @@ date;
         this.loading.dismiss();
       });
     });
+  }
+
+  openSearch(){
+    this.uiService.presentAlertWithSearch().then(()=>{
+      this.uiService.onSearchAlertDismiss().then((searchData: any)=>{
+        if(!searchData.data.values.searchInp && searchData.role !== "cancel"){
+          return this.uiService.showToaster("Empty inputs not allowed!", "danger", 2000)
+        }else if(searchData.data.values.searchInp){
+          this.onSearch(searchData.data.values.searchInp);
+        }
+      })
+    })
   }
 
   async delete(guard) {
