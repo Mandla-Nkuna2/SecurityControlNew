@@ -126,7 +126,14 @@ export class DynamicFormComponent implements OnInit {
       }
     })
   }
-
+  async runCode(code: string) {
+    if (!code) {
+      return
+    }
+    else {
+      await eval(code);
+    }
+  }
   checkSlides() {
     return new Promise((resolve, reject) => {
       let newSlideIndicators = this.dynamicInputs.filter(x => x.onNewSlide);

@@ -16,6 +16,7 @@ export class DynamicInput {
   itemIsObject?: boolean;
   condition?: string;
   onNewSlide?: boolean;
+  code?: string;
   populateQuestionItems?: {
     questionKeyName: string;
     questionKeyValue: string;
