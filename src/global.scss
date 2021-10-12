@@ -44,7 +44,9 @@
 {
     flex-direction: column;
 }
-
+.text-clr{
+    color: white;
+}
 
 .al-start
 {
@@ -261,6 +263,9 @@ ion-footer {
         color: white;
     }
     .alert-sub-title.sc-ion-alert-md {
+        color: white;
+    }
+    .alert-input.text-clr {
         color: white;
     }
 
