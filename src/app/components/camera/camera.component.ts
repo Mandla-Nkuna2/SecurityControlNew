@@ -11,19 +11,19 @@ export class CameraComponent implements OnInit {
 
   @Output() imageString: EventEmitter<string>;
   @ViewChild('picture') picture: ElementRef;
-  isApp:boolean;
-  
+  isApp: boolean;
+
 
   constructor(
     private camera: Camera,
     private actionSheetController: ActionSheetController,
     private platform: Platform
-  ) { 
+  ) {
     this.imageString = new EventEmitter();
   }
 
   ngOnInit() {
-    if (document.URL.indexOf('http://localhost') === 0 || document.URL.indexOf('ionic') === 0 || document.URL.indexOf('https://localhost') === 0) {
+    if (this.platform.is('cordova')) {
       this.isApp = true;
     }
     else {
@@ -41,18 +41,18 @@ export class CameraComponent implements OnInit {
           role: 'destructive',
           icon: !this.platform.is('ios') ? 'ios-camera-outline' : null,
           handler: () => {
-            this.captureImage(false).then((imageData: string)=>{
+            this.captureImage(false).then((imageData: string) => {
               this.imageString.emit(imageData)
-            }).catch(onError=>console.log(onError));
+            }).catch(onError => console.log(onError));
           }
         },
         {
           text: 'Choose photo from Gallery',
           icon: !this.platform.is('ios') ? 'images-outline' : null,
           handler: () => {
-            this.captureImage(true).then((imageData: string)=>{
+            this.captureImage(true).then((imageData: string) => {
               this.imageString.emit(imageData)
-            }).catch(onError=>console.log(onError));
+            }).catch(onError => console.log(onError));
           }
         },
       ]
@@ -60,7 +60,7 @@ export class CameraComponent implements OnInit {
     return await actionSheet.present();
   }
 
-  selectImage(event){
+  selectImage(event) {
     const file = (event.target as HTMLInputElement).files[0];
 
     const reader = new FileReader();
@@ -72,8 +72,8 @@ export class CameraComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  captureImage(useAlbum: boolean){
-    return new Promise((resolve, reject)=>{
+  captureImage(useAlbum: boolean) {
+    return new Promise((resolve, reject) => {
       const options: CameraOptions = {
         quality: 90,
         targetWidth: 300,
@@ -86,12 +86,13 @@ export class CameraComponent implements OnInit {
         mediaType: this.camera.MediaType.PICTURE,
         ...useAlbum ? { sourceType: this.camera.PictureSourceType.SAVEDPHOTOALBUM } : {}
       };
-      this.camera.getPicture(options).then((imageData)=>{
-        resolve('data:image/jpeg;base64,'+imageData);
-      }).catch((error)=>{
+      this.camera.getPicture(options).then((imageData) => {
+        resolve('data:image/jpeg;base64,' + imageData);
+      }).catch((error) => {
         console.log(error)
         reject(error);
       })
     })
   }
+
 }
