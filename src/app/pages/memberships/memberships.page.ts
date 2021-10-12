@@ -103,7 +103,7 @@ export class MembershipsPage implements OnInit {
         this.membershipService.upgradeOrDowngrade(
           chosenPlan.title, isDowngrade, chosenPlan.price, this.membership.companyKey,
           this.membership.nextPaymentDate, this.membership.customerCode,
-          this.membership.authCode, this.membership.emailToken, this.user.email, chosenPlan.planCode
+          this.membership.authCode, this.membership.emailToken, this.user.email, chosenPlan.planCode, this.membership.subscriptionCode
         ).then(() => {
           this.uiService.dismissLoading();
           this.uiService.showToaster("Subscription changed successfully", "success", 2000)
@@ -129,7 +129,7 @@ export class MembershipsPage implements OnInit {
           if(cardAuth){
             this.membershipService.startTrial(
               this.user.companyId, this.user.customerCode, cardAuth.authorization_code, 
-              chosenPlan.price*100, chosenPlan.planCode, chosenPlan.title
+              chosenPlan.price*100, chosenPlan.planCode, chosenPlan.title, this.user.email
               ).then(()=>{
                 this.handleComplete("Subscribed successfully!","success", true)
               })
@@ -149,7 +149,7 @@ export class MembershipsPage implements OnInit {
           this.uiService.showLoading("Please wait...")
           this.membershipService.startTrial(
             this.user.companyId, this.user.customerCode, items.data.authCode,
-            (chosenPlan.price*100) - 300, chosenPlan.planCode, chosenPlan.title
+            (chosenPlan.price*100) - 300, chosenPlan.planCode, chosenPlan.title, this.user.email
             ).then(()=>{
               this.handleComplete("Subscribed Successfully", "success", true)
             })

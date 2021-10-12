@@ -61,7 +61,7 @@ exports.startTrial = functions.https.onRequest((request, response) => {
     admin.firestore().collection('trials').doc(body.companyKey).set({
       companyKey: body.companyKey, customerCode: body.customerCode, firstChargeAmount: body.firstCharge,
       authCode: body.authCode, planCode: body.planCode, trialStartDate: moment().format("YYYY/MM/DD HH:mm:ss"),
-      tier: body.tier
+      tier: body.tier, email: body.email
     }).then(() => {
       admin.firestore().collection('companies').doc(body.companyKey).update({
         access: true, accessType: body.tier
@@ -130,14 +130,15 @@ exports.noteCheck = functions.runWith(runtimeOpts).pubsub.schedule('25 8 * * *')
 exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
   return cors(request, response, ()=>{
     let body = request.body, price = body.price, isDowngrade = body.isDowngrade,
-    diff = moment().diff(moment(body.nextPaymentDate), 'days'), discount=0;
-    if(diff>0) {
+    diff = moment(body.nextPaymentDate).diff(moment(), 'days'), discount=0;
+
+    if(diff>0) {  
       discount = (price/30)*diff;
-      return admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
+      admin.firestore().collection('pendingUpgrades').doc(body.companyKey).set({
         discountedCharge: isDowngrade ? price + discount : price - discount,companyKey: body.companyKey,
         nextPaymentDate: body.nextPaymentDate, tier: body.tier,
         customerCode: body.customerCode, email: body.email, authCode: body.authCode,
-        planCode: body.planCode, emailToken: body.emailToken
+        planCode: body.planCode, emailToken: body.emailToken, subscriptionCode: body.subCode
       }).then(()=>{
         admin.firestore().collection('companies').doc(body.companyKey).update({
           accessType: body.tier
@@ -158,7 +159,7 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
             response.status(500).send({text: "failed to upgrade"})
           }
         }).catch((onError)=>functions.logger.error(onError))
-      })
+      }).catch((onError)=>functions.logger.error(onError))
     }
   })
 })
@@ -173,7 +174,6 @@ exports.monitorSubscriptions = functions.pubsub.schedule('59 23 * * *').timeZone
           }).then(()=>{
             admin.firestore().collection('memberships').doc(doc.companyKey).delete().then(()=>{
               functions.logger.info("access revoked for : " + doc.companyKey)
-              functions.logger.log("Subscription flagged")
             }).catch((onError)=>functions.logger.error(onError))
           }).catch((onError)=>functions.logger.error(onError))
         }else{
@@ -211,20 +211,22 @@ exports.monitorPendingUpgrades = functions.pubsub.schedule('59 23 * * *').timeZo
       onFulfilled.docs.forEach((item)=>{
         let doc = item.data();
         if(moment().isSameOrAfter(doc.nextPaymentDate)){
-          triggerSubscription(
-            doc.customerCode, doc.authCode, doc.planCode, doc.discountedCharge, 
-            doc.email, doc.companyKey, doc.tier
-            ).then((subResponse)=>{
-              if(subResponse){
-                return admin.firestore().collection('pendingUpgrades').doc(doc.companyKey).delete().then(()=>{
-                  functions.logger.info("Subscription created/upgraded for: " + doc.companyKey)
-                })
-              }else{
-                functions.logger.info("Subscription upgrade failed for: " + doc.companyKey)
-                cancelSubscription(doc.companyKey, doc.emailToken).then(()=>{
-                  functions.logger.info("Subscription cancelled: " + doc.companyKey)
-                })
-              }
+          cancelSubscription(doc.subscriptionCode, doc.emailToken).then(()=>{
+            triggerSubscription(
+              doc.customerCode, doc.authCode, doc.planCode, doc.discountedCharge, 
+              doc.email, doc.companyKey, doc.tier
+              ).then((subResponse)=>{
+                if(subResponse){
+                  return admin.firestore().collection('pendingUpgrades').doc(doc.companyKey).delete().then(()=>{
+                    functions.logger.info("Subscription created/upgraded for: " + doc.companyKey)
+                  }).catch((onError)=>functions.logger.error(onError))
+                }else{
+                  functions.logger.error("Subscription upgrade failed for: " + doc.companyKey)
+                  cancelSubscription(subResponse.data.subscription_code, subResponse.data.email_token).then(()=>{
+                    functions.logger.info("Subscription cancelled: " + doc.companyKey)
+                  }).catch((onError)=>functions.logger.error(onError))
+                }
+            }).catch(onError=>functions.logger.error(onError))
           }).catch(onError=>functions.logger.error(onError))
         }
       })
@@ -237,14 +239,14 @@ exports.monitorTrials = functions.pubsub.schedule('5 0 * * *').timeZone('Africa/
     if (!onFulfilled.empty) {
       onFulfilled.docs.forEach((item) => {
         let doc = item.data();
-        if (doc.trialStartDate) {
+        if (doc.trialStartDate && !doc.trialEndDate) {
           if (moment().diff(moment(doc.trialStartDate), 'days') >= 14) {
             return admin.firestore().collection('trials').doc(doc.companyKey).update({
               trialEndDate: moment().format("YYYY/MM/DD HH:mm:ss")
             }).then(() => {
               return triggerSubscription(
                 doc.customerCode, doc.authCode, doc.planCode,
-                doc.firstCharge, doc.email, doc.companyKey, doc.tier
+                doc.firstChargeAmount, doc.email, doc.companyKey, doc.tier
               ).then((onResponse) => {
                 if (!onResponse) {
                   removeAccess(doc.companyKey).then(() => {
@@ -291,7 +293,6 @@ function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount
       }
     }).then((onResponse) => {
       if (onResponse.data.message == "Subscription successfully created") {
-        functions.logger.log("successfulyy")
         axios.post(`${PAYSTACK_HOST}transaction/charge_authorization`, {
           amount: firstChargeAmount, email: email, authorization_code: authCode
         }, {
@@ -305,9 +306,8 @@ function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount
               startDate: moment().format("YYYY/MM/DD HH:mm:ss"), lastPaymentDate: moment().format("YYYY/MM/DD HH:mm:ss"),
               tier: tier, planCode: planCode, subscriptionCode: onResponse.data.data.subscription_code,
               active: true, emailToken: onResponse.data.data.email_token, lastPaymentRef: chargeResponse.data.data.reference,
-              nextPaymentDate: moment().add(1,'month').format("YYYY/MM/DD HH:mm:ss")
+              nextPaymentDate: moment().add(1,'month').format("YYYY/MM/DD HH:mm:ss"), authCode: authCode
             }).then(() => {
-              functions.logger.debug(onResponse.data);
               resolve(onResponse.data)
             }).catch((onError) => {
               functions.logger.error(onError)
@@ -316,7 +316,6 @@ function triggerSubscription(customerCode, authCode, planCode, firstChargeAmount
           }
           else {
             cancelSubscription(onResponse.data.data.subscription_code, onResponse.data.data.email_token).then((res) => {
-              functions.logger.debug(res);
               resolve(false)
             }).catch((onError) => {
               functions.logger.error(onError)
@@ -343,7 +342,6 @@ exports.startSubscription = functions.https.onRequest((request, response) => {
         response.status(200).send({text: "DONE"})
       }
       else {
-        functions.logger.error("FAILED")
         response.status(500).send({text: "Something went wrong"})
       }
     }).catch((onError) => {
@@ -356,13 +354,12 @@ exports.cancelSubscription = functions.https.onRequest((request, response)=>{
   return cors(request, response, ()=>{
     let body= request.body;
     cancelSubscription(body.code, body.emailToken).then((cancellationRes)=>{
-      functions.logger.info(cancellationRes)
       response.status(200).send({ text: "DONE"})
     }).catch((onError)=>functions.logger.error(onError))
   })
 })
 
-function cancelSubscription(code, emailToken) {
+function cancelSubscription(code, emailToken, companyKey) {
   return new Promise((resolve, reject) => {
     axios.post(`${PAYSTACK_HOST}subscription/disable`, {
       code: code, token: emailToken
@@ -403,8 +400,6 @@ exports.createCustomer = functions.https.onRequest((request, response) => {
 exports.transactionWebhook = functions.https.onRequest((request, response) => {
   let paymentEvent = request.body;
   admin.firestore().collection('paymentEvents').add(paymentEvent).then(() => {
-    functions.logger.info("event saved");
-    functions.logger.debug(paymentEvent);
     response.sendStatus(200);
   }).catch(error => {
     functions.logger.error(error);
@@ -468,7 +463,6 @@ exports.verifyTransaction = functions.runWith(runtimeOpts).https.onRequest((requ
         'Authorization': `Bearer ${PAYSTACK_SECRET_KEY}`
       }
     }).then(res => {
-      functions.logger.debug(res);
       response.send(res.data);
     }).catch(error => {
       functions.logger.error(error);
