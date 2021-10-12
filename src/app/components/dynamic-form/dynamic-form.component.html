@@ -58,7 +58,8 @@
 
           <ion-label style="white-space: initial;" position="stacked">{{ input.label }}</ion-label>
           <ion-input [type]="input.inputType" [formControlName]="lastIndex+ i" [placeholder]="input.value"
-            [readonly]="input.disabled" [inputmode]="input.inputType" [(ngModel)]="newFormObj[input.fieldName]">
+            (ionChange)="runCode(input.code)" [readonly]="input.disabled" [inputmode]="input.inputType"
+            [(ngModel)]="newFormObj[input.fieldName]">
           </ion-input>
           <ion-text *ngIf="hasErrors(i)" color="danger">
             <p>Input required</p>
