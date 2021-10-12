@@ -143,7 +143,6 @@ exports.upgradeSubscription = functions.https.onRequest((request, response)=>{
         admin.firestore().collection('companies').doc(body.companyKey).update({
           accessType: body.tier
         }).then(()=>{
-          functions.logger.debug("upgraded")
             response.status(200).send({ text: "Upgraded"})
         }).catch(onError=>functions.logger.error(onError))
       }).catch(onError=>functions.logger.error(onError))
