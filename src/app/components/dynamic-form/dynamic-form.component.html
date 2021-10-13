@@ -19,6 +19,10 @@
       *ngIf="(noOfSlides >=1 && slideIndex == noOfSlides) || (noOfSlides == 0)">
       <ion-icon name="download-outline"></ion-icon>
     </ion-button>
+    <ion-button *ngIf="slideIndex>0  && slideIndex < noOfSlides" (click)="onExit()" fill="clear">
+      <ion-icon name="close" slot="icon-only">
+      </ion-icon>
+    </ion-button>
     <ion-buttons slot="end">
       <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides && !app" (click)="nextSlide()">Next <ion-icon
           name="arrow-forward" slot="icon-only">
@@ -26,6 +30,10 @@
       </ion-button>
       <ion-button *ngIf="noOfSlides>=1 && slideIndex < noOfSlides && app" (click)="nextSlide()">
         <ion-icon name="arrow-forward" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+      <ion-button *ngIf=" slideIndex == noOfSlides" (click)="onExit()" fill="clear">
+        <ion-icon name="close" slot="icon-only">
         </ion-icon>
       </ion-button>
     </ion-buttons>

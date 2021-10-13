@@ -33,12 +33,12 @@ export class UiService {
     await toast.present();
   }
 
-  modalDismissal(): Promise<any>{
+  modalDismissal(): Promise<any> {
     return this.modal.onDidDismiss();
   }
 
-  async openPaymentModal(user){
-     this.modal = await this.modalController.create({
+  async openPaymentModal(user) {
+    this.modal = await this.modalController.create({
       component: PaymentComponent,
       componentProps: {
         user: user
@@ -47,8 +47,8 @@ export class UiService {
     return await this.modal.present();
   }
 
-  dismissModal(options?){
-    this.modalController.dismiss(options?options:null);
+  dismissModal(options?) {
+    this.modalController.dismiss(options ? options : null);
   }
 
   async openActionSheet(useAlbum: boolean) {
@@ -104,15 +104,42 @@ export class UiService {
       await alert.present();
     })
   }
-
-  async presentAlertWithSearch(){
+  async openConfirmationForm(msg, confirmBtnText?, cancelBtnText?) {
+    return new Promise(async (resolve) => {
+      const alert = await this.alertController.create({
+        message: msg,
+        buttons: [
+          {
+            text: confirmBtnText ? confirmBtnText : 'Confirm',
+            handler: () => {
+              resolve('confirm')
+            }
+          },
+          {
+            text: cancelBtnText ? cancelBtnText : 'Cancel',
+            handler: () => {
+              resolve('no')
+            }
+          },
+          {
+            text: 'Cancel',
+            handler: () => {
+              resolve('cancel')
+            }
+          }
+        ]
+      })
+      await alert.present();
+    })
+  }
+  async presentAlertWithSearch() {
     this.searchAlert = await this.alertController.create({
       header: "Search",
       cssClass: "text-clr",
-      inputs:[{
+      inputs: [{
         name: "searchInp",
         label: "Search Staff",
-        value:"",
+        value: "",
         cssClass: "text-clr"
       }],
       buttons: [{
@@ -125,7 +152,7 @@ export class UiService {
     return await this.searchAlert.present();
   }
 
-  onSearchAlertDismiss(){
+  onSearchAlertDismiss() {
     return this.searchAlert.onDidDismiss();
   }
 

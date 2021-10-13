@@ -116,7 +116,9 @@ export class Form implements OnInit {
       }
       this.formsService.saveForm(this.formName.replace(/ +/g, ""), this.user.key, this.user.companyId, form).then(() => {
         this.addAnalytics();
-        this.loading.dismiss();
+        this.loading.dismiss().then(() => {
+          this.router.navigate(['main/form-menu'])
+        })
       })
     })
   }

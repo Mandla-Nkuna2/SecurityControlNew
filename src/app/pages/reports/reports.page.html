@@ -1,150 +1,3 @@
-<!-- <ion-content>
-  <section class="common-img-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-            <div class="md-float-material">
-              <div class="auth-box">
-
-                <ion-row>
-                  <ion-col>
-                    <ion-item>
-                      <ion-label position="stacked">FORM</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="form.key" (ionChange)="getForms(form)">
-                        <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'">ACKNOWLEDGEMENT OF DEBT
-                        </ion-select-option>
-                        <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'" value="AR">
-                          AR SITE VISIT REPORT</ion-select-option>
-                        <ion-select-option>CLIENT INSTRUCTION</ion-select-option>
-                        <ion-select-option>CRIME INCIDENT REPORT</ion-select-option>
-                        <ion-select-option>DISCIPLINARY REPORT</ion-select-option>
-                        <ion-select-option>GENERAL INCIDENT REPORT</ion-select-option>
-                        <ion-select-option
-                          *ngIf="companyId !== '0qbfVjnyuKE8EAdenn3T' && companyId !== 'gC9ZUArZzn1rlIBRZHLv'"
-                          value="GEN SITE">SITE VISIT
-                          REPORT
-                        </ion-select-option>
-                        <ion-select-option>INCIDENT NOTIFICATION</ion-select-option>
-                        <ion-select-option>LEAVE APPLICATION</ion-select-option>
-                        <ion-select-option>MEETING REPORT</ion-select-option>
-                        <ion-select-option>OB ENTRY</ion-select-option>
-                        <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'" value="PNP">
-                          PNP SITE VISIT REPORT</ion-select-option>
-                        <ion-select-option>RISK ASSESSMENT</ion-select-option>
-                        <ion-select-option
-                          *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d' ||  'gC9ZUArZzn1rlIBRZHLv' "
-                          value="SITE">
-                          SITE VISIT REPORT </ion-select-option>
-                        <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'" value="TENANT VISIT">
-                          TENANT VISITS</ion-select-option>
-                        <ion-select-option>TRAINING FORM</ion-select-option>
-                        <ion-select-option>UNIFORM ORDER</ion-select-option>
-                        <ion-select-option>VEHICLE INSPECTION</ion-select-option>
-                        <ion-select-option *ngIf="companyId === 'c3141b21-338e-fe16-6dec-76480c8f4e30'">EMPLOYEE
-                          PERFORMANCE EVALUATION FORM</ion-select-option>
-                        <ion-select-option *ngIf="companyId === 'c3141b21-338e-fe16-6dec-76480c8f4e30'">NON-CONFORMANCE
-                          FORM</ion-select-option>
-                        <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'">
-                          TRANSPARENCY REPORTS</ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                  </ion-col>
-                  <ion-col>
-                    <ion-item>
-                      <ion-label position="stacked">SITE</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="site.key" (ionChange)="getForms(form)">
-                        <ion-select-option *ngFor="let site of sites | async" [value]="site.key">{{ site.name }}
-                        </ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                  </ion-col>
-                </ion-row>
-
-                <div *ngIf="formValue">
-                  <ion-grid style="font-size: 0.7em">
-                    <ion-row class="grid-header">
-                      <ion-col size="2" class="grid-header-item ion-no-padding">No.</ion-col>
-                      <ion-col class="grid-header-item ion-no-padding">FORM</ion-col>
-                      <ion-col size="3" class="grid-header-item ion-no-padding">DATE</ion-col>
-                      <ion-col size="2" class="ion-no-padding" style="line-height: 30px;">
-                        <ion-icon name="arrow-forward-circle-outline"></ion-icon>
-                      </ion-col>
-                    </ion-row>
-                    <ion-row class="grid-row" *ngFor="let report of reports | async; let i = index">
-                      <ion-col size="2" class="grid-row-item ion-no-padding ion-text-center">{{i + 1}}</ion-col>
-
-                      <ion-col size='5' *ngIf="report.report === 'Site Visit'" class="grid-row-item ion-no-padding">SITE VISIT
-                        REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'PnP Site Visit'" class="grid-row-item ion-no-padding">PNP SITE
-                        VISIT REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Site Visit Gen'" class="grid-row-item ion-no-padding">SITE
-                        VISIT
-                        REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Training Form'" class="grid-row-item ion-no-padding">TRAINING
-                        FORM</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Uniform Order'" class="grid-row-item ion-no-padding">UNIFORM
-                        ORDER</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Vehicle Inspection'" class="grid-row-item ion-no-padding">
-                        VEHICLE
-                        INSPECTION</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Crime Incident Report'" class="grid-row-item ion-no-padding">
-                        CRIME INCIDENT REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Incident Notification'" class="grid-row-item ion-no-padding">
-                        INCIDENT NOTIFICATION</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Risk Assessment'" class="grid-row-item ion-no-padding">RISK
-                        ASSESSMENT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Incident Report'" class="grid-row-item ion-no-padding">INCIDENT
-                        REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Leave Application'" class="grid-row-item ion-no-padding">LEAVE
-                        APPLICATION</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Disciplinary Report'" class="grid-row-item ion-no-padding">
-                        DISCIPLINARY REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Client Meeting'" class="grid-row-item ion-no-padding">CLIENT
-                        MEETING</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Client Instruction'" class="grid-row-item ion-no-padding">
-                        CLIENT
-                        INSTRUCTION</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'OB Entry'" class="grid-row-item ion-no-padding">OB ENTRY
-                      </ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Tenant Survey'" class="grid-row-item ion-no-padding">TENANT
-                        SURVEY</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Transparency Report'" class="grid-row-item ion-no-padding">
-                        TRANSPARENCY REPORT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'AOD'" class="grid-row-item ion-no-padding">
-                        ACKNOWLEDGEMENT OF DEBT</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'Employee form'" class="grid-row-item ion-no-padding">
-                        EMPLOYEE PERFORMANCE EVALUATION FORM</ion-col>
-                      <ion-col size='5' *ngIf="report.report === 'NCR'" class="grid-row-item ion-no-padding">
-                        NON-CONFORMANCE REPORT</ion-col>
-
-                      <ion-col size="3" class="grid-row-item ion-no-padding">{{report.date}}</ion-col>
-                      <ion-col size="2" class="last-col ion-no-padding ion-text-center">
-                        <ion-button fill="clear" (click)="view(report)" class="ion-no-padding">
-                          <ion-icon name="arrow-forward-circle-outline" slot="icon-only"></ion-icon>
-                        </ion-button>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </div>
-
-                <div *ngIf="!formValue" style="color: #666666; text-align: center; margin-top: 15%; font-size: 2em;">
-                  No Forms Available...
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</ion-content> -->
-
-
-
-<!-- /////////////////////////////// staff side -->
 <ion-header class="ion-no-border mobile">
   <ion-toolbar class="mbar">
     <ion-buttons slot="start">
@@ -178,199 +31,44 @@
           </div>
 
 
-          <ion-row  class="headers">
+          <ion-row class="headers">
             <ion-col>
               <ion-item>
                 <ion-label position="stacked">FORM</ion-label>
-                <ion-select  interface="popover" [(ngModel)]="form.key" (ionChange)="getForms(form)">
-                  <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'">ACKNOWLEDGEMENT OF DEBT
+                <ion-select interface="popover" (ionChange)="getForms()" [(ngModel)]="selectedForm">
+                  <ion-select-option *ngFor="let form of forms" [value]="form" (click)="getForms(form)">
+                    {{form.name }}
                   </ion-select-option>
-                  <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'" value="AR">
-                    AR SITE VISIT REPORT</ion-select-option>
-                  <ion-select-option>CLIENT INSTRUCTION</ion-select-option>
-                  <ion-select-option>CRIME INCIDENT REPORT</ion-select-option>
-                  <ion-select-option>DISCIPLINARY REPORT</ion-select-option>
-                  <ion-select-option>GENERAL INCIDENT REPORT</ion-select-option>
-                  <ion-select-option
-                    *ngIf="companyId !== '0qbfVjnyuKE8EAdenn3T' && companyId !== 'gC9ZUArZzn1rlIBRZHLv'"
-                    value="GEN SITE">SITE VISIT
-                    REPORT
-                  </ion-select-option>
-                  <ion-select-option>INCIDENT NOTIFICATION</ion-select-option>
-                  <ion-select-option>LEAVE APPLICATION</ion-select-option>
-                  <ion-select-option>MEETING REPORT</ion-select-option>
-                  <ion-select-option>OB ENTRY</ion-select-option>
-                  <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'" value="PNP">
-                    PNP SITE VISIT REPORT</ion-select-option>
-                  <ion-select-option>RISK ASSESSMENT</ion-select-option>
-                  <ion-select-option
-                    *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T' || '62370402-ecae-a16e-6f5a-5fe7c4d5532d' ||  'gC9ZUArZzn1rlIBRZHLv' "
-                    value="SITE">
-                    SITE VISIT REPORT </ion-select-option>
-                  <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'" value="TENANT VISIT">
-                    TENANT VISITS</ion-select-option>
-                  <ion-select-option>TRAINING FORM</ion-select-option>
-                  <ion-select-option>UNIFORM ORDER</ion-select-option>
-                  <ion-select-option>VEHICLE INSPECTION</ion-select-option>
-                  <ion-select-option *ngIf="companyId === 'c3141b21-338e-fe16-6dec-76480c8f4e30'">EMPLOYEE
-                    PERFORMANCE EVALUATION FORM</ion-select-option>
-                  <ion-select-option *ngIf="companyId === 'c3141b21-338e-fe16-6dec-76480c8f4e30'">NON-CONFORMANCE
-                    FORM</ion-select-option>
-                  <ion-select-option *ngIf="companyId === '0qbfVjnyuKE8EAdenn3T'">
-                    TRANSPARENCY REPORTS</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
             <ion-col>
               <ion-item>
                 <ion-label position="stacked">SITE</ion-label>
-                <ion-select interface="popover" [(ngModel)]="site.key" (ionChange)="getForms(form)">
-                  <ion-select-option *ngFor="let site of sites | async" [value]="site.key">{{ site.name }}
+                <ion-select interface="popover" [(ngModel)]="site['key']" (ionChange)="filterForms()"
+                  placeholder="All Sites">
+                  <ion-select-option *ngFor="let site of sites " [value]="site.key">{{ site.name }}
+                  </ion-select-option>
+                  <ion-select-option value="All">All Sites
                   </ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
           </ion-row>
 
-          <!-- <ion-row class="headers">
-            <ion-col sizeXs="5" sizeSm="7" sizeMd="7" sizeLg="8" sizeXl="8" class="dates">
-              <h4>From</h4>
-            </ion-col>
-            <ion-col sizeXs="7" sizeSm="5" sizeMd="5" sizeLg="4" sizeXl="4">
-              <h4>Site</h4>
-            </ion-col>
-          </ion-row> -->
-
           <ion-grid style="font-size: 0.7em">
-            <!-- <ion-row class="grid-header">
-              <ion-col size="2" class="grid-header-item ion-no-padding">No.</ion-col>
-              <ion-col class="grid-header-item ion-no-padding">FORM</ion-col>
-              <ion-col size="3" class="grid-header-item ion-no-padding">DATE</ion-col>
-              <ion-col size="2" class="ion-no-padding" style="line-height: 30px;">
-                <ion-icon name="arrow-forward-circle-outline"></ion-icon>
-              </ion-col>
-            </ion-row> -->
-            <ion-row class="grid-row" *ngFor="let report of reports | async; let i = index">
-              <ion-col size="1" class="grid-row-item ion-no-padding ion-text-center">{{i + 1}}</ion-col>
-              <ion-col *ngIf="report.report === 'site-temperature' " class="grid-row-item ion-no-padding"> SITE
-                TEMPERATURE </ion-col>
-              <ion-col *ngIf="report.report === 'injury' " class="grid-row-item ion-no-padding"> INJURY
-              </ion-col>
-              <ion-col *ngIf="report.report === 'resignation' " class="grid-row-item ion-no-padding">
-                RESSIGNATION </ion-col>
-              <ion-col *ngIf="report.report === 'extinguisher-checklist' " class="grid-row-item ion-no-padding">
-                EXTINGUISHER CHECKLIST </ion-col>
-              <ion-col *ngIf="report.report === 'pay-query' " class="grid-row-item ion-no-padding"> PAY-QUERY
-              </ion-col>
-              <ion-col *ngIf="report.report === 'polygraph' " class="grid-row-item ion-no-padding"> PLOYGRAPH
-              </ion-col>
-              <ion-col *ngIf="report.report === 'fire' " class="grid-row-item ion-no-padding"> FIRE REPORT
-              </ion-col>
-              <ion-col *ngIf="report.report === 'theft' " class="grid-row-item ion-no-padding"> THEFT REPORT
-              </ion-col>
-              <ion-col *ngIf="report.report === 'gas-explosion' " class="grid-row-item ion-no-padding"> GAS
-                EXPLOSION </ion-col>
-              <ion-col *ngIf="report.report === 'performance-appraisal' " class="grid-row-item ion-no-padding">
-                PERFORMANCE APPRAISAL </ion-col>
-              <ion-col *ngIf="report.report === 'grievance' " class="grid-row-item ion-no-padding"> GRIEVANCE
-                FORM </ion-col>
-              <ion-col *ngIf="report.report === 'fence-inspection' " class="grid-row-item ion-no-padding"> FENCE
-                INSPECTION </ion-col>
-              <ion-col *ngIf="report.report === 'appeal' " class="grid-row-item ion-no-padding"> APPEAL FORM
-              </ion-col>
-              <ion-col size='5' size='5' *ngIf="report.report === 'Site Visit'" class="grid-row-item ion-no-padding">SITE VISIT
-                REPORT</ion-col>
-              <ion-col size='5' size='5' *ngIf="report.report === 'PnP Site Visit'" class="grid-row-item ion-no-padding">PNP SITE
-                VISIT REPORT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Site Visit Gen'" class="grid-row-item ion-no-padding">SITE
-                VISIT
-                REPORT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Training Form'" class="grid-row-item ion-no-padding">TRAINING
-                FORM</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Uniform Order'" class="grid-row-item ion-no-padding">UNIFORM
-                ORDER</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Vehicle Inspection'" class="grid-row-item ion-no-padding">
-                VEHICLE
-                INSPECTION</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Crime Incident Report'" class="grid-row-item ion-no-padding">
-                CRIME INCIDENT REPORT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Incident Notification'" class="grid-row-item ion-no-padding">
-                INCIDENT NOTIFICATION</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Risk Assessment'" class="grid-row-item ion-no-padding">RISK
-                ASSESSMENT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Incident Report'" class="grid-row-item ion-no-padding">INCIDENT
-                REPORT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Leave Application'" class="grid-row-item ion-no-padding">LEAVE
-                APPLICATION</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Disciplinary Report'" class="grid-row-item ion-no-padding">
-                DISCIPLINARY REPORT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Client Meeting'" class="grid-row-item ion-no-padding">CLIENT
-                MEETING</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Client Instruction'" class="grid-row-item ion-no-padding">
-                CLIENT
-                INSTRUCTION</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'OB Entry'" class="grid-row-item ion-no-padding">OB ENTRY
-              </ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Tenant Survey'" class="grid-row-item ion-no-padding">TENANT
-                SURVEY</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Transparency Report'" class="grid-row-item ion-no-padding">
-                TRANSPARENCY REPORT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'AOD'" class="grid-row-item ion-no-padding">
-                ACKNOWLEDGEMENT OF DEBT</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'Employee form'" class="grid-row-item ion-no-padding">
-                EMPLOYEE PERFORMANCE EVALUATION FORM</ion-col>
-              <ion-col size='5' *ngIf="report.report === 'NCR'" class="grid-row-item ion-no-padding">
-                NON-CONFORMANCE REPORT</ion-col>
-
+            <ion-row *ngIf="noReports">
+              <h3>No Reports available</h3>
+            </ion-row>
+            <ion-row class="grid-row" *ngFor="let report of reportsFiltererd ; let i = index">
               <ion-col size="3" class="grid-row-item ion-no-padding">{{report.date}}</ion-col>
               <ion-col size="1" class="grid-row-item ion-no-padding ion-text-center">
-                <ion-button fill="clear" (click)="view(report)" class="ion-no-padding">
-                  <ion-icon name="arrow-forward-circle-outline" slot="icon-only"></ion-icon>
+                <ion-button fill="clear" class="ion-no-padding" (click)="download(report)">
+                  <ion-icon name="download-outline" slot="icon-only"></ion-icon>
                 </ion-button>
               </ion-col>
             </ion-row>
           </ion-grid>
-
-
-          <!-- <ion-row class="headers">
-            <ion-col sizeXs="5" sizeSm="7" sizeMd="7" sizeLg="8" sizeXl="8" class="dates">
-              <h4>From</h4>
-            </ion-col>
-            <ion-col sizeXs="7" sizeSm="5" sizeMd="5" sizeLg="4" sizeXl="4">
-              <h4>Site</h4>
-            </ion-col>
-          </ion-row> -->
-
-          <!-- <ion-list style="max-width: 800px; margin: 0 auto;" *ngIf="searching"> -->
-          <!-- <div *ngIf="searching">
-            <ion-row class="values" style="width: 100% !important;" *ngFor="let employee of employeeValues">
-              <ion-col sizeXs="5" sizeSm="7" sizeMd="7" sizeLg="8" sizeXl="8" class="dates">
-                <h5>namemklmk</h5>
-              </ion-col>
-              <ion-col sizeXs="7" sizeSm="5" sizeMd="5" sizeLg="4" sizeXl="4" class="flex al-center jc-between">
-                <div  class="btn ion-activatable ripple-parent flex al-center">
-                  <ion-icon name="eye"></ion-icon>
-                  <h5>&nbsp;&nbsp;View</h5>
-                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
-                </div>
-
-                <div class="btn ion-activatable ripple-parent flex al-center">
-                  <ion-icon src="assets/imgs/editsm.svg"></ion-icon>
-                  <h5>&nbsp;&nbsp;Edit</h5>
-                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
-                </div>
-
-                <div  class="btn ion-activatable ripple-parent flex al-center" id="delete">
-                  <ion-icon src="assets/imgs/smdelete.svg"></ion-icon>
-                  <h5>&nbsp;&nbsp;Delete</h5>
-                  <ion-ripple-effect type="bounded"></ion-ripple-effect>
-                </div>
-              </ion-col>
-            </ion-row>
-          </div> -->
-
-
-
         </div>
       </ion-col>
     </ion-row>
