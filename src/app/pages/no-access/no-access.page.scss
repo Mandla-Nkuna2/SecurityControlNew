@@ -10,12 +10,19 @@ h2 {
     img
     {
         height: 100px;
+        width: auto;
     }
 
     h1
     {
         color: #ffffff;
         font-family: 'SBold';
-        font-size: 28px;
+        font-size: 20px;
+        margin-bottom: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
     }
+}
+ion-button {
+    margin-bottom: 20px;
 }
