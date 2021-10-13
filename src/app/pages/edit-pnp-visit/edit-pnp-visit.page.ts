@@ -147,12 +147,7 @@ export class EditPnpVisitPage implements OnInit {
       this.searchSites(id);
       this.visitSlider.lockSwipes(true);
       this.visitSlider.lockSwipeToNext(true);
-      if ((!document.URL.startsWith('http') || document.URL.startsWith('http://localhost:8080'))) {
-        this.isApp = true;
-      }
-      else {
-        this.isApp = false;
-      }
+      this.isApp = this.platform.platforms().includes("cordova")
     });
   }
 
