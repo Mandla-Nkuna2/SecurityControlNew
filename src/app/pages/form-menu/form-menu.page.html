@@ -32,7 +32,10 @@
                         class="home-button">
                         <div>
                           <div style="width: 100%; text-align: center;">
-                            <ion-icon [name]="form.icon" class="homeLogo"></ion-icon>
+                            <ion-icon *ngIf="!form.image" [name]="form.icon" class="homeLogo"></ion-icon>
+                            <ion-thumbnail *ngIf="form.image">
+                              <img [src]="form.image">
+                            </ion-thumbnail>
                           </div>
                           <div style="white-space: initial; text-align: center;">
                             <ion-text>{{form.name}}</ion-text>

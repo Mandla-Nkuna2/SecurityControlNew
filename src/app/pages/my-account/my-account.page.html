@@ -98,7 +98,7 @@
                 <ion-button id="sync" (click)="sync()" *ngIf="!edit">
                   Sync Account
                 </ion-button>
-                <ion-button id="sync" *ngIf="edit" (click)="save(); edit = false">
+                <ion-button id="sync" *ngIf="edit" (click)="save(user); edit = false">
                   Save
                 </ion-button>
                 <ion-button (click)="logout()">
@@ -126,7 +126,7 @@
   <div class="mobile">
     <div class="mobile-content">
       <div class="profile-holder ion-text-center ">
-        <ion-avatar>
+        <ion-avatar style="margin-bottom: 10%;">
           <div class="circle" *ngIf="app" (click)="takePhoto()">
             <img *ngIf="user.photo" [src]="user.photo">
             <img *ngIf="!user.photo" src="assets/imgs/user.jpg">
@@ -177,14 +177,14 @@
         </div>
 
       </div>
-      <ion-row class="mobile-btn-holder ion-padding-top">
-        <ion-button expand="block" id="syncc" style="text-align: center;" *ngIf="!edit" (click)="edit=true">
+      <div style="width: 100%;text-align: center;">
+        <ion-button expand="block" id="syncc" *ngIf="!edit" (click)="edit=true">
           Edit
         </ion-button>
-        <ion-button expand="block" id="syncc" style="text-align: center;" *ngIf="edit" (click)="edit=false">
+        <ion-button expand="block" id="syncc" *ngIf="edit" (click)="edit=false">
           Cancel
         </ion-button>
-      </ion-row>
+      </div>
 
       <ion-row class="mobile-btn-holder ion-padding-top">
         <ion-col size="6">
@@ -193,7 +193,7 @@
           </ion-button>
         </ion-col>
         <ion-col size="6">
-          <ion-button expand="block" id="savee" (click)="save(); edit=false">
+          <ion-button expand="block" id="savee" (click)="save(user); edit=false">
             Save
           </ion-button>
         </ion-col>

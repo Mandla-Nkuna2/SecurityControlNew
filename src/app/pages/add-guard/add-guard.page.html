@@ -9,8 +9,8 @@
 <ion-content>
   <div class="top-holder desktop flex al-center jc-between">
     <div class="left">
-      <h1 *ngIf="!new">Edit Staff</h1>
-      <h1 *ngIf="new">Add Staff</h1>
+      <!-- <h1 *ngIf="!new">Edit Staff</h1>
+      <h1 *ngIf="new">Add Staff</h1> -->
     </div>
     <div class="right path-holder">
       <h4>Home/Staff/Add Staff<span>&nbsp;Staff</span> </h4>
@@ -113,8 +113,8 @@
                     </ion-item>
                     <ion-label *ngIf="id === 'edit'">Change to:</ion-label>
                     <ion-item lines="none">
-                      <ionic-selectable placeHolder="Site" style="text-align: left;" [items]="sites" (onChange)="getSite($event)"
-                        itemValueField="name" itemTextField="name" [canSearch]="true">
+                      <ionic-selectable placeHolder="Site" style="text-align: left;" [items]="sites"
+                        (onChange)="getSite($event)" itemValueField="name" itemTextField="name" [canSearch]="true">
                       </ionic-selectable>
                     </ion-item>
                   </div>

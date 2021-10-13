@@ -45,7 +45,7 @@
                         <ion-select-option>Response Officer</ion-select-option>
                         <ion-select-option *ngIf="thompsons">Technician</ion-select-option>
                       </ion-select>
-                      <ion-input *ngIf="!New" [readonly]="view" [(ngModel)]="user.type">
+                      <ion-input *ngIf="!new" [readonly]="view" [(ngModel)]="user.type">
                       </ion-input>
                     </ion-item>
                   </div>
@@ -184,9 +184,9 @@
                   </ion-input>
                 </ion-item>
 
-              
-      
-      
+
+
+
 
                 <div *ngIf="!view">
                   <ion-row style="border-top-left-radius:25px; border-top-right-radius:25px;" class="grid-header">
@@ -202,7 +202,7 @@
                         <ion-checkbox [(ngModel)]="site.selected" (click)="addToList(site)">
                         </ion-checkbox>
                       </ion-col>
-                    
+
                     </ion-row>
 
                 </div>
