@@ -61,9 +61,7 @@ export class pdfService2 {
   }
 
   public downloadPdf(name: string, formTemplate: DynamicInput[], newFormObj: any) {
-    alert('wtf')
     this.composePDF(name, formTemplate, newFormObj).then((docDefinition: any) => {
-      alert('wtf2')
       this.generatePDF(docDefinition)
     });
   }
@@ -77,10 +75,8 @@ export class pdfService2 {
       console.log(formTemplate)
       console.log(lastTwo)
       console.log(lastTwo.filter(x => x.controlType == 'signaturePad'))
-      alert('before if')
 
       if (lastTwo.filter(x => x.controlType == 'signaturePad').length > 0) {
-        alert('in if')
 
         lastTwo.filter(x => x.controlType == 'signaturePad').forEach((signpad) => {
           let signitureDrawing = {
@@ -155,14 +151,11 @@ export class pdfService2 {
           }
           extraBodies.push(table);
         }
-        alert('before prom')
 
         const prom = new Promise((resolve, reject) => {
           this.storage.get('user').then((user: any) => {
-            alert('0')
 
             if (!newFormObj.site) {
-              alert('0')
 
               resolve([
                 [{ text: '', style: 'headLabel' }, { text: '', alignment: 'center' },
@@ -173,7 +166,6 @@ export class pdfService2 {
             }
             else {
               this.formService.getDocument('sites', newFormObj.site).then((site: any) => {
-                alert('0')
 
                 resolve(
                   [
@@ -189,12 +181,9 @@ export class pdfService2 {
 
         })
         prom.then((data: any) => {
-          alert('1')
           this.checkImage().then((image: string) => {
-            alert('2')
 
             this.populatePdf(name, data, image, extraBodies, signitures).then((docDefinition: any) => {
-              alert('3')
 
               resolveAll(docDefinition);
             })
