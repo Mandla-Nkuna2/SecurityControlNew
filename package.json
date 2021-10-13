@@ -47,6 +47,7 @@
     "axios": "^0.21.4",
     "cordova-plugin-android-permissions": "1.1.2",
     "cordova-plugin-app-version": "0.1.12",
+    "cordova-plugin-file-opener2": "3.0.5",
     "cordova-plugin-geolocation": "^4.1.0",
     "firebase": "^7.16.0",
     "firebase-admin": "^9.4.2",
@@ -155,7 +156,10 @@
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
       },
-      "cordova-plugin-app-version": {}
+      "cordova-plugin-app-version": {},
+      "cordova-plugin-file-opener2": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
     },
     "platforms": [
       "ios",

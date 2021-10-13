@@ -36,7 +36,7 @@
               <ion-item>
                 <ion-label position="stacked">FORM</ion-label>
                 <ion-select interface="popover" (ionChange)="getForms()" [(ngModel)]="selectedForm">
-                  <ion-select-option *ngFor="let form of forms" [value]="form" (click)="getForms(form)">
+                  <ion-select-option *ngFor="let form of forms" [value]="form" (click)="getForms()">
                     {{form.name }}
                   </ion-select-option>
                 </ion-select>

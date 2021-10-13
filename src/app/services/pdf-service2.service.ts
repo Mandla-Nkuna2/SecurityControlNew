@@ -32,11 +32,18 @@ export class pdfService2 {
 
   async generatePDF(docDefinition) {
     try {
+      console.log('im in generate');
       this.pdfObj = await pdfMake.createPdf(docDefinition);
       if (this.platform.is('cordova')) {
+        console.log('im in generate');
+
         this.pdfObj.getBuffer((buffer) => {
+          console.log('im in generate');
+
           var blob = new Blob([buffer], { type: 'application/pdf' });
           this.file.writeFile(this.file.dataDirectory, 'report.pdf', blob, { replace: true }).then(fileEntry => {
+            console.log('im in geneadwaawddrate');
+
             this.fileopener.open(this.file.dataDirectory + 'report.pdf', 'application/pdf');
 
           }).catch(err => {
@@ -54,7 +61,9 @@ export class pdfService2 {
   }
 
   public downloadPdf(name: string, formTemplate: DynamicInput[], newFormObj: any) {
+    alert('wtf')
     this.composePDF(name, formTemplate, newFormObj).then((docDefinition: any) => {
+      alert('wtf2')
       this.generatePDF(docDefinition)
     });
   }
@@ -65,7 +74,14 @@ export class pdfService2 {
       let signitures = [];
       let formTemplateCopy = Array.from(formTemplate);
       let lastTwo = formTemplateCopy.splice(-2, 2);
+      console.log(formTemplate)
+      console.log(lastTwo)
+      console.log(lastTwo.filter(x => x.controlType == 'signaturePad'))
+      alert('before if')
+
       if (lastTwo.filter(x => x.controlType == 'signaturePad').length > 0) {
+        alert('in if')
+
         lastTwo.filter(x => x.controlType == 'signaturePad').forEach((signpad) => {
           let signitureDrawing = {
             style: 'table3',
@@ -99,6 +115,7 @@ export class pdfService2 {
           formTemplate.splice(formTemplate.indexOf(signpad), 1);
 
         })
+      }
         let blockNumber = 0;
         let pageLimit = 20;
         formTemplate.forEach(question => {
@@ -138,10 +155,15 @@ export class pdfService2 {
           }
           extraBodies.push(table);
         }
+        alert('before prom')
 
         const prom = new Promise((resolve, reject) => {
           this.storage.get('user').then((user: any) => {
+            alert('0')
+
             if (!newFormObj.site) {
+              alert('0')
+
               resolve([
                 [{ text: '', style: 'headLabel' }, { text: '', alignment: 'center' },
                 { text: 'USER:', style: 'headLabel' }, { text: user.name, alignment: 'center' }],
@@ -151,6 +173,8 @@ export class pdfService2 {
             }
             else {
               this.formService.getDocument('sites', newFormObj.site).then((site: any) => {
+                alert('0')
+
                 resolve(
                   [
                     [{ text: 'SITE:', style: 'headLabel' }, { text: site.name, alignment: 'center' },
@@ -165,13 +189,19 @@ export class pdfService2 {
 
         })
         prom.then((data: any) => {
+          alert('1')
           this.checkImage().then((image: string) => {
+            alert('2')
+
             this.populatePdf(name, data, image, extraBodies, signitures).then((docDefinition: any) => {
+              alert('3')
+
               resolveAll(docDefinition);
             })
           })
         })
-      }
+
+
     })
   }
 

@@ -7,6 +7,7 @@ import { DynamicInput } from '../../models/dynamic-input.model';
 import { FormServiceService } from '../../services/form-service.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { ToastService } from 'src/app/services/toast.service';
 @Component({
   selector: 'app-form',
   templateUrl: './form.page.html',
@@ -38,7 +39,8 @@ export class Form implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private membershipService: MembershipService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private toast: ToastService
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -118,6 +120,7 @@ export class Form implements OnInit {
         this.addAnalytics();
         this.loading.dismiss().then(() => {
           this.router.navigate(['main/form-menu'])
+          this.toast.show('saved')
         })
       })
     })

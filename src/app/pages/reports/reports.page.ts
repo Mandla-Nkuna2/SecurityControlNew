@@ -45,7 +45,7 @@ export class ReportsPage implements OnInit {
     });
   }
 
-  getForms(form: any) {
+  getForms() {
     this.formService.getCollectionByFilter(`${this.selectedForm.name.replace(/ +/g, "")}`, 'companyId', this.companyId).then((forms: any[]) => {
       this.reports = forms;
       this.reportsFiltererd = this.reports;
