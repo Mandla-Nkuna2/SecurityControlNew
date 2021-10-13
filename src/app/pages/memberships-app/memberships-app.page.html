@@ -26,9 +26,9 @@
   </ion-grid>
 
   <ion-card *ngFor="let prod of products" class="products">
-    <h3>{{prod.title}}</h3>
-    <h6>{{prod.description}}</h6>
-    <h6>{{prod.price}}</h6>
+    <h3 *ngIf="prod.title">{{prod.title}}</h3>
+    <h6 *ngIf="prod.description">{{prod.description}}</h6>
+    <h6 *ngIf="prod.price">{{prod.price}}</h6>
     <div *ngIf="prod.title === 'Basic'">
       <ion-row>
         <ion-col size="2">
@@ -48,7 +48,7 @@
         <ion-col size="2">
         </ion-col>
         <ion-col>
-          Unlimited Guards 
+          Unlimited Guards
         </ion-col>
       </ion-row>
       <ion-row>
@@ -119,7 +119,7 @@
         <ion-col size="2">
         </ion-col>
         <ion-col>
-          Unlimited Guards 
+          Unlimited Guards
         </ion-col>
       </ion-row>
       <ion-row>
@@ -182,7 +182,7 @@
         <ion-col size="2">
         </ion-col>
         <ion-col>
-          Unlimited Guards 
+          Unlimited Guards
         </ion-col>
       </ion-row>
       <ion-row>

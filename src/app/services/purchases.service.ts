@@ -3,6 +3,7 @@ import { InAppPurchase2, IAPProduct } from '@ionic-native/in-app-purchase-2/ngx'
 import { AlertController } from '@ionic/angular';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { LoadingService } from './loading.service';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class PurchasesService {
   public transaction: EventEmitter<any>;
   trans;
 
-  constructor(private store: InAppPurchase2, private alertCtrl: AlertController,
+  constructor(private store: InAppPurchase2, private alertCtrl: AlertController, private storage: Storage,
     private functions: AngularFireFunctions, private loading: LoadingService) {
     this.transaction = new EventEmitter()
   }
@@ -33,8 +34,24 @@ export class PurchasesService {
 
   getProducts() {
     return new Promise<any>((resolve, reject) => {
-      var products = this.store.products
-      resolve(products)
+      var productsNew: any = this.store.products
+      let prodds = Array.from(productsNew)
+      setTimeout(() => {
+        this.storage.get('newproducts').then((products) => {
+          if (!products) {
+            this.storage.set('newproducts', prodds).then(() => {
+              resolve(prodds)
+            }).catch((error) => {
+              console.log(error);
+            })
+          }
+          else {
+            resolve(products)
+          }
+        })
+      }, 500);
+
+
     });
   }
 
@@ -91,7 +108,7 @@ export class PurchasesService {
         const callable = this.functions.httpsCallable('validatePurchase');
         const obs = callable(p);
         obs.subscribe(async res => {
-          console.log('Resp: ' , res);
+          console.log('Resp: ', res);
           if (res == true) {
             resolve('complete')
           }
