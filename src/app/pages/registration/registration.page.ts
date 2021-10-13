@@ -59,43 +59,43 @@ export class RegistrationPage implements OnInit {
                     }
                     else {
                       this.passwordMatch = false;
-                      reject(2);
+                      reject('Your passwords do not match');
                     }
                   }
                   else {
                     this.confirmPasswordValue = false;
-                    reject(3);
+                    reject('Your passwords do not match');
                   }
                 }
                 else {
                   this.passwordLength = false;
-                  reject(4);
+                  reject('Your password is to short');
                 }
               }
               else {
                 this.passwordValue = false;
-                reject(5);
+                reject('Your password is to short');
               }
             }
             else {
               this.validEmailValue = false;
-              reject(6);
+              reject('You email is invalid');
             }
           }
           else {
             this.emailValue = false;
-            reject(7);
+            reject('Please add an email to continue');
           }
         }
         else {
           this.nameValue = false;
-          reject(8);
+          reject('Pleaase add a name to continue');
         }
       }
       else {
 
         this.companyValue = false;
-        reject(8);
+        reject('Please add a company name to continue');
       }
     })
   }
@@ -116,6 +116,10 @@ export class RegistrationPage implements OnInit {
             this.presentAlert(err)
           })
       }).catch(err => {
+        this.loading.dismiss().then(() => {
+          this.presentAlert(err);
+        })
+
         console.log("Error: " + err); this.loading.dismiss();
       })
     })
@@ -125,7 +129,7 @@ export class RegistrationPage implements OnInit {
     const alert = await this.alertCtrl.create({
       header: 'Uhh ohh...',
       subHeader: 'Something went wrong',
-      message: err.message,
+      message: err,
       buttons: ['OK']
     });
     return await alert.present();
