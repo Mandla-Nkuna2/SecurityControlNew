@@ -9,65 +9,68 @@
 
 
 <ion-content class="staff">
-  <div class="top-holder desktop flex al-center jc-between">
-    <div class="left">
-      <h1>Reports</h1>
+  <div style="width: 100%; margin-top: 10%;">
+    <div class="top-holder desktop flex al-center jc-between" style="margin-top: 10%;">
+      <div class="left">
+        <h1>Reports</h1>
+      </div>
+
+      <div class="right path-holder">
+        <h4>Home/Reports<span>&nbsp;Reports</span> </h4>
+      </div>
     </div>
 
-    <div class="right path-holder">
-      <h4>Home/Reports<span>&nbsp;Reports</span> </h4>
-    </div>
-  </div>
+
+    <ion-grid class="main-grid" fixed>
+      <ion-row class="ion-align-items-center">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+          <div class="holder">
+            <div class="the-header flex al-center jc-between">
+              <h2>Reports</h2>
+            </div>
 
 
-  <ion-grid class="main-grid" fixed>
-    <ion-row class="ion-align-items-center">
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
-        <div class="holder">
-          <div class="the-header flex al-center jc-between">
-            <h2>Reports</h2>
-          </div>
-
-
-          <ion-row class="headers">
-            <ion-col>
-              <ion-item>
-                <ion-label position="stacked">FORM</ion-label>
-                <ionic-selectable style="text-align: left;" [items]="forms" itemTextField="name"
-                  [(ngModel)]="selectedForm" (onChange)="getForms()">
-                </ionic-selectable>
-              </ion-item>
-            </ion-col>
-            <ion-col>
-              <ion-item>
-                <ion-label position="stacked">SITE</ion-label>
-                <ionic-selectable style="text-align: left;" [items]="sites" itemValueField="key" itemTextField="name"
-                  [(ngModel)]="site" (onChange)="filterForms()">
-                </ionic-selectable>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-
-          <ion-grid style="font-size: 0.7em">
-            <ion-row *ngIf="noReports">
-              <h3>No Reports available</h3>
-            </ion-row>
-            <ion-row class="grid-row" *ngFor="let report of reportsFiltererd ; let i = index">
-              <ion-col size="3" class="grid-row-item ion-no-padding">{{report.date}}</ion-col>
-              <ion-col size="1" class="grid-row-item ion-no-padding ion-text-center">
-                <ion-button fill="clear" class="ion-no-padding" (click)="download(report)">
-                  <ion-icon name="download-outline" slot="icon-only"></ion-icon>
-                </ion-button>
+            <ion-row class="headers">
+              <ion-col>
+                <ion-item>
+                  <ion-label position="stacked">FORM</ion-label>
+                  <ionic-selectable style="text-align: left;" [items]=" forms" itemTextField="name" [canSearch]="true"
+                    [(ngModel)]="selectedForm" (onChange)="getForms()">
+                  </ionic-selectable>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="stacked">SITE</ion-label>
+                  <ionic-selectable style="text-align: left;" [items]="sites" itemValueField="key" itemTextField="name"
+                    [(ngModel)]="site" (onChange)="filterForms()">
+                  </ionic-selectable>
+                </ion-item>
               </ion-col>
             </ion-row>
-          </ion-grid>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+
+            <ion-grid style="font-size: 0.7em">
+              <ion-row *ngIf="noReports">
+                <h3>No Reports available</h3>
+              </ion-row>
+              <ion-row class="grid-row" *ngFor="let report of reportsFiltererd ; let i = index">
+                <ion-col size="3" class="grid-row-item ion-no-padding">{{report.date}}</ion-col>
+                <ion-col size="1" class="grid-row-item ion-no-padding ion-text-center">
+                  <ion-button fill="clear" class="ion-no-padding" (click)="download(report)">
+                    <ion-icon name="download-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
 
-  <div class="footer desktop">
-    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+    <div class="footer desktop">
+      <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+    </div>
   </div>
+
 </ion-content>

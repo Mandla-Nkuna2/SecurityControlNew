@@ -8,238 +8,240 @@
 </ion-header>
 
 <ion-content>
+  <div style="width: 100% ; margin-top: 15%;">
+    <ion-grid class="main-grid" *ngIf="accessType !== ''">
+      <ion-row class="headers ion-justify-content-center">
+        <ion-col class="ion-text-center">
+          <h6>Your Membership</h6>
+        </ion-col>
+        <ion-col class="ion-text-center">
+          <h6>{{accessType}}</h6>
+        </ion-col>
+        <ion-col class="ion-text-center">
+          <ion-button (click)="cancel()" style="margin-top: 15%;">
+            Cancel
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-card *ngFor="let prod of products" class="products">
+      <h3 *ngIf="prod.title">{{prod.title}}</h3>
+      <h6 *ngIf="prod.description">{{prod.description}}</h6>
+      <h6 *ngIf="prod.price">{{prod.price}}</h6>
+      <div *ngIf="prod.title === 'Basic'">
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Up to 5 Users
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Guards
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Branding
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of staff
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Company form upload
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Support Chat
+          </ion-col>
+        </ion-row>
+      </div>
+      <div *ngIf="prod.title === 'Premium'">
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Up to 10 Users
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Guards
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Custom Branding
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of staff
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Company form upload
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="close-circle-outline" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Support Chat
+          </ion-col>
+        </ion-row>
+      </div>
+      <div *ngIf="prod.title === 'Enterprise'">
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Users
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Unlimited Guards
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Custom Branding
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of sites
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Bulk upload of staff
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Company form upload
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          </ion-col>
+          <ion-col style="text-align: left;">
+            Support Chat
+          </ion-col>
+        </ion-row>
+      </div>
+      <ion-button (click)="buy(prod)" class='buy-button' color="success"
+        *ngIf="prod.title !== 'Enterprise' && prod.title != accessType">
+        Get Started
+      </ion-button>
+      <ion-button (click)="cancel()" color="danger" *ngIf="prod.title == accessType">
+        Cancel
+      </ion-button>
+      <ion-button (click)="enterpriseContact()" color="success" class='buy-button' *ngIf="prod.title === 'Enterprise'">
+        Contact Us
+      </ion-button>
+    </ion-card>
 
-  <ion-grid class="main-grid" fixed *ngIf="accessType !== ''">
-    <ion-row class="headers ion-justify-content-center">
-      <ion-col class="ion-text-center">
-        <h6>Your Membership</h6>
-      </ion-col>
-      <ion-col class="ion-text-center">
-        <h6>{{accessType}}</h6>
-      </ion-col>
-      <ion-col class="ion-text-center">
-        <ion-button (click)="cancel()">
-          Cancel
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-card *ngFor="let prod of products" class="products">
-    <h3 *ngIf="prod.title">{{prod.title}}</h3>
-    <h6 *ngIf="prod.description">{{prod.description}}</h6>
-    <h6 *ngIf="prod.price">{{prod.price}}</h6>
-    <div *ngIf="prod.title === 'Basic'">
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Up to 5 Users
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Guards
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Branding
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of staff
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Company form upload
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Support Chat
-        </ion-col>
-      </ion-row>
-    </div>
-    <div *ngIf="prod.title === 'Premium'">
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Up to 10 Users
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Guards
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Custom Branding
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of staff
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Company form upload
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="close-circle-outline" color="primary"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Support Chat
-        </ion-col>
-      </ion-row>
-    </div>
-    <div *ngIf="prod.title === 'Enterprise'">
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Users
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Unlimited Guards
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Custom Branding
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of sites
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Bulk upload of staff
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Company form upload
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="4">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-        </ion-col>
-        <ion-col style="text-align: left;">
-          Support Chat
-        </ion-col>
-      </ion-row>
-    </div>
-    <ion-button (click)="buy(prod)" class='buy-button' color="success"
-      *ngIf="prod.title !== 'Enterprise' && prod.title != accessType">
-      Get Started
-    </ion-button>
-    <ion-button (click)="cancel()" color="danger" *ngIf="prod.title == accessType">
-      Cancel
-    </ion-button>
-    <ion-button (click)="enterpriseContact()" color="success" class='buy-button' *ngIf="prod.title === 'Enterprise'">
-      Contact Us
-    </ion-button>
-  </ion-card>
 
+    <h6 class="alertText">Please note: The bulk uploads and form uploads are desktop features only. <br>
+      In order to access them, please login to the desktop platform at
+      <u (click)="goDesktop()">https://app.securitycontrol.co.za</u>
+    </h6>
+  </div>
 
-  <h6 class="alertText">Please note: The bulk uploads and form uploads are desktop features only. <br>
-    In order to access them, please login to the desktop platform at
-    <u (click)="goDesktop()">https://app.securitycontrol.co.za</u>
-  </h6>
 </ion-content>

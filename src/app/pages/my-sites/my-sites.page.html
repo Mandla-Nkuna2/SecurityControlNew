@@ -1,28 +1,3 @@
-<!-- <ion-header class="ion-no-border desktop">
-  
-  <ion-toolbar class="dbar ion-padding-horizontal">
-    <ion-buttons slot="start">
-      <ion-button class="support-btn">
-        Support
-      </ion-button>
-    </ion-buttons>
-    <ion-item lines="none" slot="end" (click)="goMyaccount()">
-      <ion-avatar slot="end">
-        <img src="assets/imgs/user.jpeg" alt="">
-      </ion-avatar>
-      <ion-label>
-        <select name="cars" id="cars">
-          <option value="volvo">Lamu Dlamini</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
-        <p>Admin</p>
-      </ion-label>
-    </ion-item>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-header class="ion-no-border">
   <ion-toolbar class="mtool">
     <ion-buttons slot="start">
@@ -32,59 +7,63 @@
 </ion-header>
 
 <ion-content class="mysites">
-  <div class="top-holder desktop flex al-center jc-between">
-    <div class="left">
-      <h1>My Sites</h1>
+  <div style="width: 100%;margin-top: 10%;">
+    <div class="top-holder desktop flex al-center jc-between">
+      <div class="left">
+        <h1>My Sites</h1>
+      </div>
+
+      <div class="right path-holder">
+        <h4>Home/Sites<span>&nbsp;My Sites</span> </h4>
+      </div>
     </div>
 
-    <div class="right path-holder">
-      <h4>Home/Sites<span>&nbsp;My Sites</span> </h4>
+
+    <div class=" btn-holder desktop add-btn">
+      <ion-button (click)="addSite()">
+        <ion-icon slot="start" name="add"></ion-icon>
+        Add New Site
+      </ion-button>
     </div>
-  </div>
 
+    <ion-grid class="main-grid" fixed>
+      <ion-row class="ion-align-items-center">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+          <div class="holder left">
+            <div class="the-header">
+              <h2>My Sites</h2>
+            </div>
 
-  <div class="btn-holder desktop add-btn">
-    <ion-button (click)="addSite()">
-      <ion-icon slot="start" name="add"></ion-icon>
-      Add New Site
-    </ion-button>
-  </div>
+            <ion-grid fixed>
+              <ion-row class="headers">
+                <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9">
+                  <h4>Site Name</h4>
+                </ion-col>
+                <ion-col sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+                  <h4>Action</h4>
+                </ion-col>
+              </ion-row>
 
-  <ion-grid class="main-grid" fixed>
-    <ion-row class="ion-align-items-center">
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
-        <div class="holder left">
-          <div class="the-header">
-            <h2>My Sites</h2>
+              <ion-row *ngFor="let site of sites | async" class="values">
+                <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9" class="dates">
+                  <h5>{{ site.name }}</h5>
+                </ion-col>
+                <ion-col (click)="viewSite(site)" sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+                  <h5>View Details</h5>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
           </div>
-
-          <ion-grid fixed>
-            <ion-row class="headers">
-              <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9">
-                <h4>Site Name</h4>
-              </ion-col>
-              <ion-col sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
-                <h4>Action</h4>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngFor="let site of sites | async" class="values">
-              <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9" class="dates">
-                <h5>{{ site.name }}</h5>
-              </ion-col>
-              <ion-col (click)="viewSite(site)" sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
-              <h5>View Details</h5>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-
-  <div class="footer desktop">
-    <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="footer desktop">
+      <p class="ion-text-wrap"> All Rights Reserved | Copyright <span>@securitycontrol.co.za</span> </p>
+    </div>
   </div>
+
+
+
+
 </ion-content>

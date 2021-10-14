@@ -41,7 +41,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-card style="margin-bottom: 20%;">
+  <ion-card style="margin-bottom: 20%; margin-top: 20%;">
     <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" *ngIf="show">
       <div formArrayName="inputs" *ngFor="let input of dynamicInputs; let i =index">
         <ion-item *ngIf="input.controlType =='select' && determineCondition(input.condition)">

@@ -18,13 +18,13 @@
 
 <ion-content #contentArea id="contentArea">
 
-  <ion-row class="messageUnit">
+  <ion-row class="messageUnit" style="margin-top: 30%;">
     <ion-col size="8" class="other-message">
       <h6>{{firstMsg.message}}</h6>
     </ion-col>
   </ion-row>
 
-  <div *ngFor="let chat of chats" class="messageUnit" >
+  <div *ngFor="let chat of chats" class="messageUnit">
 
     <div *ngIf="!chat.fromUser">
 
@@ -132,6 +132,6 @@
       </ion-col>
     </ion-row>
     <input #picture (change)="fileChangeEvent($event)" style="display:none;" type="file" accept="image/*"
-    capture="camera">
+      capture="camera">
   </ion-toolbar>
 </ion-footer>

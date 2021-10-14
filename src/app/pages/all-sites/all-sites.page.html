@@ -7,60 +7,63 @@
 </ion-header>
 
 <ion-content class="mysites">
-  <ion-fab *ngIf="permission" vertical="bottom" horizontal="end" slot="fixed" activated="false">
-    <ion-fab-button color="primary">
-      <ion-icon name="settings"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button color="primary" (click)="addSite()" data-desc="Add New Site">
-        <ion-icon name="add"></ion-icon>
+  <div style="width: 100%;margin-top: 10%;">
+    <ion-fab *ngIf="permission" vertical="bottom" horizontal="end" slot="fixed" activated="false">
+      <ion-fab-button color="primary">
+        <ion-icon name="settings"></ion-icon>
       </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
+      <ion-fab-list side="top">
+        <ion-fab-button color="primary" (click)="addSite()" data-desc="Add New Site">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
 
-  <div class="top-holder desktop flex al-center jc-between">
-    <div class="left">
-      <h1>All Sites</h1>
+    <div class="top-holder desktop flex al-center jc-between">
+      <div class="left">
+        <h1>All Sites</h1>
+      </div>
+
+      <div class="right path-holder">
+        <h4>Home/Sites<span>&nbsp;All Sites</span> </h4>
+      </div>
     </div>
 
-    <div class="right path-holder">
-      <h4>Home/Sites<span>&nbsp;All Sites</span> </h4>
-    </div>
+    <ion-grid class="main-grid" fixed>
+      <ion-row class="ion-align-items-center">
+        <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
+          <div class="holder left">
+            <div class="the-header">
+              <h2>All Sites</h2>
+            </div>
+
+            <ion-grid fixed>
+              <ion-row class="headers">
+                <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9">
+                  <h4>Site Name</h4>
+                </ion-col>
+                <ion-col sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+                  <h4>Action</h4>
+                </ion-col>
+              </ion-row>
+
+              <ion-row *ngFor="let site of sites | async" class="values">
+                <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9" class="dates">
+                  <h5>{{ site.name }}</h5>
+                </ion-col>
+                <ion-col (click)="viewSite(site)" sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
+                  <h5>View Details</h5>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
   </div>
 
-  <ion-grid class="main-grid" fixed>
-    <ion-row class="ion-align-items-center">
-      <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
-        <div class="holder left">
-          <div class="the-header">
-            <h2>All Sites</h2>
-          </div>
-
-          <ion-grid fixed>
-            <ion-row class="headers">
-              <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9">
-                <h4>Site Name</h4>
-              </ion-col>
-              <ion-col sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
-                <h4>Action</h4>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngFor="let site of sites | async" class="values">
-              <ion-col sizeXs="6" sizeSm="9" sizeMd="9" sizeLg="9" sizeXl="9" class="dates">
-                <h5>{{ site.name }}</h5>
-              </ion-col>
-              <ion-col (click)="viewSite(site)" sizeXs="6" sizeSm="3" sizeMd="3" sizeLg="3" sizeXl="3">
-              <h5>View Details</h5>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 
 
-  
 </ion-content>
