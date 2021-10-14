@@ -321,7 +321,7 @@ export class MenuPage implements OnInit {
         if (access === true) {
           return true;
         } else {
-          this.access = false;
+          this.access = true;
           this.router.navigate(['no-access'])
         }
       })

@@ -59,11 +59,15 @@ export class ReportsPage implements OnInit {
     return new Promise((resolve, reject) => {
       this.formService.getCollection(`users/${this.userKey}/sites`).then((sites: any[]) => {
         this.sites = sites;
+        console.log(sites);
+        
         resolve('complete');
       })
     })
   }
   filterForms() {
+    console.log('ff', this.site.key);
+    
     if (this.site.key != 'All') {
       this.reportsFiltererd = this.reports.filter(x => x.siteId == this.site.key);
       this.noReports = false;
@@ -74,6 +78,8 @@ export class ReportsPage implements OnInit {
     else {
       this.reportsFiltererd = this.reports;
     }
+    console.log(this.reportsFiltererd);
+    
   }
   download(formData) {
     this.pdfService.downloadPdf(this.selectedForm.name, this.selectedForm.form, formData);
