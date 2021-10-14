@@ -18,7 +18,7 @@ import { ToastService } from 'src/app/services/toast.service';
 export class MembershipsAppPage implements OnInit {
 
   app = false;
-  products = [];
+  products: any = [];
   chosenItem;
   productIDs = ['standard_membership', 'premium_membership'];
   enterprise = {
@@ -27,12 +27,12 @@ export class MembershipsAppPage implements OnInit {
   user;
   company;
   accessType = '';
+  showProdcuts = false;
 
   constructor(
     private purchaseService: PurchasesService,
     private platform: Platform,
     private storage: Storage,
-    private router: Router,
     private membershipService: MembershipService,
     private alertCtrl: AlertController,
     private toast: ToastService,
@@ -43,20 +43,42 @@ export class MembershipsAppPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.products = []; 
+    this.products = [];
     this.storage.get('user').then(user => {
       this.user = user;
       this.getCompany(user);
-      this.products = []; 
+      this.products = [];
       this.purchaseService.register(this.productIDs).then(() => {
-        this.purchaseService.getProducts().then(products => {
-          this.products = []; 
-          this.products = products;
-          console.log('Products: ', this.products);
-          this.products.forEach(prod => {
-            this.purchaseService.registerHandlers(prod);
-          });
-          this.products.push(this.enterprise)
+        this.purchaseService.getProducts().then((products: any[]) => {
+          if (products.length < 2) {
+            let interval = setInterval(() => {
+              this.purchaseService.getProducts().then((prods: any[]) => {
+                if (prods.length > 1) {
+                  clearInterval(interval);
+                  this.products = [];
+                  products.forEach((prod) => {
+                    this.products.push(Object.assign({}, prod))
+                  });
+                  console.log('Products: ', this.products);
+                  this.products.forEach(prod => {
+                    this.purchaseService.registerHandlers(prod);
+                  });
+                  this.products.push(this.enterprise)
+                }
+              })
+            }, 1000)
+          }
+          else {
+            this.products = [];
+            products.forEach((prod) => {
+              this.products.push(Object.assign({}, prod))
+            })
+            console.log('Products: ', this.products);
+            this.products.forEach(prod => {
+              this.purchaseService.registerHandlers(prod);
+            });
+            this.products.push(this.enterprise)
+          }
         })
       })
     })
@@ -182,7 +204,7 @@ export class MembershipsAppPage implements OnInit {
   async cancelInfo() {
     var msg = '';
     if (this.platform.is('ios')) {
-      msg =`<p>Cancel subscription on iStore</p>
+      msg = `<p>Cancel subscription on iStore</p>
       <ul>
         <li>Open the Settings app</li>
         <li>Tap your name</li>
@@ -191,7 +213,7 @@ export class MembershipsAppPage implements OnInit {
         <li>Tap Cancel Subscription</li>
       </ul>`;
     } else if (this.platform.is('android')) {
-      msg =`<p>Cancelling subscriptions on App Store</p>
+      msg = `<p>Cancelling subscriptions on App Store</p>
       <ul>
         <li>On your device, open Google Play Store.</li>
         <li>Make sure you are signed in to the Google account used in purchasing the app.</li>

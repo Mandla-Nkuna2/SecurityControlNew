@@ -34,22 +34,13 @@ export class PurchasesService {
 
   getProducts() {
     return new Promise<any>((resolve, reject) => {
-      var productsNew: any = this.store.products
-      let prodds = Array.from(productsNew)
-      setTimeout(() => {
-        this.storage.get('newproducts').then((products) => {
-          if (!products) {
-            this.storage.set('newproducts', prodds).then(() => {
-              resolve(prodds)
-            }).catch((error) => {
-              console.log(error);
-            })
-          }
-          else {
-            resolve(products)
-          }
-        })
-      }, 500);
+      this.store.ready(() => {
+        var productsNew: any = this.store.products
+        let prodds = Array.from(productsNew.filter(x => x.title));
+
+        resolve(prodds);
+
+      })
 
 
     });
