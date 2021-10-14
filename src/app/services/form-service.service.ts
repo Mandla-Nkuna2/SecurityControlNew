@@ -64,7 +64,7 @@ export class FormServiceService {
 
 
   public getCollectionByFilter(link: string, option: string, value: string) {
-    return new Promise((resolve, reject) => {
+   return new Promise((resolve, reject) => {
       this.completeLink(link).then(() => {
         this.afs.collection(link).ref.where(option, '==', value).get().then((collectionDocs) => {
           let collection: any = [];

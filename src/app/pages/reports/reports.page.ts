@@ -59,12 +59,13 @@ export class ReportsPage implements OnInit {
     return new Promise((resolve, reject) => {
       this.formService.getCollection(`users/${this.userKey}/sites`).then((sites: any[]) => {
         this.sites = sites;
-        resolve('complete');
+        this.sites = [{key:'All', name:'All Sites'}].concat(this.sites)
+       resolve('complete');
       })
     })
   }
   filterForms() {
-    if (this.site.key != 'All') {
+  if (this.site.key != 'All') {
       this.reportsFiltererd = this.reports.filter(x => x.siteId == this.site.key);
       this.noReports = false;
       if (this.reportsFiltererd.length == 0) {

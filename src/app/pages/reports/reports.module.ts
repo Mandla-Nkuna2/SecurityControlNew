@@ -8,6 +8,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ReportsPage } from './reports.page';
+import { IonicSelectableModule } from 'ionic-selectable'
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
   entryComponents: [PopoverComponent],
   imports: [
     ComponentsModule,
+    IonicSelectableModule,
     CommonModule,
     FormsModule,
     IonicModule,

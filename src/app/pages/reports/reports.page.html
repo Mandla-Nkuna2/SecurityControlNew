@@ -20,8 +20,6 @@
   </div>
 
 
-
-
   <ion-grid class="main-grid" fixed>
     <ion-row class="ion-align-items-center">
       <ion-col sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="12" sizeXl="12">
@@ -35,23 +33,17 @@
             <ion-col>
               <ion-item>
                 <ion-label position="stacked">FORM</ion-label>
-                <ion-select interface="popover" (ionChange)="getForms()" [(ngModel)]="selectedForm">
-                  <ion-select-option *ngFor="let form of forms" [value]="form" (click)="getForms()">
-                    {{form.name }}
-                  </ion-select-option>
-                </ion-select>
+                <ionic-selectable style="text-align: left;" [items]="forms" itemTextField="name"
+                  [(ngModel)]="selectedForm" (onChange)="getForms()">
+                </ionic-selectable>
               </ion-item>
             </ion-col>
             <ion-col>
               <ion-item>
                 <ion-label position="stacked">SITE</ion-label>
-                <ion-select interface="popover" [(ngModel)]="site['key']" (ionChange)="filterForms()"
-                  placeholder="All Sites">
-                  <ion-select-option *ngFor="let site of sites " [value]="site.key">{{ site.name }}
-                  </ion-select-option>
-                  <ion-select-option value="All">All Sites
-                  </ion-select-option>
-                </ion-select>
+                <ionic-selectable style="text-align: left;" [items]="sites" itemValueField="key" itemTextField="name"
+                  [(ngModel)]="site" (onChange)="filterForms()">
+                </ionic-selectable>
               </ion-item>
             </ion-col>
           </ion-row>
