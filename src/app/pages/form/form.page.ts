@@ -20,12 +20,7 @@ export class Form implements OnInit {
   userKey;
   user: any = {};
   doc;
-
-
   inputs: DynamicInput[] = [];
-
-
-
   rawInputes
   showForm = false;
   staticFields: any = {

@@ -53,7 +53,7 @@ export class MenuPage implements OnInit {
       title: 'REPORTS',
       url: '/reports',
       condition: 'this.permission && !this.technician && this.access && !this.app',
-      icon: 'cloud-download'
+      icon: 'documents'
     },
     {
       title: 'MAPPED REPORTS',
@@ -101,7 +101,7 @@ export class MenuPage implements OnInit {
       title: 'SUPPORT CHAT',
       url: '/chat',
       condition: 'this.permission && !this.technician && this.access && !this.app',
-      icon: 'pie-chart'
+      icon: 'chatbubbles'
     },
     {
       title: 'SALES CHAT',
@@ -113,7 +113,7 @@ export class MenuPage implements OnInit {
       title: 'MEMBERSHIP',
       url: '/memberships',
       condition: 'this.permission && !this.technician && this.access && !this.app',
-      icon: 'pie-chart'
+      icon: 'diamond'
     },
     {
       title: 'FORMS',
@@ -137,7 +137,7 @@ export class MenuPage implements OnInit {
       title: 'REPORTS',
       url: '/reports',
       condition: 'this.permission && !this.technician && this.access && this.app',
-      icon: 'cloud-download'
+      icon: 'documents'
     },
     {
       title: 'SAVED FORMS',
@@ -149,19 +149,19 @@ export class MenuPage implements OnInit {
       title: 'SUPPORT CHAT',
       url: '/chat',
       condition: 'this.permission && !this.technician && this.access && this.app',
-      icon: 'pie-chart'
+      icon: 'chatbubbles'
     },
-    {
-      title: 'SALES CHAT',
-      url: '/chat-sales',
-      condition: 'this.permission && !this.technician && this.access && this.app',
-      icon: 'pie-chart'
-    },
+    // {
+    //   title: 'SALES CHAT',
+    //   url: '/chat-sales',
+    //   condition: 'this.permission && !this.technician && this.access && this.app',
+    //   icon: 'pie-chart'
+    // },
     {
       title: 'MEMBERSHIP',
       url: '/memberships-app',
       condition: 'this.permission && !this.technician && this.access && this.app',
-      icon: 'pie-chart'
+      icon: 'diamond'
     },
     {
       title: 'WELCOME',
@@ -223,12 +223,12 @@ export class MenuPage implements OnInit {
       condition: '!this.permission && !this.technician && this.access && !this.app',
       icon: 'pie-chart'
     },
-    {
-      title: 'SALES CHAT',
-      url: '/chat-sales',
-      condition: '!this.permission && !this.technician && this.access && !this.app',
-      icon: 'pie-chart'
-    },
+    // {
+    //   title: 'SALES CHAT',
+    //   url: '/chat-sales',
+    //   condition: '!this.permission && !this.technician && this.access && !this.app',
+    //   icon: 'pie-chart'
+    // },
     {
       title: 'FORMS',
       url: '/form-menu',
@@ -266,12 +266,12 @@ export class MenuPage implements OnInit {
       condition: '!this.permission && !this.technician && this.access && this.app',
       icon: 'pie-chart'
     },
-    {
-      title: 'SALES CHAT',
-      url: '/chat-sales',
-      condition: '!this.permission && !this.technician && this.access && this.app',
-      icon: 'pie-chart'
-    },
+    // {
+    //   title: 'SALES CHAT',
+    //   url: '/chat-sales',
+    //   condition: '!this.permission && !this.technician && this.access && this.app',
+    //   icon: 'pie-chart'
+    // },
     {
       title: 'No Access',
       url: '/no-access',

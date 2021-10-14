@@ -120,11 +120,10 @@ ion-content
 
     .main-grid
     {
-        padding: 0 25px;
         width: 100% !important;
         .holder
         {
-            background: #100F10;
+            background: radial-gradient(circle at center, #201f1f 0%, #171717 100%);
             border-radius: 23px;
             width: 100%;
             .the-header

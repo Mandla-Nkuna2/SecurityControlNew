@@ -11,8 +11,8 @@
         <ion-menu-toggle auto-hide="false">
           <div *ngFor="let p of pages1">
             <ion-item *ngIf="evaluate(p.condition)" [routerLink]="p.url" routerDirection="root"
-              [class.active-item]="selectedPath === p.url">
-              <ion-icon [src]="p.icon" slot="start"></ion-icon>
+              [class.active-item]="selectedPath === p.url" lines="none" detail="false">
+              <ion-icon [name]="p.icon" slot="start"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
               <div *ngIf="p.title === 'SALES CHAT' && salesCount !== 0"
                 style="color: red; border-radius: 40%; border: 1px solid red;">{{salesCount}}</div>
@@ -23,10 +23,10 @@
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
-    <ion-footer style="  --background: #100F10;  ">
+    <ion-footer>
       <ion-menu-toggle auto-hide="false">
-        <ion-item style="  --background: #100F10;  " routerLink="/my-account" icon-left routerDirection="root"
-          [class.active-item]="selectedPath === '/my-account'">
+        <ion-item routerLink="/my-account" icon-left routerDirection="root"
+          [class.active-item]="selectedPath === '/my-account'" lines="none" detail="false">
           <ion-label style="text-align: center;" style='color:grey; text-align: center;'
             color="color: #757575 !important;">MY ACCOUNT</ion-label>
         </ion-item>

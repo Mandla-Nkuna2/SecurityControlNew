@@ -61,12 +61,7 @@ export class AddGuardPage implements OnInit {
   }
 
   ngOnInit() {
-    if (document.URL.indexOf('http://localhost') === 0 || document.URL.indexOf('ionic') === 0 || document.URL.indexOf('https://localhost') === 0) {
-      this.isApp = true;
-    }
-    else {
-      this.isApp = false;
-    }
+    this.isApp = this.platform.platforms().includes("cordova")
     if (this.id === 'new') {
       this.platform.ready().then(() => {
         this.storage.get('user').then((user) => {
@@ -103,6 +98,8 @@ export class AddGuardPage implements OnInit {
         this.grades = this.gradeCollection.valueChanges();
       });
     }
+    console.log('app', this.isApp);
+    
   }
 
   thompsonPerm() {
