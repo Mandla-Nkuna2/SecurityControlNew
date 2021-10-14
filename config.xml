@@ -3,7 +3,7 @@
     <name>Security Control</name>
     <description>Security Admin Forms App</description>
     <author email="support@securitycontrol.co.za" href="https://securitycontrol.co.za/">Innovative Thinking (Pty) Ltd</author>
-    <content original-src="index.html" src="http://localhost:8101" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
