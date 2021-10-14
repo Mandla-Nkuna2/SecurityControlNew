@@ -74,9 +74,10 @@ ion-content
     }
         .holder
         {
-            img
+            ion-icon
             {
-                height: 100px;
+                font-size: 120px;
+                color: #ff4343;
             }
 
             h1
