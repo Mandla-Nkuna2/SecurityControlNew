@@ -1,17 +1,7 @@
 <ion-content class="ion-padding-horizontal">
   <ion-grid style="height: 100%">
-    <ion-row
-      class="ion-justify-content-center ion-align-items-center"
-      style="height: 100%"
-    >
-      <ion-col
-        sizeXs="12"
-        sizeSm="8"
-        sizeMd="6"
-        sizeLg="4"
-        sizeXl="4"
-        class="ion-no-padding"
-      >
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
+      <ion-col sizeXs="12" sizeSm="8" sizeMd="6" sizeLg="4" sizeXl="4" class="ion-no-padding">
         <div class="holder">
           <div class="logo-holder ion-text-center">
             <img src="assets/imgs/logo.svg" alt="" />
@@ -26,22 +16,14 @@
             <div class="input-item">
               <ion-label>Email</ion-label>
               <ion-item lines="none">
-                <ion-input
-                  type="email"
-                  [(ngModel)]="user.email"
-                  placeholder="Johndoe@gmail.com"
-                ></ion-input>
+                <ion-input type="email" [(ngModel)]="user.email" placeholder="Johndoe@gmail.com"></ion-input>
               </ion-item>
             </div>
 
             <div class="input-item">
               <ion-label>Password</ion-label>
               <ion-item lines="none">
-                <ion-input
-                  [(ngModel)]="user.password"
-                  type="password"
-                  placeholder="*********"
-                ></ion-input>
+                <ion-input [(ngModel)]="user.password" type="password" placeholder="*********"></ion-input>
               </ion-item>
             </div>
 

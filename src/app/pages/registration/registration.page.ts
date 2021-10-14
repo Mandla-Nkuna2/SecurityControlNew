@@ -34,7 +34,7 @@ export class RegistrationPage implements OnInit {
     private auth: AuthenticationService,
     public loading: LoadingService,
     private analyticsService: AnalyticsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
