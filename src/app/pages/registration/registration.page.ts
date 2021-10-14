@@ -89,7 +89,7 @@ export class RegistrationPage implements OnInit {
         }
         else {
           this.nameValue = false;
-          reject('Pleaase add a name to continue');
+          reject('Please add a name to continue');
         }
       }
       else {
