@@ -58,4 +58,13 @@ export class NoAccessPage implements OnInit {
     }
   }
 
+  demo() {
+    // To do:
+    /*
+    Add user to a demo company
+    Add conditions to limit functionality on demo => Can't change company details, add users etc.
+    Add watermark to all documents create with demo 
+    */
+  }
+
 }

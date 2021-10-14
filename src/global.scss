@@ -164,7 +164,7 @@ ion-list{
     background: black !important;
 }
 ion-item{
-    --background: black;
+    --background: radial-gradient(circle at center, #201f1f 0%, #171717 100%);
     color: white;
 }
 
@@ -274,4 +274,7 @@ ion-footer {
         color: #919191 !important;
         font-size: 10px !important;
     }
+}
+.popover-content {
+    min-width: 320px !important;
 }

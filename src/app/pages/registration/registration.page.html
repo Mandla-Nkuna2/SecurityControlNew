@@ -1,97 +1,50 @@
-<ion-content class="fix-menu">
-
-  <section class="common-img-bg">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-
-          <div class="col-md-6" style="margin: 0 auto; padding-top: 30px">
-            <img class="auth-form__image reset" src="assets/imgs/logo.svg" role="img" />
+<ion-content class="ion-padding-horizontal">
+  <ion-grid style="height: 100%">
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%">
+      <ion-col sizeXs="12" sizeSm="8" sizeMd="6" sizeLg="4" sizeXl="4" class="ion-no-padding">
+        <div class="holder">
+          <div class="logo-holder ion-text-center">
+            <img src="assets/imgs/logo.svg" alt="" />
           </div>
 
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-
-            <div class="auth-box">
-
-              <div class="row m-b-20">
-                <div class="col-md-6">
-                  <h3 class="text-left txt-primary">Sign Up</h3>
-                </div>
-              </div>
-              <hr />
-
-              <div class="md-float-material">
-
-                <ion-item>
-                  <ion-input [(ngModel)]="user.companyName" placeholder="Company Name"></ion-input>
-                  <span class="md-line"></span>
-                </ion-item>
-                <div class="form__message" *ngIf="!companyValue">Please enter a Company name.</div>
-
-
-                <ion-item>
-                  <ion-input [(ngModel)]="user.name" placeholder="Your Full Name"></ion-input>
-                  <span class="md-line"></span>
-                </ion-item>
-
-                <div class="form__message" *ngIf="!nameValue">Please enter a valid name.</div>
-
-                <ion-item>
-                  <ion-input [(ngModel)]="user.email" type="email" placeholder="Your Email Address"></ion-input>
-                  <span class="md-line"></span>
-                </ion-item>
-
-                <div class="form__message" *ngIf="!emailValue">
-                  Please enter your email.
-                </div>
-                <div class="form__message" *ngIf="!validEmailValue">Please enter a valid email
-                  address.</div>
-
-                <ion-item>
-                  <ion-input type="password" placeholder="Password" [(ngModel)]="user.password">
-                  </ion-input>
-                  <span class="md-line"></span>
-                </ion-item>
-
-                <div class="form__message" *ngIf="!passwordValue">Please enter your
-                  password.</div>
-
-                <div class="form__message" *ngIf="!passwordLength">Password must be at
-                  least 8 characters long.</div>
-
-                <ion-item>
-                  <ion-input type="password" placeholder="Confirm Password" [(ngModel)]="user.passwordConfirm">
-                  </ion-input>
-                  <span class="md-line"></span>
-                </ion-item>
-
-                <div class="form__message" *ngIf="!confirmPasswordValue">Please
-                  confirm your password.</div>
-
-                <div class="form__message" *ngIf="!passwordMatch">Passwords
-                  don't match.</div>
-
-                <p style="color: #666666" class="ion-text-center">By signing up you agree to the <a
-                    routerLink="/view-terms" routeDirection="root">Terms of Use</a> and <a
-                    routerLink="/view-privacy-policy" routeDirection="root">Privacy Policy</a>.
-                </p>
-
-                <ion-button color="success" expand="block" (click)="register(user)">Sign
-                  Up</ion-button>
-                <div style="color:#666666; margin-top: 20px;" class="ion-text-center">Already have an account? <a
-                    routerLink="/login" routeDirection="root">Login</a></div>
-
-              </div>
-
+          <div class="the-form">
+            <div class="title">
+              <h3>Register</h3>
+              <p class="ion-text-wrap">Create your account</p>
             </div>
-            <!-- end of form -->
+
+            <div class="input-item">
+              <ion-label>Email</ion-label>
+              <ion-item lines="none">
+                <ion-input type="email" [(ngModel)]="user.email" placeholder="Johndoe@gmail.com"></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="input-item">
+              <ion-label>Password</ion-label>
+              <ion-item lines="none">
+                <ion-input [(ngModel)]="user.password" type="password" placeholder="*********"></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="btn-holder ion-padding-top">
+              <ion-button (click)="register(user)" expand="block">
+                Create Account
+              </ion-button>
+            </div>
+
+            <div class="bottom-holder ion-text-center" (click)="goToLogin()">
+              <p>Already have an account?<span> &nbsp;Login</span></p>
+            </div>
           </div>
-          <!-- Authentication card end -->
         </div>
-        <!-- end of col-sm-12 -->
-      </div>
-      <!-- end of row -->
-    </div>
-    <!-- end of container-fluid -->
-  </section>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="footer desktop">
+    <p class="ion-text-wrap">
+      All Rights Reserved | Copyright <span>@securitycontrol.co.za</span>
+    </p>
+  </div>
 </ion-content>
