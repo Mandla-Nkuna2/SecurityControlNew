@@ -9,6 +9,8 @@ import { PushNotificationsService } from 'src/app/services/push-notifications.se
 import { ChatServiceService } from 'src/app/services/chat-service.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormServiceService } from 'src/app/services/form-service.service';
+import { Platform } from '@ionic/angular';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-menu',
@@ -307,7 +309,12 @@ export class MenuPage implements OnInit {
   email = ''
   access = true;
 
-  constructor(private router: Router, private storage: Storage, public loading: LoadingService,
+  constructor(
+    private router: Router,
+    private storage: Storage,
+    public loading: LoadingService,
+    private platfrom: Platform,
+    private uiService: UiService,
     private pushService: PushNotificationsService, private chatService: ChatServiceService, private authService: AuthenticationService,
     private formsService: FormServiceService) {
     this.router.events.subscribe((event: RouterEvent) => {
@@ -332,6 +339,10 @@ export class MenuPage implements OnInit {
   }
 
   ngOnInit() {
+    this.initialize();
+    this.refesh();
+  }
+  initialize() {
     this.checkAccess().then(res => {
       if (res === true) {
         this.screen = window.innerWidth;
@@ -363,6 +374,11 @@ export class MenuPage implements OnInit {
           })
         })
       }
+    })
+  }
+  async refesh() {
+    this.uiService.refreshMenu.subscribe(() => {
+      this.initialize();
     })
   }
 

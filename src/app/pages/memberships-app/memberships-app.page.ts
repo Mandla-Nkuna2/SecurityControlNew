@@ -9,6 +9,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { MembershipService } from 'src/app/services/membership.service';
 import { PurchasesService } from 'src/app/services/purchases.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-memberships-app',
@@ -39,7 +40,9 @@ export class MembershipsAppPage implements OnInit {
     private navController: NavController,
     private firestore: AngularFirestore,
     private loading: LoadingService,
-    private formsService: FormServiceService
+    private formsService: FormServiceService,
+    private router: Router,
+    private uiService: UiService
   ) { }
 
   ngOnInit() {
@@ -132,8 +135,8 @@ export class MembershipsAppPage implements OnInit {
           this.formsService.retrieveForms(newUser.companyId).then(() => {
             newUser.premium = true;
             this.loading.dismiss();
-            this.navController.navigateRoot('').then(() => {
-              this.navController.navigateRoot('menu/form-menu');
+            this.router.navigate(['menu/welcome']).then(() => {
+              this.uiService.refreshMenuStart();
             })
           })
         })
