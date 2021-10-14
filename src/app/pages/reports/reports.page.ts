@@ -59,6 +59,7 @@ export class ReportsPage implements OnInit {
     return new Promise((resolve, reject) => {
       this.formService.getCollection(`users/${this.userKey}/sites`).then((sites: any[]) => {
         this.sites = sites;
+        this.sites = [{key:'All', name:'All Sites'}].concat(this.sites)
        resolve('complete');
       })
     })
