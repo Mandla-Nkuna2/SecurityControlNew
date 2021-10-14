@@ -108,7 +108,7 @@ export class MyAccountPage implements OnInit {
         }
       })
     })
-    if (document.URL.indexOf('http://localhost') === 0 || document.URL.indexOf('ionic') === 0 || document.URL.indexOf('https://localhost') === 0) {
+    if (this.platform.is('cordova')) {
       this.app = true;
     }
     else {

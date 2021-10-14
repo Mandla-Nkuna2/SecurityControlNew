@@ -23,12 +23,7 @@ export class CameraComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.platform.is('cordova')) {
-      this.isApp = true;
-    }
-    else {
-      this.isApp = false;
-    }
+   this.isApp = this.platform.platforms().includes("cordova")
   }
 
   async openImageActionSheet() {

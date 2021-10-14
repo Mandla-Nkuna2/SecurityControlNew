@@ -84,13 +84,7 @@ export class IncidentNotificationPage implements OnInit {
           this.notification.time = moment(new Date().toISOString()).locale('en').format('HH:mm');
           this.notification.timeStamp = this.notification.date + ' at ' + this.notification.time;
           this.notification.report = 'Incident Notification';
-
-          if ((!document.URL.startsWith('http') || document.URL.startsWith('http://localhost:8080'))) {
-            this.isApp = true;
-          }
-          else {
-            this.isApp = false;
-          }
+          this.isApp = this.platform.platforms().includes("cordova")
         });
       });
     } else if (this.id === 'view') {
@@ -109,12 +103,7 @@ export class IncidentNotificationPage implements OnInit {
         this.saved = true;
       });
     }
-    if ((!document.URL.startsWith('http') || document.URL.startsWith('http://localhost:8080'))) {
-      this.isApp = true;
-    }
-    else {
-      this.isApp = false;
-    }
+    this.isApp = this.platform.platforms().includes("cordova")
   }
 
   

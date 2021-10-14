@@ -84,12 +84,7 @@ export class EditTransparencyPage implements OnInit {
       this.searchSites(id);
       this.transSlider.lockSwipes(true);
       this.transSlider.lockSwipeToNext(true);
-      if ((!document.URL.startsWith('http') || document.URL.startsWith('http://localhost:8080'))) {
-        this.isApp = true;
-      }
-      else {
-        this.isApp = false;
-      }
+      this.isApp = this.platform.platforms().includes("cordova")
     });
   }
 
