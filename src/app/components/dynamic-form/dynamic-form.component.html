@@ -32,7 +32,7 @@
         <ion-icon name="arrow-forward" slot="icon-only">
         </ion-icon>
       </ion-button>
-      <ion-button *ngIf=" slideIndex == noOfSlides" (click)="onExit()" fill="clear">
+      <ion-button *ngIf="slideIndex == noOfSlides && noOfSlides != 0 " (click)="onExit()" fill="clear">
         <ion-icon name="close" slot="icon-only">
         </ion-icon>
       </ion-button>

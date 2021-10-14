@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content scroll="false" >
   <app-dynamic-form *ngIf="showForm" [dynamicInputs]="inputs" [formTitle]="formName" [staticFields]="staticFields"
     (formObject)="saveForm($event)">
   </app-dynamic-form>
