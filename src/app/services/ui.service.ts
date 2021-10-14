@@ -1,7 +1,7 @@
 import { PaymentComponent } from './../components/payment/payment.component';
 import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
 import { ToastController, ActionSheetController, Platform, PopoverController, AlertController, LoadingController, ModalController } from '@ionic/angular';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { SigniturePadComponent } from '../components/signiture-popover/signiture-popover.component';
 
 @Injectable({
@@ -11,6 +11,8 @@ export class UiService {
   popover;
   modal;
   searchAlert;
+  loader: any;
+  refreshMenu: EventEmitter<any>;
   constructor(
     private toastController: ToastController,
     private actionSheetController: ActionSheetController,
@@ -20,8 +22,10 @@ export class UiService {
     private alertController: AlertController,
     private loadingCtrl: LoadingController,
     private modalController: ModalController
-  ) { }
-  loader: any;
+  ) {
+    this.refreshMenu = new EventEmitter();
+  }
+
 
   async showToaster(msg, clr, duration?, position?) {
     const toast = await this.toastController.create({
@@ -222,5 +226,8 @@ export class UiService {
     else {
       console.log("popup-helper: dismissLoading called with no loader!");
     }
+  }
+  public refreshMenuStart() {
+    this.refreshMenu.emit('true');
   }
 }
