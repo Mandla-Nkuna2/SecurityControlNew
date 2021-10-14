@@ -340,6 +340,7 @@ export class MenuPage implements OnInit {
 
   ngOnInit() {
     this.initialize();
+    this.refesh();
   }
   initialize() {
     this.checkAccess().then(res => {
